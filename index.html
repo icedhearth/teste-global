@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Inscrição Global Entry</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> 
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #f4f7f6;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            color: #003087;
+            text-align: center;
+        }
+        h3 {
+            color: #C8102E;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 5px;
+            margin-top: 25px;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #333;
+        }
+        input, select, textarea {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+        }
+        button {
+            background-color: #25D366;
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 20px;
+            display: block;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #20b354;
+        }
+        .conditional-field {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px dashed #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+        hr {
+            margin: 30px 0;
+            border: 0;
+            border-top: 2px solid #003087;
+        }
+        p strong {
+            color: #C8102E;
+        }
+        ol {
+            margin-left: 20px;
+            color: #555;
+        }
+        ol li {
+            margin-bottom: 5px;
+        }
+        #aceiteDeclaracao {
+            width: auto;
+            margin-left: 10px;
+        }
+        .loading-message {
+            text-align: center;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #003087;
+        }
+    </style>
+</head>
+<body>
+    <h1>Formulário de Inscrição Global Entry</h1>
+    <p>Preencha os dados abaixo para a sua solicitação Global Entry. Ao clicar em "Enviar", um PDF detalhado será gerado, enviado para o Firebase Storage, e uma mensagem será enviada ao WhatsApp com os dados básicos e um link para o PDF.</p>
+
+    <form id="globalEntryForm" name="globalEntryForm" method="POST">
+        <h3>Informações Pessoais</h3>
+        <label for="nome">Nome completo (como no passaporte):</label>
+        <input type="text" id="nome" name="nome" required>
+
+        <label for="sobrenome">Sobrenome (como no passaporte):</label>
+        <input type="text" id="sobrenome" name="sobrenome" required>
+
+        <label for="outrosNomes">Já usou outros nomes? (ex.: nome de solteiro, apelido):</label>
+        <input type="text" id="outrosNomes" name="outrosNomes">
+
+        <label for="nascimento">Data de nascimento:</label>
+        <input type="date" id="nascimento" name="nascimento" required>
+
+        <label for="localNascimento">Cidade e país de nascimento:</label>
+        <input type="text" id="localNascimento" name="localNascimento" required>
+
+        <label for="sexo">Sexo:</label>
+        <select id="sexo" name="sexo" required>
+            <option value="">Selecione</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Feminino">Feminino</option>
+            <option value="Outro">Outro</option>
+        </select>
+
+        <label for="nacionalidade">Nacionalidade atual:</label>
+        <input type="text" id="nacionalidade" name="nacionalidade" required>
+
+        <label for="outrasNacionalidades">Possui outras nacionalidades? (Se sim, quais?):</label>
+        <input type="text" id="outrasNacionalidades" name="outrasNacionalidades">
+
+        <hr>
+        <h3>Informações de Documentação</h3>
+        <label for="passaporteNumero">Número do passaporte:</label>
+        <input type="text" id="passaporteNumero" name="passaporteNumero" required>
+
+        <label for="passaporteEmissao">Data de emissão do passaporte:</label>
+        <input type="date" id="passaporteEmissao" name="passaporteEmissao" required>
+
+        <label for="passaporteValidade">Data de validade do passaporte:</label>
+        <input type="date" id="passaporteValidade" name="passaporteValidade" required>
+
+        <label for="passaportePaisEmissor">País emissor do passaporte:</label>
+        <input type="text" id="passaportePaisEmissor" name="passaportePaisEmissor" required>
+
+        <label for="passaporteLocalEmissao">Local de emissão do passaporte (Cidade/Estado):</label>
+        <input type="text" id="passaporteLocalEmissao" name="passaporteLocalEmissao" required>
+
+        <label for="cartaoResidenciaPermanente">Possui Green Card (Cartão de Residente Permanente)?</label>
+        <select id="cartaoResidenciaPermanente" name="cartaoResidenciaPermanente" required>
+            <option value="">Selecione</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+        </select>
+        <div id="greenCardInfo" class="conditional-field">
+            <label for="greenCardNumero">Número do Green Card:</label>
+            <input type="text" id="greenCardNumero" name="greenCardNumero">
+            <label for="greenCardValidade">Data de validade do Green Card:</label>
+            <input type="date" id="greenCardValidade" name="greenCardValidade">
+        </div>
+
+        <hr>
+        <h3>Endereço e Contato</h3>
+        <label for="enderecoAtual">Endereço de residência atual (rua, número, bairro, cidade, estado, CEP, país):</label>
+        <textarea id="enderecoAtual" name="enderecoAtual" rows="3" required></textarea>
+
+        <label for="tempoNoEnderecoAtual">Tempo de residência neste endereço:</label>
+        <input type="text" id="tempoNoEnderecoAtual" name="tempoNoEnderecoAtual" placeholder="Ex: 5 anos, 3 meses" required>
+
+        <label for="telefonePrincipal">Número de telefone principal (com código do país, ex: 5561999998888):</label>
+        <input type="tel" id="telefonePrincipal" name="telefonePrincipal" required>
+
+        <label for="email">E-mail principal:</label>
+        <input type="email" id="email" name="email" required>
+
+        <hr>
+        <h3>Histórico de Emprego e Educação (Últimos 5 Anos)</h3>
+        <label for="ocupacaoAtual">Ocupação/Profissão atual:</label>
+        <input type="text" id="ocupacaoAtual" name="ocupacaoAtual" required>
+
+        <label for="empregadorAtual">Nome do empregador atual (ou "Autônomo" / "Aposentado" / "Estudante"):</label>
+        <input type="text" id="empregadorAtual" name="empregadorAtual" required>
+
+        <label for="enderecoEmpregadorAtual">Endereço do empregador atual:</label>
+        <textarea id="enderecoEmpregadorAtual" name="enderecoEmpregadorAtual" rows="2" required></textarea>
+
+        <label for="dataInicioEmpregoAtual">Data de início no emprego atual:</label>
+        <input type="date" id="dataInicioEmpregoAtual" name="dataInicioEmpregoAtual" required>
+
+        <label for="historicoEmprego">Liste outros empregos/ocupações nos últimos 5 anos (se houver, com datas e endereços):</label>
+        <textarea id="historicoEmprego" name="historicoEmprego" rows="4"></textarea>
+
+        <label for="historicoEducacao">Maior nível de educação concluído e nome da instituição:</label>
+        <input type="text" id="historicoEducacao" name="historicoEducacao" required>
+
+        <hr>
+        <h3>Histórico de Residência (Últimos 5 Anos)</h3>
+        <label for="enderecosAnteriores">Liste todos os endereços onde morou nos últimos 5 anos (se diferente do atual, com datas):</label>
+        <textarea id="enderecosAnteriores" name="enderecosAnteriores" rows="4" placeholder="Ex: De Jan/2020 a Dez/2022: Rua X, nº Y, Cidade, País"></textarea>
+
+        <hr>
+        <h3>Histórico de Viagens Internacionais</h3>
+        <label for="paisesVisitados">Liste todos os países que você visitou nos últimos 5 anos (exceto o país de sua nacionalidade e os EUA):</label>
+        <textarea id="paisesVisitados" name="paisesVisitados" rows="3" placeholder="Separados por vírgula. Ex: Canadá, México, Reino Unido"></textarea>
+
+        <hr>
+        <h3>Perguntas de Elegibilidade (Cruciais para Global Entry)</h3>
+        <p><strong>Por favor, responda a todas as perguntas abaixo com "Sim" ou "Não":</strong></p>
+
+        <label for="condenacaoCriminal">1. Você já foi condenado(a) por qualquer crime em qualquer país?</label>
+        <select id="condenacaoCriminal" name="condenacaoCriminal" required>
+            <option value="">Selecione</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+        </select>
+        <div id="condenacaoCriminalDetails" class="conditional-field">
+            <label for="condenacaoCriminalExplicacao">Explique os detalhes da condenação:</label>
+            <textarea id="condenacaoCriminalExplicacao" name="condenacaoCriminalExplicacao" rows="2"></textarea>
+        </div>
+
+        <label for="violacaoAduaneira">2. Você já violou alguma lei alfandegária, de imigração ou agrícola em qualquer país?</label>
+        <select id="violacaoAduaneira" name="violacaoAduaneira" required>
+            <option value="">Selecione</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+        </select>
+        <div id="violacaoAduaneiraDetails" class="conditional-field">
+            <label for="violacaoAduaneiraExplicacao">Explique os detalhes da violação:</label>
+            <textarea id="violacaoAduaneiraExplicacao" name="violacaoAduaneiraExplicacao" rows="2"></textarea>
+        </div>
+
+        <label for="objetoContrabando">3. Você já foi alvo de apreensão de objetos em qualquer país (drogas, armas, etc.)?</label>
+        <select id="objetoContrabando" name="objetoContrabando" required>
+            <option value="">Selecione</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+        </select>
+        <div id="objetoContrabandoDetails" class="conditional-field">
+            <label for="objetoContrabandoExplicacao">Explique os detalhes da apreensão:</label>
+            <textarea id="objetoContrabandoExplicacao" name="objetoContrabandoExplicacao" rows="2"></textarea>
+        </div>
+
+        <label for="entradaNegadaEUA">4. Você já teve sua entrada negada nos EUA ou foi expulso(a) dos EUA?</label>
+        <select id="entradaNegadaEUA" name="entradaNegadaEUA" required>
+            <option value="">Selecione</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+        </select>
+        <div id="entradaNegadaEUADetails" class="conditional-field">
+            <label for="entradaNegadaEUAExplicacao">Explique os detalhes da negativa/expulsão:</label>
+            <textarea id="entradaNegadaEUAExplicacao" name="entradaNegadaEUAExplicacao" rows="2"></textarea>
+        </div>
+
+        <label for="mandadoPrisao">5. Existe algum mandado de prisão ativo contra você em qualquer país?</label>
+        <select id="mandadoPrisao" name="mandadoPrisao" required>
+            <option value="">Selecione</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+        </select>
+        <div id="mandadoPrisaoDetails" class="conditional-field">
+            <label for="mandadoPrisaoExplicacao">Explique os detalhes do mandado:</label>
+            <textarea id="mandadoPrisaoExplicacao" name="mandadoPrisaoExplicacao" rows="2"></textarea>
+        </div>
+
+        <label for="investigacaoGovernamental">6. Você é ou já foi alvo de investigação por qualquer agência governamental em qualquer país?</label>
+        <select id="investigacaoGovernamental" name="investigacaoGovernamental" required>
+            <option value="">Selecione</option>
+            <option value="Sim">Sim</option>
+            <option value="Não">Não</option>
+        </select>
+        <div id="investigacaoGovernamentalDetails" class="conditional-field">
+            <label for="investigacaoGovernamentalExplicacao">Explique os detalhes da investigação:</label>
+            <textarea id="investigacaoGovernamentalExplicacao" name="investigacaoGovernamentalExplicacao" rows="2"></textarea>
+        </div>
+
+        <hr>
+        <h3>Contato de Emergência</h3>
+        <label for="contatoEmergenciaNome">Nome completo da pessoa de contato de emergência:</label>
+        <input type="text" id="contatoEmergenciaNome" name="contatoEmergenciaNome" required>
+
+        <label for="contatoEmergenciaTelefone">Telefone da pessoa de contato de emergência (com código do país):</label>
+        <input type="tel" id="contatoEmergenciaTelefone" name="contatoEmergenciaTelefone" required>
+
+        <label for="contatoEmergenciaRelacao">Relação com a pessoa de contato de emergência:</label>
+        <input type="text" id="contatoEmergenciaRelacao" name="contatoEmergenciaRelacao" required>
+
+        <hr>
+        <h3>Declaração Final</h3>
+        <p>Eu, <input type="text" id="declaracaoNome" name="declaracaoNome" placeholder="Nome completo" required>, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.</p>
+
+        <p>Estou ciente de que qualquer informação falsa ou enganosa fornecida neste formulário pode resultar na recusa do Global Entry e em outras sanções legais.</p>
+
+        <label for="declaracaoLocal">Local:</label>
+        <input type="text" id="declaracaoLocal" name="declaracaoLocal" required>
+
+        <label for="declaracaoData">Data:</label>
+        <input type="date" id="declaracaoData" name="declaracaoData" required>
+
+        <label>Concordo com os termos desta declaração <input type="checkbox" id="aceiteDeclaracao" name="aceiteDeclaracao" required style="width: auto; margin-left: 10px;"></label>
+
+        <button type="submit" id="submitButton">Enviar Formulário</button>
+        <div id="loadingMessage" class="loading-message" style="display:none;">
+            Gerando PDF e enviando... Por favor, aguarde.
+        </div>
+    </form>
+
+    <script type="module">
+        // Importa as funções necessárias do Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
+        // import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics.js"; // Opcional
+
+        // Configuração do Firebase com suas credenciais (A MESMA API KEY FORNECIDA)
+        const firebaseConfig = {
+            apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0", // Sua API Key real
+            authDomain: "visaformulariostorage.firebaseapp.com",
+            projectId: "visaformulariostorage",
+            storageBucket: "visaformulariostorage.firebasestorage.app",
+            messagingSenderId: "720170394408",
+            appId: "1:720170394408:web:b1c294c39c489388f6261d",
+            measurementId: "G-ZFCV4JEEFT"
+        };
+
+        // Inicializa o Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+        // const analytics = getAnalytics(app); // Opcional, remova se não usar Analytics
+
+        // --- Funções Auxiliares ---
+        function formatDateBr(dateStr) {
+            if (!dateStr) return 'Não informado';
+            try {
+                const [year, month, day] = dateStr.split('-');
+                const date = new Date(year, month - 1, day);
+                if (isNaN(date.getTime())) {
+                    return 'Data inválida';
+                }
+                return date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+            } catch (e) {
+                return 'Erro ao formatar data';
+            }
+        }
+
+        function toggleConditionalField(checkboxId, fieldId) {
+            const checkbox = document.getElementById(checkboxId);
+            const field = document.getElementById(fieldId);
+            if (checkbox && field) {
+                field.style.display = (checkbox.value === 'Sim') ? 'block' : 'none';
+            }
+        }
+
+        // --- Event Listeners para Campos Condicionais ---
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('cartaoResidenciaPermanente').addEventListener('change', () => toggleConditionalField('cartaoResidenciaPermanente', 'greenCardInfo'));
+            document.getElementById('condenacaoCriminal').addEventListener('change', () => toggleConditionalField('condenacaoCriminal', 'condenacaoCriminalDetails'));
+            document.getElementById('violacaoAduaneira').addEventListener('change', () => toggleConditionalField('violacaoAduaneira', 'violacaoAduaneiraDetails'));
+            document.getElementById('objetoContrabando').addEventListener('change', () => toggleConditionalField('objetoContrabando', 'objetoContrabandoDetails'));
+            document.getElementById('entradaNegadaEUA').addEventListener('change', () => toggleConditionalField('entradaNegadaEUA', 'entradaNegadaEUADetails'));
+            document.getElementById('mandadoPrisao').addEventListener('change', () => toggleConditionalField('mandadoPrisao', 'mandadoPrisaoDetails'));
+            document.getElementById('investigacaoGovernamental').addEventListener('change', () => toggleConditionalField('investigacaoGovernamental', 'investigacaoGovernamentalDetails'));
+            
+            // Inicializar o estado dos campos condicionais no carregamento
+            toggleConditionalField('cartaoResidenciaPermanente', 'greenCardInfo');
+            toggleConditionalField('condenacaoCriminal', 'condenacaoCriminalDetails');
+            toggleConditionalField('violacaoAduaneira', 'violacaoAduaneiraDetails');
+            toggleConditionalField('objetoContrabando', 'objetoContrabandoDetails');
+            toggleConditionalField('entradaNegadaEUA', 'entradaNegadaEUADetails');
+            toggleConditionalField('mandadoPrisao', 'mandadoPrisaoDetails');
+            toggleConditionalField('investigacaoGovernamental', 'investigacaoGovernamentalDetails');
+
+            document.getElementById('globalEntryForm').addEventListener('submit', generateGlobalEntryPDF);
+        });
+
+        // --- Função Principal para Gerar PDF, Upload e Envio WhatsApp ---
+        async function generateGlobalEntryPDF(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            const submitButton = document.getElementById('submitButton');
+            const loadingMessage = document.getElementById('loadingMessage');
+            submitButton.disabled = true; // Desabilita o botão
+            loadingMessage.style.display = 'block'; // Mostra mensagem de carregamento
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const form = document.getElementById('globalEntryForm');
+                const formData = new FormData(form);
+
+                const solicitanteNome = formData.get('nome') + ' ' + formData.get('sobrenome');
+                const fixedWhatsAppNumber = '5561999998165'; // O número de WhatsApp da empresa
+
+                const doc = new jsPDF();
+                const pageWidth = doc.internal.pageSize.width;
+                const pageHeight = doc.internal.pageSize.height;
+                const margin = 15;
+                let yPosition = 30;
+
+                // --- Funções de Desenho para o PDF (Adaptadas) ---
+                function drawHeader() {
+                    doc.setFillColor(0, 48, 135); // Azul escuro
+                    doc.rect(0, 0, pageWidth, 25, 'F');
+                    doc.setFontSize(16);
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFont("Helvetica", "bold");
+                    const title = "Formulário de Inscrição Global Entry";
+                    const titleWidth = doc.getTextWidth(title);
+                    const titleX = (pageWidth - titleWidth) / 2;
+                    doc.text(title, titleX, 15);
+                }
+
+                function drawPageBorder() {
+                    doc.setDrawColor(0, 48, 135);
+                    doc.setLineWidth(0.5);
+                    doc.rect(margin / 2, margin / 2, pageWidth - margin, pageHeight - margin);
+                }
+
+                function addSectionTitle(title) {
+                    if (yPosition + 15 > pageHeight - margin) {
+                        doc.addPage();
+                        yPosition = 30;
+                        drawHeader();
+                        drawPageBorder();
+                    }
+                    doc.setFillColor(200, 16, 46); // Vermelho
+                    doc.rect(margin, yPosition - 5, pageWidth - 2 * margin, 10, 'F');
+                    doc.setFontSize(12);
+                    doc.setTextColor(255, 255, 255);
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(title, margin + 5, yPosition + 2);
+                    yPosition += 15;
+                }
+
+                function addText(label, value, isBoldLabel = true) {
+                    const maxWidth = pageWidth - 2 * margin - 10;
+                    const lineHeight = 5;
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+
+                    const text = (isBoldLabel ? `${label}: ` : label) + value;
+                    const lines = doc.splitTextToSize(text, maxWidth);
+
+                    lines.forEach((line, index) => {
+                        if (yPosition + lineHeight > pageHeight - margin) {
+                            doc.addPage();
+                            yPosition = 30;
+                            drawHeader();
+                            drawPageBorder();
+                        }
+                        if (isBoldLabel && index === 0) {
+                            const labelWidth = doc.getTextWidth(label + ": ");
+                            doc.setFont("Helvetica", "bold");
+                            doc.text(`${label}:`, margin, yPosition);
+                            doc.setFont("Helvetica", "normal"); // Voltar ao normal para o valor
+                            doc.text(value, margin + labelWidth, yPosition);
+                        } else {
+                            doc.setFont("Helvetica", "normal");
+                            doc.text(line, margin, yPosition);
+                        }
+                        yPosition += lineHeight;
+                    });
+                    yPosition += 2;
+                }
+
+                // --- Geração do Conteúdo do PDF ---
+                drawHeader();
+                drawPageBorder();
+
+                // Informações Pessoais
+                addSectionTitle("Informações Pessoais");
+                addText("Nome Completo", solicitanteNome);
+                addText("Outros Nomes Utilizados", formData.get('outrosNomes') || 'Não');
+                addText("Data de Nascimento", formatDateBr(formData.get('nascimento')));
+                addText("Local de Nascimento", formData.get('localNascimento'));
+                addText("Sexo", formData.get('sexo'));
+                addText("Nacionalidade Atual", formData.get('nacionalidade'));
+                addText("Outras Nacionalidades", formData.get('outrasNacionalidades') || 'Não possui');
+
+                // Informações de Documentação
+                addSectionTitle("Informações de Documentação");
+                addText("Número do Passaporte", formData.get('passaporteNumero'));
+                addText("Data de Emissão do Passaporte", formatDateBr(formData.get('passaporteEmissao')));
+                addText("Data de Validade do Passaporte", formatDateBr(formData.get('passaporteValidade')));
+                addText("País Emissor do Passaporte", formData.get('passaportePaisEmissor'));
+                addText("Local de Emissão do Passaporte", formData.get('passaporteLocalEmissao'));
+                addText("Possui Green Card?", formData.get('cartaoResidenciaPermanente'));
+                if (formData.get('cartaoResidenciaPermanente') === 'Sim') {
+                    addText("Número do Green Card", formData.get('greenCardNumero') || 'Não informado');
+                    addText("Validade do Green Card", formatDateBr(formData.get('greenCardValidade')) || 'Não informado');
+                }
+
+                // Endereço e Contato
+                addSectionTitle("Endereço e Contato");
+                addText("Endereço de Residência Atual", formData.get('enderecoAtual'));
+                addText("Tempo no Endereço Atual", formData.get('tempoNoEnderecoAtual'));
+                addText("Telefone Principal", formData.get('telefonePrincipal'));
+                addText("E-mail Principal", formData.get('email'));
+
+                // Histórico de Emprego e Educação
+                addSectionTitle("Histórico de Emprego e Educação (Últimos 5 Anos)");
+                addText("Ocupação/Profissão Atual", formData.get('ocupacaoAtual'));
+                addText("Empregador Atual", formData.get('empregadorAtual'));
+                addText("Endereço do Empregador Atual", formData.get('enderecoEmpregadorAtual'));
+                addText("Data de Início no Emprego Atual", formatDateBr(formData.get('dataInicioEmpregoAtual')));
+                addText("Outros Empregos/Ocupações (Últimos 5 Anos)", formData.get('historicoEmprego') || 'Nenhum');
+                addText("Nível de Educação e Instituição", formData.get('historicoEducacao'));
+
+                // Histórico de Residência
+                addSectionTitle("Histórico de Residência (Últimos 5 Anos)");
+                addText("Endereços Anteriores", formData.get('enderecosAnteriores') || 'Nenhum');
+
+                // Histórico de Viagens Internacionais
+                addSectionTitle("Histórico de Viagens Internacionais");
+                addText("Países Visitados nos Últimos 5 Anos", formData.get('paisesVisitados') || 'Nenhum');
+
+                // Perguntas de Elegibilidade
+                addSectionTitle("Perguntas de Elegibilidade");
+                addText("Já foi condenado(a) por qualquer crime?", formData.get('condenacaoCriminal'));
+                if (formData.get('condenacaoCriminal') === 'Sim') {
+                    addText("Explicação da Condenação", formData.get('condenacaoCriminalExplicacao'));
+                }
+                addText("Já violou alguma lei alfandegária, de imigração ou agrícola?", formData.get('violacaoAduaneira'));
+                if (formData.get('violacaoAduaneira') === 'Sim') {
+                    addText("Explicação da Violação", formData.get('violacaoAduaneiraExplicacao'));
+                }
+                addText("Já foi alvo de apreensão de objetos (drogas, armas, etc.)?", formData.get('objetoContrabando'));
+                if (formData.get('objetoContrabando') === 'Sim') {
+                    addText("Explicação da Apreensão", formData.get('objetoContrabandoExplicacao'));
+                }
+                addText("Já teve entrada negada nos EUA ou foi expulso(a)?", formData.get('entradaNegadaEUA'));
+                if (formData.get('entradaNegadaEUA') === 'Sim') {
+                    addText("Explicação da Negativa/Expulsão", formData.get('entradaNegadaEUAExplicacao'));
+                }
+                addText("Existe algum mandado de prisão ativo contra você?", formData.get('mandadoPrisao'));
+                if (formData.get('mandadoPrisao') === 'Sim') {
+                    addText("Explicação do Mandado", formData.get('mandadoPrisaoExplicacao'));
+                }
+                addText("É ou já foi alvo de investigação por agência governamental?", formData.get('investigacaoGovernamental'));
+                if (formData.get('investigacaoGovernamental') === 'Sim') {
+                    addText("Explicação da Investigação", formData.get('investigacaoGovernamentalExplicacao'));
+                }
+
+                // Contato de Emergência
+                addSectionTitle("Contato de Emergência");
+                addText("Nome do Contato", formData.get('contatoEmergenciaNome'));
+                addText("Telefone do Contato", formData.get('contatoEmergenciaTelefone'));
+                addText("Relação com o Contato", formData.get('contatoEmergenciaRelacao'));
+
+                // Declaração Final
+                addSectionTitle("Declaração Final");
+                addText("Declarante", formData.get('declaracaoNome'));
+                addText("Local da Declaração", formData.get('declaracaoLocal'));
+                addText("Data da Declaração", formatDateBr(formData.get('declaracaoData')));
+                addText("Concordo com os Termos", formData.get('aceiteDeclaracao') ? 'Sim' : 'Não');
+
+                // --- Finaliza o PDF e tenta o upload ---
+                const pdfBlob = doc.output('blob');
+                const pdfFileName = `GlobalEntry_${solicitanteNome.replace(/\s+/g, '_')}_${new Date().getTime()}.pdf`;
+                const storageRef = ref(storage, `global_entry_forms/${pdfFileName}`); // Caminho no Firebase Storage
+
+                // Upload do PDF
+                const snapshot = await uploadBytes(storageRef, pdfBlob);
+                const downloadURL = await getDownloadURL(snapshot.ref);
+
+                console.log('PDF uploaded successfully:', downloadURL);
+
+                // --- Envio para o WhatsApp ---
+                let whatsappMessage = `*Novo Formulário Global Entry Recebido!* \n\n`;
+                whatsappMessage += `*Nome do Solicitante:* ${solicitanteNome}\n`;
+                whatsappMessage += `*E-mail:* ${formData.get('email')}\n`;
+                whatsappMessage += `*Telefone do Cliente:* ${formData.get('telefonePrincipal')}\n`;
+                whatsappMessage += `*Link para o Formulário Completo (PDF):*\n${downloadURL}\n\n`;
+                whatsappMessage += `Por favor, revise o PDF para prosseguir.`;
+
+                const whatsappUrlFixed = `https://wa.me/${fixedWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+                window.open(whatsappUrlFixed, '_blank');
+
+                alert('Formulário Global Entry enviado com sucesso! O PDF foi gerado e o link enviado para o WhatsApp da empresa.');
+
+            } catch (error) {
+                console.error("Erro ao gerar PDF ou enviar para Firebase/WhatsApp:", error);
+                alert("Ocorreu um erro ao processar o formulário. Por favor, tente novamente. Verifique o console para mais detalhes.");
+            } finally {
+                submitButton.disabled = false;
+                loadingMessage.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
