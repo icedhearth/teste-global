@@ -5,582 +5,747 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulário de Inscrição Global Entry</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.autotable.min.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 20px auto;
+            background-color: #f4f4f4;
+            margin: 0;
             padding: 20px;
-            background-color: #f4f7f6;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            color: #333;
+            box-sizing: border-box;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 30px;
             border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
         }
-        h1 {
-            color: #003087;
+
+        h1, h3 {
             text-align: center;
+            color: #0056b3;
+            margin-bottom: 20px;
         }
-        h3 {
-            color: #C8102E;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 5px;
-            margin-top: 25px;
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
         }
-        label {
-            display: block;
-            margin: 10px 0 5px;
-            font-weight: bold;
+
+        .form-section h3 {
+            margin-top: 0;
             color: #333;
         }
-        input, select, textarea {
-            width: calc(100% - 16px);
-            padding: 8px;
-            margin-bottom: 10px;
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="date"],
+        .form-group input[type="number"],
+        .form-group select,
+        .form-group textarea {
+            width: calc(100% - 22px);
+            padding: 10px;
             border: 1px solid #ccc;
             border-radius: 4px;
             box-sizing: border-box;
+            font-size: 1em;
+            transition: border-color 0.3s;
         }
-        textarea {
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="date"]:focus,
+        .form-group input[type="number"]:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .form-group textarea {
             resize: vertical;
+            min-height: 80px;
         }
-        button {
-            background-color: #25D366;
+
+        .radio-group label,
+        .checkbox-group label {
+            display: inline-block;
+            margin-right: 15px;
+            font-weight: normal;
+        }
+
+        .radio-group input[type="radio"],
+        .checkbox-group input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        .button-group {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .button-group button {
+            background-color: #007bff;
             color: white;
             padding: 12px 25px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            font-size: 16px;
+            font-size: 1.1em;
+            transition: background-color 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .button-group button:hover {
+            background-color: #0056b3;
+        }
+
+        .declaration-text {
+            font-size: 0.9em;
+            color: #666;
             margin-top: 20px;
-            display: block;
-            width: 100%;
+            text-align: justify;
         }
-        button:hover {
-            background-color: #20b354;
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                padding: 20px;
+            }
+
+            .form-group input[type="text"],
+            .form-group input[type="email"],
+            .form-group input[type="date"],
+            .form-group input[type="number"],
+            .form-group select,
+            .form-group textarea {
+                width: calc(100% - 20px); /* Adjust for padding on smaller screens */
+            }
+
+            .button-group button {
+                width: 100%;
+                margin-bottom: 10px;
+            }
         }
-        .conditional-field {
-            display: none;
-            margin-top: 15px;
-            padding: 15px;
-            border: 1px dashed #ddd;
-            border-radius: 5px;
-            background-color: #f9f9f9;
-        }
-        hr {
-            margin: 30px 0;
-            border: 0;
-            border-top: 2px solid #003087;
-        }
-        p strong {
-            color: #C8102E;
-        }
-        ol {
-            margin-left: 20px;
-            color: #555;
-        }
-        ol li {
-            margin-bottom: 5px;
-        }
-        #aceiteDeclaracao {
-            width: auto;
-            margin-left: 10px;
-        }
-        .loading-message {
-            text-align: center;
-            margin-top: 20px;
-            font-weight: bold;
-            color: #003087;
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h3 {
+                font-size: 1.2em;
+            }
+
+            .form-section {
+                padding: 15px;
+            }
+
+            .form-group label {
+                font-size: 0.95em;
+            }
+
+            .form-group input, .form-group select, .form-group textarea {
+                font-size: 0.9em;
+            }
+
+            .radio-group label,
+            .checkbox-group label {
+                display: block;
+                margin-bottom: 5px;
+            }
         }
     </style>
 </head>
 <body>
-    <h1>Formulário de Inscrição Global Entry</h1>
-    <p>Preencha os dados abaixo para a sua solicitação Global Entry. Ao clicar em "Enviar", um PDF detalhado será gerado, enviado para o Firebase Storage, e uma mensagem será enviada ao WhatsApp com os dados básicos e um link para o PDF.</p>
+    <div class="container">
+        <h1>Formulário de Inscrição Global Entry</h1>
+        <p style="text-align: center;">Preencha o formulário com seus dados para a aplicação do Global Entry.</p>
 
-    <form id="globalEntryForm" name="globalEntryForm" method="POST">
-        <h3>Informações Pessoais</h3>
-        <label for="nome">Nome completo (como no passaporte):</label>
-        <input type="text" id="nome" name="nome" required>
+        <form id="globalEntryForm">
+            <div class="form-section">
+                <h3>1. Dados Pessoais</h3>
+                <div class="form-group">
+                    <label for="fullName">Nome Completo:</label>
+                    <input type="text" id="fullName" name="fullName">
+                </div>
+                <div class="form-group">
+                    <label for="dob">Data de Nascimento:</label>
+                    <input type="date" id="dob" name="dob">
+                </div>
+                <div class="form-group">
+                    <label for="gender">Gênero:</label>
+                    <select id="gender" name="gender">
+                        <option value="">Selecione</option>
+                        <option value="Masculino">Masculino</option>
+                        <option value="Feminino">Feminino</option>
+                        <option value="Outro">Outro</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="nationality">Nacionalidade:</label>
+                    <input type="text" id="nationality" name="nationality">
+                </div>
+                <div class="form-group">
+                    <label for="countryOfBirth">País de Nascimento:</label>
+                    <input type="text" id="countryOfBirth" name="countryOfBirth">
+                </div>
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="phone">Telefone:</label>
+                    <input type="text" id="phone" name="phone" placeholder="(XX) XXXXX-XXXX">
+                </div>
+            </div>
 
-        <label for="sobrenome">Sobrenome (como no passaporte):</label>
-        <input type="text" id="sobrenome" name="sobrenome" required>
+            <div class="form-section">
+                <h3>2. Dados do Passaporte</h3>
+                <div class="form-group">
+                    <label for="passportNumber">Número do Passaporte:</label>
+                    <input type="text" id="passportNumber" name="passportNumber">
+                </div>
+                <div class="form-group">
+                    <label for="issueDate">Data de Emissão:</label>
+                    <input type="date" id="issueDate" name="issueDate">
+                </div>
+                <div class="form-group">
+                    <label for="expiryDate">Data de Validade:</label>
+                    <input type="date" id="expiryDate" name="expiryDate">
+                </div>
+                <div class="form-group">
+                    <label for="issuingCountry">País Emissor:</label>
+                    <input type="text" id="issuingCountry" name="issuingCountry">
+                </div>
+            </div>
 
-        <label for="outrosNomes">Já usou outros nomes? (ex.: nome de solteiro, apelido):</label>
-        <input type="text" id="outrosNomes" name="outrosNomes">
+            <div class="form-section">
+                <h3>3. Endereço Atual</h3>
+                <div class="form-group">
+                    <label for="currentAddress">Endereço:</label>
+                    <input type="text" id="currentAddress" name="currentAddress" placeholder="Rua, Número, Complemento">
+                </div>
+                <div class="form-group">
+                    <label for="currentCity">Cidade:</label>
+                    <input type="text" id="currentCity" name="currentCity">
+                </div>
+                <div class="form-group">
+                    <label for="currentState">Estado/Província:</label>
+                    <input type="text" id="currentState" name="currentState">
+                </div>
+                <div class="form-group">
+                    <label for="currentZipCode">CEP/Código Postal:</label>
+                    <input type="text" id="currentZipCode" name="currentZipCode">
+                </div>
+                <div class="form-group">
+                    <label for="currentCountry">País:</label>
+                    <input type="text" id="currentCountry" name="currentCountry">
+                </div>
+            </div>
 
-        <label for="nascimento">Data de nascimento:</label>
-        <input type="date" id="nascimento" name="nascimento" required>
+            <div class="form-section">
+                <h3>4. Histórico de Endereços (Últimos 5 anos)</h3>
+                <p>Liste todos os endereços onde você residiu nos últimos 5 anos. Comece pelo mais recente.</p>
+                <div id="addressHistoryContainer">
+                    <div class="address-entry">
+                        <div class="form-group">
+                            <label>Endereço:</label>
+                            <input type="text" name="pastAddress[]" placeholder="Rua, Número, Complemento">
+                        </div>
+                        <div class="form-group">
+                            <label>Cidade:</label>
+                            <input type="text" name="pastCity[]">
+                        </div>
+                        <div class="form-group">
+                            <label>Estado/Província:</label>
+                            <input type="text" name="pastState[]">
+                        </div>
+                        <div class="form-group">
+                            <label>País:</label>
+                            <input type="text" name="pastCountry[]">
+                        </div>
+                        <div class="form-group">
+                            <label>De (MM/AAAA):</label>
+                            <input type="month" name="pastAddressFrom[]">
+                        </div>
+                        <div class="form-group">
+                            <label>Até (MM/AAAA):</label>
+                            <input type="month" name="pastAddressTo[]">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="addAddressEntry()" style="background-color: #28a745; margin-top: 10px;">Adicionar Endereço</button>
+            </div>
 
-        <label for="localNascimento">Cidade e país de nascimento:</label>
-        <input type="text" id="localNascimento" name="localNascimento" required>
+            <div class="form-section">
+                <h3>5. Histórico de Emprego (Últimos 5 anos)</h3>
+                <p>Liste seu histórico de emprego nos últimos 5 anos. Comece pelo mais recente.</p>
+                <div id="employmentHistoryContainer">
+                    <div class="employment-entry">
+                        <div class="form-group">
+                            <label>Empregador:</label>
+                            <input type="text" name="employerName[]">
+                        </div>
+                        <div class="form-group">
+                            <label>Cargo:</label>
+                            <input type="text" name="occupation[]">
+                        </div>
+                        <div class="form-group">
+                            <label>Endereço do Empregador:</label>
+                            <input type="text" name="employerAddress[]" placeholder="Rua, Número, Cidade, País">
+                        </div>
+                        <div class="form-group">
+                            <label>De (MM/AAAA):</label>
+                            <input type="month" name="employmentFrom[]">
+                        </div>
+                        <div class="form-group">
+                            <label>Até (MM/AAAA):</label>
+                            <input type="month" name="employmentTo[]">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="addEmploymentEntry()" style="background-color: #28a745; margin-top: 10px;">Adicionar Emprego</button>
+            </div>
 
-        <label for="sexo">Sexo:</label>
-        <select id="sexo" name="sexo" required>
-            <option value="">Selecione</option>
-            <option value="Masculino">Masculino</option>
-            <option value="Feminino">Feminino</option>
-            <option value="Outro">Outro</option>
-        </select>
+            <div class="form-section">
+                <h3>6. Histórico de Viagens Internacionais (Últimos 5 anos)</h3>
+                <p>Liste todos os países que você visitou nos últimos 5 anos, exceto o seu país de residência atual.</p>
+                <div id="travelHistoryContainer">
+                    <div class="travel-entry">
+                        <div class="form-group">
+                            <label>País Visitado:</label>
+                            <input type="text" name="countryVisited[]">
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Entrada (MM/AAAA):</label>
+                            <input type="month" name="entryDate[]">
+                        </div>
+                        <div class="form-group">
+                            <label>Data de Saída (MM/AAAA):</label>
+                            <input type="month" name="exitDate[]">
+                        </div>
+                        <div class="form-group">
+                            <label>Propósito da Viagem:</label>
+                            <textarea name="travelPurpose[]" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="addTravelEntry()" style="background-color: #28a745; margin-top: 10px;">Adicionar Viagem</button>
+            </div>
 
-        <label for="nacionalidade">Nacionalidade atual:</label>
-        <input type="text" id="nacionalidade" name="nacionalidade" required>
+            <div class="form-section">
+                <h3>7. Perguntas de Elegibilidade e Histórico</h3>
+                <div class="form-group radio-group">
+                    <label>a. Você já foi condenado(a) por algum crime (incluindo DUI/DWI), tem alguma acusação criminal pendente, ou possui mandados de prisão em aberto em qualquer país?</label>
+                    <input type="radio" id="crimeYes" name="criminalRecord" value="Sim"> <label for="crimeYes">Sim</label>
+                    <input type="radio" id="crimeNo" name="criminalRecord" value="Não"> <label for="crimeNo">Não</label>
+                    <div class="form-group" id="crimeDetails" style="display: none; margin-top: 10px;">
+                        <label for="crimeExplanation">Explique:</label>
+                        <textarea id="crimeExplanation" name="crimeExplanation" rows="3"></textarea>
+                    </div>
+                </div>
 
-        <label for="outrasNacionalidades">Possui outras nacionalidades? (Se sim, quais?):</label>
-        <input type="text" id="outrasNacionalidades" name="outrasNacionalidades">
+                <div class="form-group radio-group">
+                    <label>b. Você já foi considerado(a) culpado(a) de violação de quaisquer regulamentos ou leis alfandegárias, de imigração ou agrícolas em qualquer país?</label>
+                    <input type="radio" id="violationYes" name="violationRecord" value="Sim"> <label for="violationYes">Sim</label>
+                    <input type="radio" id="violationNo" name="violationRecord" value="Não"> <label for="violationNo">Não</label>
+                    <div class="form-group" id="violationDetails" style="display: none; margin-top: 10px;">
+                        <label for="violationExplanation">Explique:</label>
+                        <textarea id="violationExplanation" name="violationExplanation" rows="3"></textarea>
+                    </div>
+                </div>
 
-        <hr>
-        <h3>Informações de Documentação</h3>
-        <label for="passaporteNumero">Número do passaporte:</label>
-        <input type="text" id="passaporteNumero" name="passaporteNumero" required>
+                <div class="form-group radio-group">
+                    <label>c. Você é objeto de uma investigação em andamento por qualquer agência federal, estadual ou local de aplicação da lei?</label>
+                    <input type="radio" id="investigationYes" name="investigationStatus" value="Sim"> <label for="investigationYes">Sim</label>
+                    <input type="radio" id="investigationNo" name="investigationStatus" value="Não"> <label for="investigationNo">Não</label>
+                    <div class="form-group" id="investigationDetails" style="display: none; margin-top: 10px;">
+                        <label for="investigationExplanation">Explique:</label>
+                        <textarea id="investigationExplanation" name="investigationExplanation" rows="3"></textarea>
+                    </div>
+                </div>
 
-        <label for="passaporteEmissao">Data de emissão do passaporte:</label>
-        <input type="date" id="passaporteEmissao" name="passaporteEmissao" required>
+                <div class="form-group radio-group">
+                    <label>d. Você já forneceu informações falsas ou incompletas em qualquer formulário de inscrição ou processo de imigração para os Estados Unidos ou qualquer outro país?</label>
+                    <input type="radio" id="falseInfoYes" name="falseInformation" value="Sim"> <label for="falseInfoYes">Sim</label>
+                    <input type="radio" id="falseInfoNo" name="falseInformation" value="Não"> <label for="falseInfoNo">Não</label>
+                    <div class="form-group" id="falseInfoDetails" style="display: none; margin-top: 10px;">
+                        <label for="falseInfoExplanation">Explique:</label>
+                        <textarea id="falseInfoExplanation" name="falseInfoExplanation" rows="3"></textarea>
+                    </div>
+                </div>
+            </div>
 
-        <label for="passaporteValidade">Data de validade do passaporte:</label>
-        <input type="date" id="passaporteValidade" name="passaporteValidade" required>
+            <div class="form-section declaration-section">
+                <h3>8. Declaração e Autorização</h3>
+                <div class="form-group checkbox-group">
+                    <input type="checkbox" id="declaration" name="declaration">
+                    <label for="declaration">Declaro que todas as informações fornecidas neste formulário são verdadeiras e completas. Autorizo a **Objetivo Turismo Ltda.** a submeter minha inscrição ao programa Global Entry e a ter acesso a todas as informações relacionadas ao meu processo de aplicação, incluindo status e resultados, em meu nome. Entendo que qualquer informação falsa ou enganosa pode resultar na negação da minha inscrição ou revogação de minha filiação ao programa Global Entry.</label>
+                </div>
+            </div>
 
-        <label for="passaportePaisEmissor">País emissor do passaporte:</label>
-        <input type="text" id="passaportePaisEmissor" name="passaportePaisEmissor" required>
+            <div class="button-group">
+                <button type="button" onclick="generateGlobalEntryPDF()">Gerar PDF</button>
+                <button type="reset">Limpar Formulário</button>
+            </div>
+        </form>
+    </div>
 
-        <label for="passaporteLocalEmissao">Local de emissão do passaporte (Cidade/Estado):</label>
-        <input type="text" id="passaporteLocalEmissao" name="passaporteLocalEmissao" required>
+    <script>
+        const { jsPDF } = window.jspdf;
 
-        <label for="cartaoResidenciaPermanente">Possui Green Card (Cartão de Residente Permanente)?</label>
-        <select id="cartaoResidenciaPermanente" name="cartaoResidenciaPermanente" required>
-            <option value="">Selecione</option>
-            <option value="Sim">Sim</option>
-            <option value="Não">Não</option>
-        </select>
-        <div id="greenCardInfo" class="conditional-field">
-            <label for="greenCardNumero">Número do Green Card:</label>
-            <input type="text" id="greenCardNumero" name="greenCardNumero">
-            <label for="greenCardValidade">Data de validade do Green Card:</label>
-            <input type="date" id="greenCardValidade" name="greenCardValidade">
-        </div>
-
-        <hr>
-        <h3>Endereço e Contato</h3>
-        <label for="enderecoAtual">Endereço de residência atual (rua, número, bairro, cidade, estado, CEP, país):</label>
-        <textarea id="enderecoAtual" name="enderecoAtual" rows="3" required></textarea>
-
-        <label for="tempoNoEnderecoAtual">Tempo de residência neste endereço:</label>
-        <input type="text" id="tempoNoEnderecoAtual" name="tempoNoEnderecoAtual" placeholder="Ex: 5 anos, 3 meses" required>
-
-        <label for="telefonePrincipal">Número de telefone principal (com código do país, ex: 5561999998888):</label>
-        <input type="tel" id="telefonePrincipal" name="telefonePrincipal" required>
-
-        <label for="email">E-mail principal:</label>
-        <input type="email" id="email" name="email" required>
-
-        <hr>
-        <h3>Histórico de Emprego e Educação (Últimos 5 Anos)</h3>
-        <label for="ocupacaoAtual">Ocupação/Profissão atual:</label>
-        <input type="text" id="ocupacaoAtual" name="ocupacaoAtual" required>
-
-        <label for="empregadorAtual">Nome do empregador atual (ou "Autônomo" / "Aposentado" / "Estudante"):</label>
-        <input type="text" id="empregadorAtual" name="empregadorAtual" required>
-
-        <label for="enderecoEmpregadorAtual">Endereço do empregador atual:</label>
-        <textarea id="enderecoEmpregadorAtual" name="enderecoEmpregadorAtual" rows="2" required></textarea>
-
-        <label for="dataInicioEmpregoAtual">Data de início no emprego atual:</label>
-        <input type="date" id="dataInicioEmpregoAtual" name="dataInicioEmpregoAtual" required>
-
-        <label for="historicoEmprego">Liste outros empregos/ocupações nos últimos 5 anos (se houver, com datas e endereços):</label>
-        <textarea id="historicoEmprego" name="historicoEmprego" rows="4"></textarea>
-
-        <label for="historicoEducacao">Maior nível de educação concluído e nome da instituição:</label>
-        <input type="text" id="historicoEducacao" name="historicoEducacao" required>
-
-        <hr>
-        <h3>Histórico de Residência (Últimos 5 Anos)</h3>
-        <label for="enderecosAnteriores">Liste todos os endereços onde morou nos últimos 5 anos (se diferente do atual, com datas):</label>
-        <textarea id="enderecosAnteriores" name="enderecosAnteriores" rows="4" placeholder="Ex: De Jan/2020 a Dez/2022: Rua X, nº Y, Cidade, País"></textarea>
-
-        <hr>
-        <h3>Histórico de Viagens Internacionais</h3>
-        <label for="paisesVisitados">Liste todos os países que você visitou nos últimos 5 anos (exceto o país de sua nacionalidade e os EUA):</label>
-        <textarea id="paisesVisitados" name="paisesVisitados" rows="3" placeholder="Separados por vírgula. Ex: Canadá, México, Reino Unido"></textarea>
-
-        <hr>
-        <h3>Perguntas de Elegibilidade (Cruciais para Global Entry)</h3>
-        <p><strong>Por favor, responda a todas as perguntas abaixo com "Sim" ou "Não":</strong></p>
-
-        <label for="condenacaoCriminal">1. Você já foi condenado(a) por qualquer crime em qualquer país?</label>
-        <select id="condenacaoCriminal" name="condenacaoCriminal" required>
-            <option value="">Selecione</option>
-            <option value="Sim">Sim</option>
-            <option value="Não">Não</option>
-        </select>
-        <div id="condenacaoCriminalDetails" class="conditional-field">
-            <label for="condenacaoCriminalExplicacao">Explique os detalhes da condenação:</label>
-            <textarea id="condenacaoCriminalExplicacao" name="condenacaoCriminalExplicacao" rows="2"></textarea>
-        </div>
-
-        <label for="violacaoAduaneira">2. Você já violou alguma lei alfandegária, de imigração ou agrícola em qualquer país?</label>
-        <select id="violacaoAduaneira" name="violacaoAduaneira" required>
-            <option value="">Selecione</option>
-            <option value="Sim">Sim</option>
-            <option value="Não">Não</option>
-        </select>
-        <div id="violacaoAduaneiraDetails" class="conditional-field">
-            <label for="violacaoAduaneiraExplicacao">Explique os detalhes da violação:</label>
-            <textarea id="violacaoAduaneiraExplicacao" name="violacaoAduaneiraExplicacao" rows="2"></textarea>
-        </div>
-
-        <label for="objetoContrabando">3. Você já foi alvo de apreensão de objetos em qualquer país (drogas, armas, etc.)?</label>
-        <select id="objetoContrabando" name="objetoContrabando" required>
-            <option value="">Selecione</option>
-            <option value="Sim">Sim</option>
-            <option value="Não">Não</option>
-        </select>
-        <div id="objetoContrabandoDetails" class="conditional-field">
-            <label for="objetoContrabandoExplicacao">Explique os detalhes da apreensão:</label>
-            <textarea id="objetoContrabandoExplicacao" name="objetoContrabandoExplicacao" rows="2"></textarea>
-        </div>
-
-        <label for="entradaNegadaEUA">4. Você já teve sua entrada negada nos EUA ou foi expulso(a) dos EUA?</label>
-        <select id="entradaNegadaEUA" name="entradaNegadaEUA" required>
-            <option value="">Selecione</option>
-            <option value="Sim">Sim</option>
-            <option value="Não">Não</option>
-        </select>
-        <div id="entradaNegadaEUADetails" class="conditional-field">
-            <label for="entradaNegadaEUAExplicacao">Explique os detalhes da negativa/expulsão:</label>
-            <textarea id="entradaNegadaEUAExplicacao" name="entradaNegadaEUAExplicacao" rows="2"></textarea>
-        </div>
-
-        <label for="mandadoPrisao">5. Existe algum mandado de prisão ativo contra você em qualquer país?</label>
-        <select id="mandadoPrisao" name="mandadoPrisao" required>
-            <option value="">Selecione</option>
-            <option value="Sim">Sim</option>
-            <option value="Não">Não</option>
-        </select>
-        <div id="mandadoPrisaoDetails" class="conditional-field">
-            <label for="mandadoPrisaoExplicacao">Explique os detalhes do mandado:</label>
-            <textarea id="mandadoPrisaoExplicacao" name="mandadoPrisaoExplicacao" rows="2"></textarea>
-        </div>
-
-        <label for="investigacaoGovernamental">6. Você é ou já foi alvo de investigação por qualquer agência governamental em qualquer país?</label>
-        <select id="investigacaoGovernamental" name="investigacaoGovernamental" required>
-            <option value="">Selecione</option>
-            <option value="Sim">Sim</option>
-            <option value="Não">Não</option>
-        </select>
-        <div id="investigacaoGovernamentalDetails" class="conditional-field">
-            <label for="investigacaoGovernamentalExplicacao">Explique os detalhes da investigação:</label>
-            <textarea id="investigacaoGovernamentalExplicacao" name="investigacaoGovernamentalExplicacao" rows="2"></textarea>
-        </div>
-
-        <hr>
-        <h3>Contato de Emergência</h3>
-        <label for="contatoEmergenciaNome">Nome completo da pessoa de contato de emergência:</label>
-        <input type="text" id="contatoEmergenciaNome" name="contatoEmergenciaNome" required>
-
-        <label for="contatoEmergenciaTelefone">Telefone da pessoa de contato de emergência (com código do país):</label>
-        <input type="tel" id="contatoEmergenciaTelefone" name="contatoEmergenciaTelefone" required>
-
-        <label for="contatoEmergenciaRelacao">Relação com a pessoa de contato de emergência:</label>
-        <input type="text" id="contatoEmergenciaRelacao" name="contatoEmergenciaRelacao" required>
-
-        <hr>
-        <h3>Declaração Final</h3>
-        <p>Eu, <input type="text" id="declaracaoNome" name="declaracaoNome" placeholder="Nome completo" required>, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.</p>
-
-        <p>Estou ciente de que qualquer informação falsa ou enganosa fornecida neste formulário pode resultar na recusa do Global Entry e em outras sanções legais.</p>
-
-        <label for="declaracaoLocal">Local:</label>
-        <input type="text" id="declaracaoLocal" name="declaracaoLocal" required>
-
-        <label for="declaracaoData">Data:</label>
-        <input type="date" id="declaracaoData" name="declaracaoData" required>
-
-        <label>Concordo com os termos desta declaração <input type="checkbox" id="aceiteDeclaracao" name="aceiteDeclaracao" required style="width: auto; margin-left: 10px;"></label>
-
-        <button type="submit" id="submitButton">Enviar Formulário</button>
-        <div id="loadingMessage" class="loading-message" style="display:none;">
-            Gerando PDF e enviando... Por favor, aguarde.
-        </div>
-    </form>
-
-    <script type="module">
-        // Importa as funções necessárias do Firebase SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
-        // import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics.js"; // Opcional
-
-        // Configuração do Firebase com suas credenciais (A MESMA API KEY FORNECIDA)
-        const firebaseConfig = {
-            apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0", // Sua API Key real
-            authDomain: "visaformulariostorage.firebaseapp.com",
-            projectId: "visaformulariostorage",
-            storageBucket: "visaformulariostorage.firebasestorage.app",
-            messagingSenderId: "720170394408",
-            appId: "1:720170394408:web:b1c294c39c489388f6261d",
-            measurementId: "G-ZFCV4JEEFT"
-        };
-
-        // Inicializa o Firebase
-        const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
-        // const analytics = getAnalytics(app); // Opcional, remova se não usar Analytics
-
-        // --- Funções Auxiliares ---
-        function formatDateBr(dateStr) {
-            if (!dateStr) return 'Não informado';
-            try {
-                const [year, month, day] = dateStr.split('-');
-                const date = new Date(year, month - 1, day);
-                if (isNaN(date.getTime())) {
-                    return 'Data inválida';
-                }
-                return date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-            } catch (e) {
-                return 'Erro ao formatar data';
-            }
+        // Função para adicionar campos de histórico de endereço
+        function addAddressEntry() {
+            const container = document.getElementById('addressHistoryContainer');
+            const newEntry = document.createElement('div');
+            newEntry.classList.add('address-entry');
+            newEntry.innerHTML = `
+                <div class="form-group">
+                    <label>Endereço:</label>
+                    <input type="text" name="pastAddress[]" placeholder="Rua, Número, Complemento">
+                </div>
+                <div class="form-group">
+                    <label>Cidade:</label>
+                    <input type="text" name="pastCity[]">
+                </div>
+                <div class="form-group">
+                    <label>Estado/Província:</label>
+                    <input type="text" name="pastState[]">
+                </div>
+                <div class="form-group">
+                    <label>País:</label>
+                    <input type="text" name="pastCountry[]">
+                </div>
+                <div class="form-group">
+                    <label>De (MM/AAAA):</label>
+                    <input type="month" name="pastAddressFrom[]">
+                </div>
+                <div class="form-group">
+                    <label>Até (MM/AAAA):</label>
+                    <input type="month" name="pastAddressTo[]">
+                </div>
+                <button type="button" onclick="this.parentNode.remove()" style="background-color: #dc3545; margin-top: 5px;">Remover</button>
+                <hr style="margin: 15px 0;">
+            `;
+            container.appendChild(newEntry);
         }
 
-        function toggleConditionalField(checkboxId, fieldId) {
-            const checkbox = document.getElementById(checkboxId);
-            const field = document.getElementById(fieldId);
-            if (checkbox && field) {
-                field.style.display = (checkbox.value === 'Sim') ? 'block' : 'none';
-            }
+        // Função para adicionar campos de histórico de emprego
+        function addEmploymentEntry() {
+            const container = document.getElementById('employmentHistoryContainer');
+            const newEntry = document.createElement('div');
+            newEntry.classList.add('employment-entry');
+            newEntry.innerHTML = `
+                <div class="form-group">
+                    <label>Empregador:</label>
+                    <input type="text" name="employerName[]">
+                </div>
+                <div class="form-group">
+                    <label>Cargo:</label>
+                    <input type="text" name="occupation[]">
+                </div>
+                <div class="form-group">
+                    <label>Endereço do Empregador:</label>
+                    <input type="text" name="employerAddress[]" placeholder="Rua, Número, Cidade, País">
+                </div>
+                <div class="form-group">
+                    <label>De (MM/AAAA):</label>
+                    <input type="month" name="employmentFrom[]">
+                </div>
+                <div class="form-group">
+                    <label>Até (MM/AAAA):</label>
+                    <input type="month" name="employmentTo[]">
+                </div>
+                <button type="button" onclick="this.parentNode.remove()" style="background-color: #dc3545; margin-top: 5px;">Remover</button>
+                <hr style="margin: 15px 0;">
+            `;
+            container.appendChild(newEntry);
         }
 
-        // --- Event Listeners para Campos Condicionais ---
-        document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('cartaoResidenciaPermanente').addEventListener('change', () => toggleConditionalField('cartaoResidenciaPermanente', 'greenCardInfo'));
-            document.getElementById('condenacaoCriminal').addEventListener('change', () => toggleConditionalField('condenacaoCriminal', 'condenacaoCriminalDetails'));
-            document.getElementById('violacaoAduaneira').addEventListener('change', () => toggleConditionalField('violacaoAduaneira', 'violacaoAduaneiraDetails'));
-            document.getElementById('objetoContrabando').addEventListener('change', () => toggleConditionalField('objetoContrabando', 'objetoContrabandoDetails'));
-            document.getElementById('entradaNegadaEUA').addEventListener('change', () => toggleConditionalField('entradaNegadaEUA', 'entradaNegadaEUADetails'));
-            document.getElementById('mandadoPrisao').addEventListener('change', () => toggleConditionalField('mandadoPrisao', 'mandadoPrisaoDetails'));
-            document.getElementById('investigacaoGovernamental').addEventListener('change', () => toggleConditionalField('investigacaoGovernamental', 'investigacaoGovernamentalDetails'));
-            
-            // Inicializar o estado dos campos condicionais no carregamento
-            toggleConditionalField('cartaoResidenciaPermanente', 'greenCardInfo');
-            toggleConditionalField('condenacaoCriminal', 'condenacaoCriminalDetails');
-            toggleConditionalField('violacaoAduaneira', 'violacaoAduaneiraDetails');
-            toggleConditionalField('objetoContrabando', 'objetoContrabandoDetails');
-            toggleConditionalField('entradaNegadaEUA', 'entradaNegadaEUADetails');
-            toggleConditionalField('mandadoPrisao', 'mandadoPrisaoDetails');
-            toggleConditionalField('investigacaoGovernamental', 'investigacaoGovernamentalDetails');
+        // Função para adicionar campos de histórico de viagens
+        function addTravelEntry() {
+            const container = document.getElementById('travelHistoryContainer');
+            const newEntry = document.createElement('div');
+            newEntry.classList.add('travel-entry');
+            newEntry.innerHTML = `
+                <div class="form-group">
+                    <label>País Visitado:</label>
+                    <input type="text" name="countryVisited[]">
+                </div>
+                <div class="form-group">
+                    <label>Data de Entrada (MM/AAAA):</label>
+                    <input type="month" name="entryDate[]">
+                </div>
+                <div class="form-group">
+                    <label>Data de Saída (MM/AAAA):</label>
+                    <input type="month" name="exitDate[]">
+                </div>
+                <div class="form-group">
+                    <label>Propósito da Viagem:</label>
+                    <textarea name="travelPurpose[]" rows="2"></textarea>
+                </div>
+                <button type="button" onclick="this.parentNode.remove()" style="background-color: #dc3545; margin-top: 5px;">Remover</button>
+                <hr style="margin: 15px 0;">
+            `;
+            container.appendChild(newEntry);
+        }
 
-            document.getElementById('globalEntryForm').addEventListener('submit', generateGlobalEntryPDF);
+        // Lógica para mostrar/esconder campos de explicação
+        document.querySelectorAll('input[name="criminalRecord"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                document.getElementById('crimeDetails').style.display = event.target.value === 'Sim' ? 'block' : 'none';
+            });
+        });
+        document.querySelectorAll('input[name="violationRecord"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                document.getElementById('violationDetails').style.display = event.target.value === 'Sim' ? 'block' : 'none';
+            });
+        });
+        document.querySelectorAll('input[name="investigationStatus"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                document.getElementById('investigationDetails').style.display = event.target.value === 'Sim' ? 'block' : 'none';
+            });
+        });
+        document.querySelectorAll('input[name="falseInformation"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                document.getElementById('falseInfoDetails').style.display = event.target.value === 'Sim' ? 'block' : 'none';
+            });
         });
 
-        // --- Função Principal para Gerar PDF, Upload e Envio WhatsApp ---
-        async function generateGlobalEntryPDF(event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
+        // Função para adicionar texto justificado com formatação
+        function addJustifiedText(doc, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let currentY = y;
+            let bold = false;
+            let italic = false;
 
-            const submitButton = document.getElementById('submitButton');
-            const loadingMessage = document.getElementById('loadingMessage');
-            submitButton.disabled = true; // Desabilita o botão
-            loadingMessage.style.display = 'block'; // Mostra mensagem de carregamento
+            for (let i = 0; i < words.length; i++) {
+                let word = words[i];
 
-            try {
-                const { jsPDF } = window.jspdf;
-                const form = document.getElementById('globalEntryForm');
-                const formData = new FormData(form);
-
-                const solicitanteNome = formData.get('nome') + ' ' + formData.get('sobrenome');
-                const fixedWhatsAppNumber = '5561999998165'; // O número de WhatsApp da empresa
-
-                const doc = new jsPDF();
-                const pageWidth = doc.internal.pageSize.width;
-                const pageHeight = doc.internal.pageSize.height;
-                const margin = 15;
-                let yPosition = 30;
-
-                // --- Funções de Desenho para o PDF (Adaptadas) ---
-                function drawHeader() {
-                    doc.setFillColor(0, 48, 135); // Azul escuro
-                    doc.rect(0, 0, pageWidth, 25, 'F');
-                    doc.setFontSize(16);
-                    doc.setTextColor(255, 255, 255);
-                    doc.setFont("Helvetica", "bold");
-                    const title = "Formulário de Inscrição Global Entry";
-                    const titleWidth = doc.getTextWidth(title);
-                    const titleX = (pageWidth - titleWidth) / 2;
-                    doc.text(title, titleX, 15);
+                if (word.includes('**')) { // Bold toggle
+                    bold = !bold;
+                    word = word.replace(/\*\*/g, '');
+                    doc.setFont(doc.getFont().fontName, bold ? 'bold' : 'normal');
+                }
+                if (word.includes('*')) { // Italic toggle (assuming single asterisk for italic)
+                    italic = !italic;
+                    word = word.replace(/\*/g, '');
+                    doc.setFont(doc.getFont().fontName, doc.getFont().fontStyle, italic ? 'italic' : 'normal');
                 }
 
-                function drawPageBorder() {
-                    doc.setDrawColor(0, 48, 135);
-                    doc.setLineWidth(0.5);
-                    doc.rect(margin / 2, margin / 2, pageWidth - margin, pageHeight - margin);
+                const testLine = line + (line ? ' ' : '') + word;
+                const testWidth = doc.getTextWidth(testLine);
+
+                if (testWidth > maxWidth && i > 0) {
+                    doc.text(line, x, currentY, { align: 'justify' });
+                    line = word;
+                    currentY += lineHeight;
+                } else {
+                    line = testLine;
                 }
-
-                function addSectionTitle(title) {
-                    if (yPosition + 15 > pageHeight - margin) {
-                        doc.addPage();
-                        yPosition = 30;
-                        drawHeader();
-                        drawPageBorder();
-                    }
-                    doc.setFillColor(200, 16, 46); // Vermelho
-                    doc.rect(margin, yPosition - 5, pageWidth - 2 * margin, 10, 'F');
-                    doc.setFontSize(12);
-                    doc.setTextColor(255, 255, 255);
-                    doc.setFont("Helvetica", "bold");
-                    doc.text(title, margin + 5, yPosition + 2);
-                    yPosition += 15;
-                }
-
-                function addText(label, value, isBoldLabel = true) {
-                    const maxWidth = pageWidth - 2 * margin - 10;
-                    const lineHeight = 5;
-                    doc.setFontSize(10);
-                    doc.setTextColor(0, 0, 0);
-
-                    const text = (isBoldLabel ? `${label}: ` : label) + value;
-                    const lines = doc.splitTextToSize(text, maxWidth);
-
-                    lines.forEach((line, index) => {
-                        if (yPosition + lineHeight > pageHeight - margin) {
-                            doc.addPage();
-                            yPosition = 30;
-                            drawHeader();
-                            drawPageBorder();
-                        }
-                        if (isBoldLabel && index === 0) {
-                            const labelWidth = doc.getTextWidth(label + ": ");
-                            doc.setFont("Helvetica", "bold");
-                            doc.text(`${label}:`, margin, yPosition);
-                            doc.setFont("Helvetica", "normal"); // Voltar ao normal para o valor
-                            doc.text(value, margin + labelWidth, yPosition);
-                        } else {
-                            doc.setFont("Helvetica", "normal");
-                            doc.text(line, margin, yPosition);
-                        }
-                        yPosition += lineHeight;
-                    });
-                    yPosition += 2;
-                }
-
-                // --- Geração do Conteúdo do PDF ---
-                drawHeader();
-                drawPageBorder();
-
-                // Informações Pessoais
-                addSectionTitle("Informações Pessoais");
-                addText("Nome Completo", solicitanteNome);
-                addText("Outros Nomes Utilizados", formData.get('outrosNomes') || 'Não');
-                addText("Data de Nascimento", formatDateBr(formData.get('nascimento')));
-                addText("Local de Nascimento", formData.get('localNascimento'));
-                addText("Sexo", formData.get('sexo'));
-                addText("Nacionalidade Atual", formData.get('nacionalidade'));
-                addText("Outras Nacionalidades", formData.get('outrasNacionalidades') || 'Não possui');
-
-                // Informações de Documentação
-                addSectionTitle("Informações de Documentação");
-                addText("Número do Passaporte", formData.get('passaporteNumero'));
-                addText("Data de Emissão do Passaporte", formatDateBr(formData.get('passaporteEmissao')));
-                addText("Data de Validade do Passaporte", formatDateBr(formData.get('passaporteValidade')));
-                addText("País Emissor do Passaporte", formData.get('passaportePaisEmissor'));
-                addText("Local de Emissão do Passaporte", formData.get('passaporteLocalEmissao'));
-                addText("Possui Green Card?", formData.get('cartaoResidenciaPermanente'));
-                if (formData.get('cartaoResidenciaPermanente') === 'Sim') {
-                    addText("Número do Green Card", formData.get('greenCardNumero') || 'Não informado');
-                    addText("Validade do Green Card", formatDateBr(formData.get('greenCardValidade')) || 'Não informado');
-                }
-
-                // Endereço e Contato
-                addSectionTitle("Endereço e Contato");
-                addText("Endereço de Residência Atual", formData.get('enderecoAtual'));
-                addText("Tempo no Endereço Atual", formData.get('tempoNoEnderecoAtual'));
-                addText("Telefone Principal", formData.get('telefonePrincipal'));
-                addText("E-mail Principal", formData.get('email'));
-
-                // Histórico de Emprego e Educação
-                addSectionTitle("Histórico de Emprego e Educação (Últimos 5 Anos)");
-                addText("Ocupação/Profissão Atual", formData.get('ocupacaoAtual'));
-                addText("Empregador Atual", formData.get('empregadorAtual'));
-                addText("Endereço do Empregador Atual", formData.get('enderecoEmpregadorAtual'));
-                addText("Data de Início no Emprego Atual", formatDateBr(formData.get('dataInicioEmpregoAtual')));
-                addText("Outros Empregos/Ocupações (Últimos 5 Anos)", formData.get('historicoEmprego') || 'Nenhum');
-                addText("Nível de Educação e Instituição", formData.get('historicoEducacao'));
-
-                // Histórico de Residência
-                addSectionTitle("Histórico de Residência (Últimos 5 Anos)");
-                addText("Endereços Anteriores", formData.get('enderecosAnteriores') || 'Nenhum');
-
-                // Histórico de Viagens Internacionais
-                addSectionTitle("Histórico de Viagens Internacionais");
-                addText("Países Visitados nos Últimos 5 Anos", formData.get('paisesVisitados') || 'Nenhum');
-
-                // Perguntas de Elegibilidade
-                addSectionTitle("Perguntas de Elegibilidade");
-                addText("Já foi condenado(a) por qualquer crime?", formData.get('condenacaoCriminal'));
-                if (formData.get('condenacaoCriminal') === 'Sim') {
-                    addText("Explicação da Condenação", formData.get('condenacaoCriminalExplicacao'));
-                }
-                addText("Já violou alguma lei alfandegária, de imigração ou agrícola?", formData.get('violacaoAduaneira'));
-                if (formData.get('violacaoAduaneira') === 'Sim') {
-                    addText("Explicação da Violação", formData.get('violacaoAduaneiraExplicacao'));
-                }
-                addText("Já foi alvo de apreensão de objetos (drogas, armas, etc.)?", formData.get('objetoContrabando'));
-                if (formData.get('objetoContrabando') === 'Sim') {
-                    addText("Explicação da Apreensão", formData.get('objetoContrabandoExplicacao'));
-                }
-                addText("Já teve entrada negada nos EUA ou foi expulso(a)?", formData.get('entradaNegadaEUA'));
-                if (formData.get('entradaNegadaEUA') === 'Sim') {
-                    addText("Explicação da Negativa/Expulsão", formData.get('entradaNegadaEUAExplicacao'));
-                }
-                addText("Existe algum mandado de prisão ativo contra você?", formData.get('mandadoPrisao'));
-                if (formData.get('mandadoPrisao') === 'Sim') {
-                    addText("Explicação do Mandado", formData.get('mandadoPrisaoExplicacao'));
-                }
-                addText("É ou já foi alvo de investigação por agência governamental?", formData.get('investigacaoGovernamental'));
-                if (formData.get('investigacaoGovernamental') === 'Sim') {
-                    addText("Explicação da Investigação", formData.get('investigacaoGovernamentalExplicacao'));
-                }
-
-                // Contato de Emergência
-                addSectionTitle("Contato de Emergência");
-                addText("Nome do Contato", formData.get('contatoEmergenciaNome'));
-                addText("Telefone do Contato", formData.get('contatoEmergenciaTelefone'));
-                addText("Relação com o Contato", formData.get('contatoEmergenciaRelacao'));
-
-                // Declaração Final
-                addSectionTitle("Declaração Final");
-                addText("Declarante", formData.get('declaracaoNome'));
-                addText("Local da Declaração", formData.get('declaracaoLocal'));
-                addText("Data da Declaração", formatDateBr(formData.get('declaracaoData')));
-                addText("Concordo com os Termos", formData.get('aceiteDeclaracao') ? 'Sim' : 'Não');
-
-                // --- Finaliza o PDF e tenta o upload ---
-                const pdfBlob = doc.output('blob');
-                const pdfFileName = `GlobalEntry_${solicitanteNome.replace(/\s+/g, '_')}_${new Date().getTime()}.pdf`;
-                const storageRef = ref(storage, `global_entry_forms/${pdfFileName}`); // Caminho no Firebase Storage
-
-                // Upload do PDF
-                const snapshot = await uploadBytes(storageRef, pdfBlob);
-                const downloadURL = await getDownloadURL(snapshot.ref);
-
-                console.log('PDF uploaded successfully:', downloadURL);
-
-                // --- Envio para o WhatsApp ---
-                let whatsappMessage = `*Novo Formulário Global Entry Recebido!* \n\n`;
-                whatsappMessage += `*Nome do Solicitante:* ${solicitanteNome}\n`;
-                whatsappMessage += `*E-mail:* ${formData.get('email')}\n`;
-                whatsappMessage += `*Telefone do Cliente:* ${formData.get('telefonePrincipal')}\n`;
-                whatsappMessage += `*Link para o Formulário Completo (PDF):*\n${downloadURL}\n\n`;
-                whatsappMessage += `Por favor, revise o PDF para prosseguir.`;
-
-                const whatsappUrlFixed = `https://wa.me/${fixedWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-                window.open(whatsappUrlFixed, '_blank');
-
-                alert('Formulário Global Entry enviado com sucesso! O PDF foi gerado e o link enviado para o WhatsApp da empresa.');
-
-            } catch (error) {
-                console.error("Erro ao gerar PDF ou enviar para Firebase/WhatsApp:", error);
-                alert("Ocorreu um erro ao processar o formulário. Por favor, tente novamente. Verifique o console para mais detalhes.");
-            } finally {
-                submitButton.disabled = false;
-                loadingMessage.style.display = 'none';
             }
+            if (line) {
+                doc.text(line, x, currentY, { align: 'justify' });
+            }
+            return currentY + lineHeight; // Return next Y position
+        }
+
+        async function generateGlobalEntryPDF() {
+            const doc = new jsPDF();
+            let y = 20;
+            const margin = 20;
+            const lineHeight = 7;
+            const form = document.getElementById('globalEntryForm');
+
+            doc.setFontSize(18);
+            doc.setTextColor(40, 40, 40);
+            doc.text("Formulário de Inscrição Global Entry", doc.internal.pageSize.width / 2, y, { align: "center" });
+            y += 15;
+
+            doc.setFontSize(12);
+            doc.setTextColor(0, 0, 0);
+
+            // 1. Dados Pessoais
+            doc.setFontSize(14);
+            doc.text("1. Dados Pessoais", margin, y);
+            y += 10;
+            doc.setFontSize(11);
+            doc.text(`Nome Completo: ${form.fullName.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`Data de Nascimento: ${form.dob.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`Gênero: ${form.gender.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`Nacionalidade: ${form.nationality.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`País de Nascimento: ${form.countryOfBirth.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`E-mail: ${form.email.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`Telefone: ${form.phone.value || 'N/A'}`, margin, y); y += lineHeight;
+            y += 5;
+
+            // 2. Dados do Passaporte
+            if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+            doc.setFontSize(14);
+            doc.text("2. Dados do Passaporte", margin, y);
+            y += 10;
+            doc.setFontSize(11);
+            doc.text(`Número do Passaporte: ${form.passportNumber.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`Data de Emissão: ${form.issueDate.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`Data de Validade: ${form.expiryDate.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`País Emissor: ${form.issuingCountry.value || 'N/A'}`, margin, y); y += lineHeight;
+            y += 5;
+
+            // 3. Endereço Atual
+            if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+            doc.setFontSize(14);
+            doc.text("3. Endereço Atual", margin, y);
+            y += 10;
+            doc.setFontSize(11);
+            doc.text(`Endereço: ${form.currentAddress.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`Cidade: ${form.currentCity.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`Estado/Província: ${form.currentState.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`CEP/Código Postal: ${form.currentZipCode.value || 'N/A'}`, margin, y); y += lineHeight;
+            doc.text(`País: ${form.currentCountry.value || 'N/A'}`, margin, y); y += lineHeight;
+            y += 5;
+
+            // 4. Histórico de Endereços
+            if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+            doc.setFontSize(14);
+            doc.text("4. Histórico de Endereços (Últimos 5 anos)", margin, y);
+            y += 10;
+            doc.setFontSize(11);
+            const pastAddresses = document.querySelectorAll('#addressHistoryContainer .address-entry');
+            if (pastAddresses.length === 0 || (!pastAddresses[0].querySelector('input[name="pastAddress[]"]').value && !pastAddresses[0].querySelector('input[name="pastCity[]"]').value)) {
+                 doc.text('Nenhum endereço anterior informado.', margin, y);
+                 y += lineHeight;
+            } else {
+                pastAddresses.forEach((entry, index) => {
+                    if (y + 3 * lineHeight > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+                    const address = entry.querySelector('input[name="pastAddress[]"]').value || 'N/A';
+                    const city = entry.querySelector('input[name="pastCity[]"]').value || 'N/A';
+                    const state = entry.querySelector('input[name="pastState[]"]').value || 'N/A';
+                    const country = entry.querySelector('input[name="pastCountry[]"]').value || 'N/A';
+                    const from = entry.querySelector('input[name="pastAddressFrom[]"]').value || 'N/A';
+                    const to = entry.querySelector('input[name="pastAddressTo[]"]').value || 'N/A';
+                    doc.text(`Endereço ${index + 1}: ${address}, ${city}, ${state}, ${country}`, margin, y); y += lineHeight;
+                    doc.text(`Período: ${from} a ${to}`, margin, y); y += lineHeight;
+                    y += 3; // Small gap between entries
+                });
+            }
+            y += 5;
+
+            // 5. Histórico de Emprego
+            if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+            doc.setFontSize(14);
+            doc.text("5. Histórico de Emprego (Últimos 5 anos)", margin, y);
+            y += 10;
+            doc.setFontSize(11);
+            const employmentEntries = document.querySelectorAll('#employmentHistoryContainer .employment-entry');
+            if (employmentEntries.length === 0 || (!employmentEntries[0].querySelector('input[name="employerName[]"]').value && !employmentEntries[0].querySelector('input[name="occupation[]"]').value)) {
+                doc.text('Nenhum histórico de emprego informado.', margin, y);
+                y += lineHeight;
+            } else {
+                employmentEntries.forEach((entry, index) => {
+                    if (y + 3 * lineHeight > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+                    const employer = entry.querySelector('input[name="employerName[]"]').value || 'N/A';
+                    const occupation = entry.querySelector('input[name="occupation[]"]').value || 'N/A';
+                    const employerAddress = entry.querySelector('input[name="employerAddress[]"]').value || 'N/A';
+                    const from = entry.querySelector('input[name="employmentFrom[]"]').value || 'N/A';
+                    const to = entry.querySelector('input[name="employmentTo[]"]').value || 'N/A';
+                    doc.text(`Emprego ${index + 1}: ${employer} - ${occupation}`, margin, y); y += lineHeight;
+                    doc.text(`Endereço: ${employerAddress}`, margin, y); y += lineHeight;
+                    doc.text(`Período: ${from} a ${to}`, margin, y); y += lineHeight;
+                    y += 3;
+                });
+            }
+            y += 5;
+
+            // 6. Histórico de Viagens Internacionais
+            if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+            doc.setFontSize(14);
+            doc.text("6. Histórico de Viagens Internacionais (Últimos 5 anos)", margin, y);
+            y += 10;
+            doc.setFontSize(11);
+            const travelEntries = document.querySelectorAll('#travelHistoryContainer .travel-entry');
+            if (travelEntries.length === 0 || (!travelEntries[0].querySelector('input[name="countryVisited[]"]').value && !travelEntries[0].querySelector('textarea[name="travelPurpose[]"]').value)) {
+                doc.text('Nenhum histórico de viagem informado.', margin, y);
+                y += lineHeight;
+            } else {
+                travelEntries.forEach((entry, index) => {
+                    if (y + 4 * lineHeight > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+                    const country = entry.querySelector('input[name="countryVisited[]"]').value || 'N/A';
+                    const entryDate = entry.querySelector('input[name="entryDate[]"]').value || 'N/A';
+                    const exitDate = entry.querySelector('input[name="exitDate[]"]').value || 'N/A';
+                    const purpose = entry.querySelector('textarea[name="travelPurpose[]"]').value || 'N/A';
+                    doc.text(`Viagem ${index + 1}: País: ${country}`, margin, y); y += lineHeight;
+                    doc.text(`Período: ${entryDate} a ${exitDate}`, margin, y); y += lineHeight;
+                    doc.text(`Propósito: ${purpose}`, margin, y); y += lineHeight;
+                    y += 3;
+                });
+            }
+            y += 5;
+
+            // 7. Perguntas de Elegibilidade e Histórico
+            if (y + 80 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+            doc.setFontSize(14);
+            doc.text("7. Perguntas de Elegibilidade e Histórico", margin, y);
+            y += 10;
+            doc.setFontSize(11);
+
+            const criminalRecord = form.criminalRecord.value || 'N/A';
+            const crimeExplanation = form.crimeExplanation.value || '';
+            doc.text(`a. Condenação criminal/Acusação/Mandados: ${criminalRecord}${criminalRecord === 'Sim' ? ` - ${crimeExplanation}` : ''}`, margin, y); y += lineHeight;
+
+            const violationRecord = form.violationRecord.value || 'N/A';
+            const violationExplanation = form.violationExplanation.value || '';
+            doc.text(`b. Violação alfandegária/imigração/agrícola: ${violationRecord}${violationRecord === 'Sim' ? ` - ${violationExplanation}` : ''}`, margin, y); y += lineHeight;
+
+            const investigationStatus = form.investigationStatus.value || 'N/A';
+            const investigationExplanation = form.investigationExplanation.value || '';
+            doc.text(`c. Investigação em andamento: ${investigationStatus}${investigationStatus === 'Sim' ? ` - ${investigationExplanation}` : ''}`, margin, y); y += lineHeight;
+
+            const falseInformation = form.falseInformation.value || 'N/A';
+            const falseInfoExplanation = form.falseInfoExplanation.value || '';
+            doc.text(`d. Informações falsas/incompletas: ${falseInformation}${falseInformation === 'Sim' ? ` - ${falseInfoExplanation}` : ''}`, margin, y); y += lineHeight;
+            y += 5;
+
+            // 8. Declaração
+            if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+            doc.setFontSize(14);
+            doc.text("8. Declaração e Autorização", margin, y);
+            y += 10;
+            doc.setFontSize(11);
+            const declarationText = `Declaro que todas as informações fornecidas neste formulário são verdadeiras e completas. Autorizo a **Objetivo Turismo Ltda.** a submeter minha inscrição ao programa Global Entry e a ter acesso a todas as informações relacionadas ao meu processo de aplicação, incluindo status e resultados, em meu nome. Entendo que qualquer informação falsa ou enganosa pode resultar na negação da minha inscrição ou revogação de minha filiação ao programa Global Entry.`;
+
+            doc.setFont(doc.getFont().fontName, 'normal'); // Reset font style
+            y = addJustifiedText(doc, declarationText, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
+            doc.text(`Declaração aceita: ${form.declaration.checked ? 'Sim' : 'Não'}`, margin, y); y += lineHeight;
+            y += 15;
+
+            // Finalização
+            doc.setFontSize(10);
+            doc.text(`Data de Geração: ${new Date().toLocaleDateString('pt-BR')}`, margin, doc.internal.pageSize.height - 15);
+            doc.text("Gerado por: Formulário de Inscrição Global Entry", doc.internal.pageSize.width - margin, doc.internal.pageSize.height - 15, { align: "right" });
+
+            doc.save("Inscricao_Global_Entry.pdf");
         }
     </script>
 </body>
