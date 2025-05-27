@@ -354,7 +354,7 @@
                     </div>
                     <div class="form-group">
                         <label for="parentsInUS">Seus pais estão nos EUA?</label>
-                        <select id="parentsInUS" name="parentsInUS">
+                    <select id="parentsInUS" name="parentsInUS">
                             <option value="">Selecione</option>
                             <option value="Sim">Sim</option>
                             <option value="Não">Não</option>
@@ -578,18 +578,29 @@
     <script>
         // Configuração do Firebase com suas credenciais
         const firebaseConfig = {
-            apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0", // Sua API Key real
-            authDomain: "visaformulariostorage.firebaseapp.com",
-            projectId: "visaformulariostorage",
-            storageBucket: "visaformulariostorage", 
-            messagingSenderId: "720170394408",
-            appId: "1:720170394408:web:b1c294c39c489388f6261d",
-            measurementId: "G-ZFCV4JEEFT"
+            apiKey: "YOUR_API_KEY", // Sua API Key real
+            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_PROJECT_ID.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID",
+            measurementId: "YOUR_MEASUREMENT_ID"
         };
+        // Use as suas credenciais reais aqui:
+        // Exemplo:
+        // const firebaseConfig = {
+        //     apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0",
+        //     authDomain: "visaformulariostorage.firebaseapp.com",
+        //     projectId: "visaformulariostorage",
+        //     storageBucket: "visaformulariostorage.appspot.com",
+        //     messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+        //     appId: "SEU_APP_ID",
+        //     measurementId: "SEU_MEASUREMENT_ID"
+        // };
 
         // Inicializa o Firebase (acessando a instância global de 'firebase')
         const app = firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage(app);
+        const storage = firebase.storage(app); // Firebase v8 compat SDK
 
         // --- Funções Auxiliares ---
         function formatDateBr(dateStr) {
@@ -826,7 +837,7 @@
                 }
                 if (originalWord.includes('_')) { 
                     isItalic = !isItalic;
-                    word = word.replace(/_/g, ''); 
+                    word = word.replace(/_|-/g, ''); // Adicionado - para lidar com o underscore do 28 U.S.C.
                 }
 
                 let fontStyle = 'normal';
@@ -859,7 +870,6 @@
             submitButton.disabled = true;
             submitButton.textContent = 'Enviando...';
 
-            // Acesse jsPDF diretamente de window.jspdf
             const jsPDF = window.jspdf.jsPDF; 
             const doc = new jsPDF();
 
@@ -867,7 +877,7 @@
             const margin = 20;
             const lineHeight = 7;
             const form = document.getElementById('globalEntryForm');
-            const fixedWhatsAppNumber = '556199998165'; // SEU NÚMERO DE WHATSAPP CORRIGIDO
+            const fixedWhatsAppNumber = '556199998165'; // Seu número de WhatsApp fixo
 
             try {
                 doc.setFontSize(18);
@@ -893,21 +903,21 @@
                 doc.text(`Estado Civil: ${form.maritalStatus.value || 'Não informado'}`, margin, y); y += lineHeight;
 
                 if (['Casado', 'Divorciado', 'Viúvo', 'União Estável'].includes(form.maritalStatus.value)) {
-                    if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+                    y += 5;
                     doc.setFontSize(12);
-                    doc.text("Dados do Cônjuge", margin + 5, y); y += 10;
+                    doc.text("Dados do Cônjuge:", margin + 5, y);
+                    y += lineHeight;
                     doc.setFontSize(11);
-                    doc.text(`Nome Completo do Cônjuge: ${form.spouseFullName.value || 'Não informado'}`, margin, y); y += lineHeight;
-                    doc.text(`Data de Nascimento do Cônjuge: ${formatDateBr(form.spouseDob.value) || 'Não informado'}`, margin, y); y += lineHeight;
-                    doc.text(`País de Nascimento do Cônjuge: ${form.spouseCountryOfBirth.value || 'Não informado'}`, margin, y); y += lineHeight;
+                    doc.text(`Nome Completo do Cônjuge: ${form.spouseFullName.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                    doc.text(`Data de Nascimento do Cônjuge: ${formatDateBr(form.spouseDob.value) || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                    doc.text(`País de Nascimento do Cônjuge: ${form.spouseCountryOfBirth.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
                     if (form.maritalStatus.value === 'Viúvo') {
-                        doc.text(`Data de Falecimento do Cônjuge: ${formatDateBr(form.spouseDod.value) || 'Não informado'}`, margin, y); y += lineHeight;
+                        doc.text(`Data de Falecimento do Cônjuge: ${formatDateBr(form.spouseDod.value) || 'Não informado'}`, margin + 10, y); y += lineHeight;
                     }
                 }
                 y += 5;
 
                 // 2. Dados do Passaporte
-                if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
                 doc.setFontSize(14);
                 doc.text("2. Dados do Passaporte", margin, y);
                 y += 10;
@@ -919,7 +929,6 @@
                 y += 5;
 
                 // 3. Endereço Atual e Contato
-                if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
                 doc.setFontSize(14);
                 doc.text("3. Endereço Atual e Contato", margin, y);
                 y += 10;
@@ -930,264 +939,243 @@
                 doc.text(`CEP/Código Postal: ${form.currentZipCode.value || 'Não informado'}`, margin, y); y += lineHeight;
                 doc.text(`País: ${form.currentCountry.value || 'Não informado'}`, margin, y); y += lineHeight;
                 doc.text(`Telefone: ${form.phone.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`E-mail: ${form.email.value || 'Não informado'}`, margin, y); y += lineHeight;
-                y += 5;
+                doc.text(`E-mail: ${form.email.value || 'Não informado'}`, margin, y); y += 5;
 
                 // 4. Informações Familiares
-                if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
                 doc.setFontSize(14);
                 doc.text("4. Informações Familiares", margin, y);
                 y += 10;
                 doc.setFontSize(11);
-                doc.text(`Pais Vivos: ${form.parentsAlive.value || 'Não informado'}`, margin, y); y += lineHeight;
+                doc.text(`Seus pais estão vivos?: ${form.parentsAlive.value || 'Não informado'}`, margin, y); y += lineHeight;
                 if (form.parentsAlive.value === 'Sim') {
-                    doc.text(`Nome Completo do Pai: ${form.fatherFullName.value || 'Não informado'}`, margin, y); y += lineHeight;
-                    doc.text(`Data de Nascimento do Pai: ${formatDateBr(form.fatherDob.value) || 'Não informado'}`, margin, y); y += lineHeight;
-                    doc.text(`Nome Completo da Mãe: ${form.motherFullName.value || 'Não informado'}`, margin, y); y += lineHeight;
-                    doc.text(`Data de Nascimento da Mãe: ${formatDateBr(form.motherDob.value) || 'Não informado'}`, margin, y); y += lineHeight;
-                    doc.text(`Pais nos EUA: ${form.parentsInUS.value || 'Não informado'}`, margin, y); y += lineHeight;
+                    doc.text(`Nome Completo do Pai: ${form.fatherFullName.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                    doc.text(`Data de Nascimento do Pai: ${formatDateBr(form.fatherDob.value) || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                    doc.text(`Nome Completo da Mãe: ${form.motherFullName.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                    doc.text(`Data de Nascimento da Mãe: ${formatDateBr(form.motherDob.value) || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                    doc.text(`Seus pais estão nos EUA?: ${form.parentsInUS.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
                     if (form.parentsInUS.value === 'Sim') {
-                        doc.text(`Explicação sobre Pais nos EUA: ${form.parentsInUSExplanation.value || 'Não informado'}`, margin, y); y += lineHeight;
+                        doc.text(`Explicação sobre pais nos EUA: ${form.parentsInUSExplanation.value || 'Não informado'}`, margin + 15, y); y += lineHeight;
                     }
                 }
-                doc.text(`Conhecidos nos EUA: ${form.knownInUS.value || 'Não informado'}`, margin, y); y += lineHeight;
+                
+                doc.text(`Você tem conhecidos nos EUA?: ${form.knownInUS.value || 'Não informado'}`, margin, y); y += lineHeight;
                 if (form.knownInUS.value === 'Sim') {
-                    doc.text(`Nome Completo do Conhecido: ${form.knownName.value || 'Não informado'}`, margin, y); y += lineHeight;
-                    doc.text(`Telefone do Conhecido: ${form.knownPhone.value || 'Não informado'}`, margin, y); y += lineHeight;
-                    doc.text(`E-mail do Conhecido: ${form.knownEmail.value || 'Não informado'}`, margin, y); y += lineHeight;
-                    doc.text(`Vínculo com o Solicitante: ${form.knownRelationship.value || 'Não informado'}`, margin, y); y += lineHeight;
+                    doc.setFontSize(12);
+                    doc.text("Dados do Conhecido nos EUA:", margin + 5, y);
+                    y += lineHeight;
+                    doc.setFontSize(11);
+                    doc.text(`Nome Completo do Conhecido: ${form.knownName.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                    doc.text(`Telefone do Conhecido: ${form.knownPhone.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                    doc.text(`E-mail do Conhecido: ${form.knownEmail.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                    doc.text(`Vínculo com o Solicitante: ${form.knownRelationship.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
                 }
                 y += 5;
 
-                // 5. Histórico de Endereços
-                if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+                // Histórico de Endereços
                 doc.setFontSize(14);
                 doc.text("5. Histórico de Endereços (Últimos 5 anos)", margin, y);
                 y += 10;
                 doc.setFontSize(11);
                 const pastAddresses = document.querySelectorAll('#addressHistoryContainer .address-entry');
-                let hasAddressHistory = false;
-                pastAddresses.forEach(entry => {
-                    if (entry.querySelector('input[name="pastAddress[]"]').value || entry.querySelector('input[name="pastCity[]"]').value) {
-                        hasAddressHistory = true;
-                    }
-                });
-                if (!hasAddressHistory) {
-                     doc.text('Nenhum endereço anterior informado.', margin, y);
-                     y += lineHeight;
+                if (pastAddresses.length === 0) {
+                    doc.text('Nenhum endereço informado.', margin, y); y += lineHeight;
                 } else {
                     pastAddresses.forEach((entry, index) => {
-                        if (y + 3 * lineHeight > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
-                        const address = entry.querySelector('input[name="pastAddress[]"]').value || 'Não informado';
-                        const city = entry.querySelector('input[name="pastCity[]"]').value || 'Não informado';
-                        const state = entry.querySelector('input[name="pastState[]"]').value || 'Não informado';
-                        const country = entry.querySelector('input[name="pastCountry[]"]').value || 'Não informado';
-                        const from = entry.querySelector('input[name="pastAddressFrom[]"]').value || 'Não informado';
-                        const to = entry.querySelector('input[name="pastAddressTo[]"]').value || 'Não informado';
+                        const address = entry.querySelector('[name="pastAddress[]"]').value;
+                        const city = entry.querySelector('[name="pastCity[]"]').value;
+                        const state = entry.querySelector('[name="pastState[]"]').value;
+                        const country = entry.querySelector('[name="pastCountry[]"]').value;
+                        const fromMonth = entry.querySelector('[name="pastAddressFrom[]"]').value;
+                        const toMonth = entry.querySelector('[name="pastAddressTo[]"]').value;
+                        
                         doc.text(`Endereço ${index + 1}: ${address}, ${city}, ${state}, ${country}`, margin, y); y += lineHeight;
-                        doc.text(`Período: ${from} a ${to}`, margin, y); y += lineHeight;
-                        y += 3; // Small gap between entries
+                        doc.text(`Período: ${fromMonth || 'Não informado'} a ${toMonth || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                        y += 3; // Pequeno espaço entre entradas
+                        if (y > doc.internal.pageSize.height - margin) { // Nova página se necessário
+                            doc.addPage();
+                            y = margin;
+                        }
                     });
                 }
                 y += 5;
 
-                // 6. Histórico de Emprego
-                if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+                // Histórico de Emprego
                 doc.setFontSize(14);
                 doc.text("6. Histórico de Emprego (Últimos 5 anos)", margin, y);
                 y += 10;
                 doc.setFontSize(11);
                 const employmentEntries = document.querySelectorAll('#employmentHistoryContainer .employment-entry');
-                let hasEmploymentHistory = false;
-                employmentEntries.forEach(entry => {
-                    if (entry.querySelector('input[name="employerName[]"]').value || entry.querySelector('input[name="occupation[]"]').value) {
-                        hasEmploymentHistory = true;
-                    }
-                });
-                if (!hasEmploymentHistory) {
-                    doc.text('Nenhum histórico de emprego informado.', margin, y);
-                    y += lineHeight;
+                if (employmentEntries.length === 0) {
+                    doc.text('Nenhum emprego informado.', margin, y); y += lineHeight;
                 } else {
                     employmentEntries.forEach((entry, index) => {
-                        if (y + 3 * lineHeight > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
-                        const employer = entry.querySelector('input[name="employerName[]"]').value || 'Não informado';
-                        const occupation = entry.querySelector('input[name="occupation[]"]').value || 'Não informado';
-                        const employerAddress = entry.querySelector('input[name="employerAddress[]"]').value || 'Não informado';
-                        const from = entry.querySelector('input[name="employmentFrom[]"]').value || 'Não informado';
-                        const to = entry.querySelector('input[name="employmentTo[]"]').value || 'Não informado';
-                        doc.text(`Emprego ${index + 1}: ${employer} - ${occupation}`, margin, y); y += lineHeight;
-                        doc.text(`Endereço: ${employerAddress}`, margin, y); y += lineHeight;
-                        doc.text(`Período: ${from} a ${to}`, margin, y); y += lineHeight;
-                        y += 3;
+                        const employerName = entry.querySelector('[name="employerName[]"]').value;
+                        const occupation = entry.querySelector('[name="occupation[]"]').value;
+                        const employerAddress = entry.querySelector('[name="employerAddress[]"]').value;
+                        const employmentFrom = entry.querySelector('[name="employmentFrom[]"]').value;
+                        const employmentTo = entry.querySelector('[name="employmentTo[]"]').value;
+
+                        doc.text(`Emprego ${index + 1}: ${employerName} (${occupation})`, margin, y); y += lineHeight;
+                        doc.text(`Endereço: ${employerAddress}`, margin + 10, y); y += lineHeight;
+                        doc.text(`Período: ${employmentFrom || 'Não informado'} a ${employmentTo || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                        y += 3; // Pequeno espaço entre entradas
+                        if (y > doc.internal.pageSize.height - margin) {
+                            doc.addPage();
+                            y = margin;
+                        }
                     });
                 }
                 y += 5;
 
-                // 7. Histórico de Viagens Internacionais
-                if (y + 40 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+                // Histórico de Viagens Internacionais
                 doc.setFontSize(14);
                 doc.text("7. Histórico de Viagens Internacionais (Últimos 5 anos)", margin, y);
                 y += 10;
                 doc.setFontSize(11);
                 const travelEntries = document.querySelectorAll('#travelHistoryContainer .travel-entry');
-                let hasTravelHistory = false;
-                travelEntries.forEach(entry => {
-                    if (entry.querySelector('input[name="countryVisited[]"]').value || entry.querySelector('textarea[name="travelPurpose[]"]').value) {
-                        hasTravelHistory = true;
-                    }
-                });
-                if (!hasTravelHistory) {
-                    doc.text('Nenhum histórico de viagem informado.', margin, y);
-                    y += lineHeight;
+                if (travelEntries.length === 0) {
+                    doc.text('Nenhuma viagem internacional informada.', margin, y); y += lineHeight;
                 } else {
                     travelEntries.forEach((entry, index) => {
-                        if (y + 4 * lineHeight > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
-                        const country = entry.querySelector('input[name="countryVisited[]"]').value || 'Não informado';
-                        const entryDate = entry.querySelector('input[name="entryDate[]"]').value || 'Não informado';
-                        const exitDate = entry.querySelector('input[name="exitDate[]"]').value || 'Não informado';
-                        const purpose = entry.querySelector('textarea[name="travelPurpose[]"]').value || 'Não informado';
-                        doc.text(`Viagem ${index + 1}: País: ${country}`, margin, y); y += lineHeight;
-                        doc.text(`Período: ${entryDate} a ${exitDate}`, margin, y); y += lineHeight;
-                        doc.text(`Propósito: ${purpose}`, margin, y); y += lineHeight;
-                        y += 3;
+                        const countryVisited = entry.querySelector('[name="countryVisited[]"]').value;
+                        const entryDate = entry.querySelector('[name="entryDate[]"]').value;
+                        const exitDate = entry.querySelector('[name="exitDate[]"]').value;
+                        const travelPurpose = entry.querySelector('[name="travelPurpose[]"]').value;
+
+                        doc.text(`Viagem ${index + 1}: País - ${countryVisited}`, margin, y); y += lineHeight;
+                        doc.text(`Datas: ${entryDate || 'Não informado'} a ${exitDate || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                        doc.text(`Propósito: ${travelPurpose || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                        y += 3; // Pequeno espaço entre entradas
+                        if (y > doc.internal.pageSize.height - margin) {
+                            doc.addPage();
+                            y = margin;
+                        }
                     });
                 }
                 y += 5;
 
-                // 8. Perguntas de Elegibilidade e Histórico
-                if (y + 80 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+                // Perguntas de Elegibilidade e Histórico
                 doc.setFontSize(14);
                 doc.text("8. Perguntas de Elegibilidade e Histórico", margin, y);
                 y += 10;
                 doc.setFontSize(11);
-
-                const criminalRecord = form.criminalRecord.value || 'Não informado';
-                const crimeExplanation = form.crimeExplanation.value || '';
-                doc.text(`a. Condenação criminal/Acusação/Mandados: ${criminalRecord}${criminalRecord === 'Sim' ? ` - ${crimeExplanation}` : ''}`, margin, y); y += lineHeight;
-
-                const violationRecord = form.violationRecord.value || 'Não informado';
-                const violationExplanation = form.violationExplanation.value || '';
-                doc.text(`b. Violação alfandegária/imigração/agrícola: ${violationRecord}${violationRecord === 'Sim' ? ` - ${violationExplanation}` : ''}`, margin, y); y += lineHeight;
-
-                const investigationStatus = form.investigationStatus.value || 'Não informado';
-                const investigationExplanation = form.investigationExplanation.value || '';
-                doc.text(`c. Investigação em andamento: ${investigationStatus}${investigationStatus === 'Sim' ? ` - ${investigationExplanation}` : ''}`, margin, y); y += lineHeight;
-
-                const falseInformation = form.falseInformation.value || 'Não informado';
-                const falseInfoExplanation = form.falseInfoExplanation.value || '';
-                doc.text(`d. Informações falsas/incompletas: ${falseInformation}${falseInformation === 'Sim' ? ` - ${falseInfoExplanation}` : ''}`, margin, y); y += lineHeight;
+                
+                doc.text(`a. Condenado(a) por crime/mandados?: ${form.criminalRecord.value || 'Não informado'}`, margin, y); y += lineHeight;
+                if (form.criminalRecord.value === 'Sim') {
+                    doc.text(`   Explicação: ${form.crimeExplanation.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                }
+                doc.text(`b. Violação de regulamentos alfandegários/imigração/agrícolas?: ${form.violationRecord.value || 'Não informado'}`, margin, y); y += lineHeight;
+                if (form.violationRecord.value === 'Sim') {
+                    doc.text(`   Explicação: ${form.violationExplanation.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                }
+                doc.text(`c. Objeto de investigação em andamento?: ${form.investigationStatus.value || 'Não informado'}`, margin, y); y += lineHeight;
+                if (form.investigationStatus.value === 'Sim') {
+                    doc.text(`   Explicação: ${form.investigationExplanation.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                }
+                doc.text(`d. Forneceu informações falsas/incompletas antes?: ${form.falseInformation.value || 'Não informado'}`, margin, y); y += lineHeight;
+                if (form.falseInformation.value === 'Sim') {
+                    doc.text(`   Explicação: ${form.falseInfoExplanation.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                }
                 y += 5;
 
-                // 9. Declaração
-                if (y + 120 > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
+                // Declaração e Autorização
+                if (y > doc.internal.pageSize.height - margin - 150) { // Nova página se pouco espaço
+                    doc.addPage();
+                    y = margin;
+                }
                 doc.setFontSize(14);
                 doc.text("9. Declaração e Autorização", margin, y);
                 y += 10;
                 doc.setFontSize(11);
 
-                const declaracaoNome = form.declaracaoNome.value || 'Não informado';
-                y = addJustifiedText(doc, `Eu, ${declaracaoNome}, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação de visto e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.`, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
-                y += 5;
+                doc.setFont(doc.getFont().fontName, 'normal'); // Reset font style
+                const declaracaoText = `Eu, ${form.declaracaoNome.value || 'Não informado'}, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação de visto e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.`;
+                y = addJustifiedText(doc, declaracaoText, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
+                y += lineHeight;
 
-                doc.setFontSize(11);
-                doc.setFont(doc.getFont().fontName, 'bold');
+                doc.setFontSize(12);
                 doc.text("Declaro estar ciente de que:", margin, y);
-                y += lineHeight;
-                doc.setFont(doc.getFont().fontName, 'normal');
+                y += 5;
+                doc.setFontSize(11);
 
-                const declarationPoints1 = [
-                    "1. Qualquer declaração falsa, incompleta ou enganosa poderá resultar na recusa permanente do visto ou na negativa de admissão nos Estados Unidos, conforme disposto na legislação aplicável.",
-                    "2. Todas as informações prestadas nesta solicitação constituem declarações juramentadas, realizadas sob pena de perjúrio, nos termos do disposto no _28 U.S.C. § 1746_.",
-                    "3. Informações adicionais poderão ser requisitadas pelas autoridades competentes após a análise desta solicitação, sendo minha responsabilidade fornecê-las tempestivamente.",
-                    "4. As informações contidas nesta solicitação poderão ser compartilhadas com outras agências governamentais dos Estados Unidos, que possuem autoridade para utilizá-las para fins de aplicação da lei ou para propósitos imigratórios, conforme permitido pela legislação vigente.",
-                    "5. A fotografia fornecida com esta solicitação poderá ser utilizada pelas autoridades americanas para fins de verificação de identidade, empregabilidade ou outros objetivos legais previstos na legislação dos Estados Unidos."
+                doc.setFont(doc.getFont().fontName, 'normal');
+                const listItems1 = [
+                    `1. Qualquer declaração falsa, incompleta ou enganosa poderá resultar na recusa permanente do visto ou na negativa de admissão nos Estados Unidos, conforme disposto na legislação aplicável.`,
+                    `2. Todas as informações prestadas nesta solicitação constituem declarações juramentadas, realizadas sob pena de perjúrio, nos termos do disposto no _28 U.S.C. § 1746_.`,
+                    `3. Informações adicionais poderão ser requisitadas pelas autoridades competentes após a análise desta solicitação, sendo minha responsabilidade fornecê-las tempestivamente.`,
+                    `4. As informações contidas nesta solicitação poderão ser compartilhadas com outras agências governamentais dos Estados Unidos, que possuem autoridade para utilizá-las para fins de aplicação da lei ou para propósitos imigratórios, conforme permitido pela legislação vigente.`,
+                    `5. A fotografia fornecida com esta solicitação poderá ser utilizada pelas autoridades americanas para fins de verificação de identidade, empregabilidade ou outros objetivos legais previstos na legislação dos Estados Unidos.`
                 ];
-                declarationPoints1.forEach(point => {
-                    if (y + lineHeight > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
-                    y = addJustifiedText(doc, point, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
+                listItems1.forEach(item => {
+                    y = addJustifiedText(doc, item, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
+                    y += 2; // Pequeno espaço entre os itens da lista
                 });
                 y += 5;
 
-                doc.setFont(doc.getFont().fontName, 'bold');
+                doc.setFontSize(12);
                 doc.text("Declaro ainda:", margin, y);
-                y += lineHeight;
-                doc.setFont(doc.getFont().fontName, 'normal');
+                y += 5;
+                doc.setFontSize(11);
 
-                const declarationPoints2 = [
-                    "6. Que sou exclusivamente responsável pela autenticidade e exatidão dos documentos apresentados e das informações prestadas nesta solicitação.",
-                    "7. Que tenho pleno conhecimento de que a concessão ou negativa do visto é prerrogativa exclusiva da Autoridade Consular Americana, não cabendo a terceiros qualquer ingerência sobre tal decisão.",
-                    "8. Que estou ciente de que, em processos de renovação de visto, entrevistas presenciais poderão ser exigidas a critério exclusivo da Autoridade Consular Americana.",
-                    "9. Que reconheço que o serviço contratado constitui assessoria relacionada ao processo de preenchimento de documentação, agendamento de biometria e entrevista, não abrangendo serviços de entrega ou retirada de documentos no Centro de Atendimento ao Solicitante de Visto (CASV), sendo necessária a contratação de um agente colaborador, caso eu deseje tais serviços adicionais.",
-                    "10. Que a aposição de minha assinatura eletrônica neste documento possui validade jurídica, conforme a legislação aplicável, e representa meu reconhecimento expresso dos serviços contratados."
+                const listItems2 = [
+                    `6. Que sou exclusivamente responsável pela autenticidade e exatidão dos documentos apresentados e das informações prestadas nesta solicitação.`,
+                    `7. Que tenho pleno conhecimento de que a concessão ou negativa do visto é prerrogativa exclusiva da Autoridade Consular Americana, não cabendo a terceiros qualquer ingerência sobre tal decisão.`,
+                    `8. Que estou ciente de que, em processos de renovação de visto, entrevistas presenciais poderão ser exigidas a critério exclusivo da Autoridade Consular Americana.`,
+                    `9. Que reconheço que o serviço contratado constitui assessoria relacionada ao processo de preenchimento de documentação, agendamento de biometria e entrevista, não abrangendo serviços de entrega ou retirada de documentos no Centro de Atendimento ao Solicitante de Visto (CASV), sendo necessária a contratação de um agente colaborador, caso eu deseje tais serviços adicionais.`,
+                    `10. Que a aposição de minha assinatura eletrônica neste documento possui validade jurídica, conforme a legislação aplicável, e representa meu reconhecimento expresso dos serviços contratados.`
                 ];
-                declarationPoints2.forEach(point => {
-                    if (y + lineHeight > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
-                    y = addJustifiedText(doc, point, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
+                listItems2.forEach(item => {
+                    y = addJustifiedText(doc, item, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
+                    y += 2; // Pequeno espaço entre os itens da lista
                 });
                 y += 5;
 
-                doc.setFont(doc.getFont().fontName, 'bold');
+                doc.setFontSize(12);
                 doc.text("Autorização:", margin, y);
-                y += lineHeight;
-                doc.setFont(doc.getFont().fontName, 'normal');
-
-                const authorizationText = `Declaro, por fim, ter revisado e conferido todos os dados por mim apresentados, autorizando expressamente a empresa **Objetivo Turismo Ltda.**, contratada diretamente por mim ou por intermédio de minha agência, a proceder com o envio eletrônico do Formulário DS-160 ao Consulado Americano, bem como a realizar o pagamento das taxas e o agendamento necessários à tramitação do meu pedido de visto.`;
-                if (y + lineHeight > doc.internal.pageSize.height - margin) { doc.addPage(); y = margin; }
-                y = addJustifiedText(doc, authorizationText, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
                 y += 5;
+                doc.setFontSize(11);
+                const authorizationText = `Declaro, por fim, ter revisado e conferido todos os dados por mim apresentados, autorizando expressamente a empresa **Objetivo Turismo Ltda.**, contratada diretamente por mim ou por intermédio de minha agência, a proceder com o envio eletrônico do Formulário DS-160 ao Consulado Americano, bem como a realizar o pagamento das taxas e o agendamento necessários à tramitação do meu pedido de visto.`;
+                y = addJustifiedText(doc, authorizationText, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
+                y += lineHeight;
 
                 doc.text(`Local: ${form.declaracaoLocal.value || 'Não informado'}`, margin, y); y += lineHeight;
                 doc.text(`Data: ${formatDateBr(form.declaracaoData.value) || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Concordo com os termos da declaração: ${form.aceiteDeclaracao.checked ? 'Sim' : 'Não'}`, margin, y); y += lineHeight;
+                doc.text(`Aceite da Declaração: ${form.aceiteDeclaracao.checked ? 'Sim' : 'Não'}`, margin, y); y += lineHeight;
                 y += 15;
 
-                // Finalização do PDF
-                doc.setFontSize(10);
-                doc.setTextColor(100, 100, 100);
-                doc.text(`Gerado em: ${new Date().toLocaleDateString('pt-BR')}`, margin, doc.internal.pageSize.height - 10);
-                doc.text("Formulário de Inscrição Global Entry", doc.internal.pageSize.width - margin, doc.internal.pageSize.height - 10, { align: "right" });
-
-                console.log("PDF gerado como blob...");
+                // --- Geração e Upload do PDF ---
                 const pdfBlob = doc.output('blob');
-                const solicitanteNomeParaArquivo = form.fullName.value ? form.fullName.value.replace(/\s+/g, '_').substring(0, 50) : 'Global_Entry_Solicitante'; 
-                const pdfFileName = `GlobalEntry_${solicitanteNomeParaArquivo}_${new Date().getTime()}.pdf`;
+                const timestamp = Date.now();
+                const fullNameCleaned = (form.fullName.value || 'sem_nome').replace(/[^a-zA-Z0-9_]/g, '_'); // Limpa o nome para o arquivo
 
-                // PASSO ADICIONADO: DOWNLOAD DO PDF PARA O CLIENTE
-                doc.save(pdfFileName); 
-                console.log('PDF baixado automaticamente para o cliente.');
-
-                // Firebase Storage upload
-                console.log(`Iniciando upload para Firebase Storage: global_entry_forms/${pdfFileName}`);
-                const storageRef = storage.ref(`global_entry_forms/${pdfFileName}`); // Usa a instância 'storage' global
+                // ALTERAÇÃO AQUI: Salva na mesma pasta 'pdfs/'
+                const fileName = `pdfs/GlobalEntry_${fullNameCleaned}_${timestamp}.pdf`;
                 
-                try {
-                    await storageRef.put(pdfBlob); 
-                    const downloadURL = await storageRef.getDownloadURL(); 
-                    console.log('PDF uploaded successfully. Download URL:', downloadURL);
+                console.log(`Tentando fazer upload do arquivo: ${fileName}`);
 
-                    // Envio para o WhatsApp
-                    let whatsappMessage = `*Novo Formulário Global Entry Recebido!* \n\n`;
-                    whatsappMessage += `*Nome do Solicitante:* ${form.fullName.value || 'Não informado'}\n`;
-                    whatsappMessage += `*E-mail:* ${form.email.value || 'Não informado'}\n`;
-                    whatsappMessage += `*Telefone do Cliente:* ${form.phone.value || 'Não informado'}\n`;
-                    whatsappMessage += `*Link para o Formulário Completo (PDF):*\n${downloadURL}\n\n`;
-                    whatsappMessage += `Por favor, revise o PDF para prosseguir.`;
+                // Firebase Storage (usando sintaxe v8 compat)
+                const storageRef = storage.ref().child(fileName);
+                const snapshot = await storageRef.put(pdfBlob);
+                const downloadURL = await snapshot.ref.getDownloadURL();
 
-                    const whatsappUrlFixed = `https://wa.me/${fixedWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-                    
-                    console.log('URL do WhatsApp gerada:', whatsappUrlFixed); // Log da URL do WhatsApp
-                    window.open(whatsappUrlFixed, '_blank');
+                console.log('PDF uploaded successfully:', downloadURL);
 
-                    alert('Formulário Global Entry enviado com sucesso! O PDF foi gerado e baixado, enviado para o Firebase e o link foi enviado para o WhatsApp da empresa.');
+                // --- Envio para o WhatsApp ---
+                let whatsappMessage = `*Novo Formulário Global Entry Recebido!* \n\n`;
+                whatsappMessage += `*Nome do Solicitante:* ${form.fullName.value || 'Não informado'}\n`;
+                whatsappMessage += `*E-mail:* ${form.email.value || 'Não informado'}\n`;
+                whatsappMessage += `*Telefone do Cliente:* ${form.phone.value || 'Não informado'}\n`;
+                whatsappMessage += `*Link para o Formulário Completo (PDF):*\n${downloadURL}\n\n`;
+                whatsappMessage += `Por favor, revise o PDF para prosseguir.`;
 
-                } catch (firebaseError) {
-                    console.error("Erro ao fazer upload para Firebase ou obter URL:", firebaseError);
-                    alert("Ocorreu um erro ao enviar o formulário para o armazenamento. Por favor, verifique suas regras de segurança do Firebase e tente novamente.");
-                }
+                const whatsappUrlFixed = `https://wa.me/${fixedWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+                window.open(whatsappUrlFixed, '_blank');
+
+                alert('Formulário Global Entry enviado com sucesso! O PDF foi gerado e o link enviado para o WhatsApp da empresa.');
 
             } catch (error) {
-                console.error("Erro geral na geração do PDF ou no fluxo:", error);
-                alert("Ocorreu um erro ao processar o formulário. Por favor, tente novamente. Verifique o console do navegador (F12 > Console) para mais detalhes.");
+                console.error("Erro ao gerar PDF ou enviar para Firebase/WhatsApp:", error);
+                alert("Ocorreu um erro ao processar o formulário. Por favor, tente novamente. Verifique o console para mais detalhes.");
             } finally {
                 submitButton.disabled = false;
                 submitButton.textContent = 'Enviar';
