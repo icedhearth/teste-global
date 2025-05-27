@@ -6,6 +6,8 @@
     <title>Formulário de Inscrição Global Entry</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.autotable.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-storage-compat.js"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -573,12 +575,8 @@
         </form>
     </div>
 
-    <script type="module">
-        // Importa as funções necessárias do Firebase SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js";
-
-        // Configuração do Firebase com suas credenciais (A MESMA API KEY FORNECIDA)
+    <script>
+        // Configuração do Firebase com suas credenciais
         const firebaseConfig = {
             apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0", // Sua API Key real
             authDomain: "visaformulariostorage.firebaseapp.com",
@@ -589,9 +587,9 @@
             measurementId: "G-ZFCV4JEEFT"
         };
 
-        // Inicializa o Firebase
-        const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
+        // Inicializa o Firebase (acessando a instância global de 'firebase')
+        const app = firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage(app);
 
         // --- Funções Auxiliares ---
         function formatDateBr(dateStr) {
@@ -609,7 +607,7 @@
         }
 
         // Função para adicionar campos de histórico de endereço
-        window.addAddressEntry = function() { // Exposto globalmente para o onclick
+        window.addAddressEntry = function() {
             const container = document.getElementById('addressHistoryContainer');
             const newEntry = document.createElement('div');
             newEntry.classList.add('address-entry');
@@ -645,7 +643,7 @@
         }
 
         // Função para adicionar campos de histórico de emprego
-        window.addEmploymentEntry = function() { // Exposto globalmente para o onclick
+        window.addEmploymentEntry = function() {
             const container = document.getElementById('employmentHistoryContainer');
             const newEntry = document.createElement('div');
             newEntry.classList.add('employment-entry');
@@ -677,7 +675,7 @@
         }
 
         // Função para adicionar campos de histórico de viagens
-        window.addTravelEntry = function() { // Exposto globalmente para o onclick
+        window.addTravelEntry = function() {
             const container = document.getElementById('travelHistoryContainer');
             const newEntry = document.createElement('div');
             newEntry.classList.add('travel-entry');
@@ -704,7 +702,7 @@
             container.appendChild(newEntry);
         }
 
-        // Funções de toggle para campos condicionais (baseadas na lógica do DS-160)
+        // Funções de toggle para campos condicionais
         function toggleSpouseInfo() {
             const maritalStatus = document.getElementById('maritalStatus');
             const spouseInfo = document.getElementById('spouseInfo');
@@ -814,25 +812,23 @@
             let line = '';
             let currentY = y;
             
-            // Variáveis para controlar estados de formatação
             let isBold = false;
             let isItalic = false;
 
             for (let i = 0; i < words.length; i++) {
                 let word = words[i];
-                let originalWord = word; // Guarda a palavra original para verificar marcadores
+                let originalWord = word; 
 
                 // Atualiza o estado da formatação se encontrar marcadores
                 if (originalWord.includes('**')) {
                     isBold = !isBold;
                     word = word.replace(/\*\*/g, '');
                 }
-                if (originalWord.includes('_')) { // Usando _ para itálico
+                if (originalWord.includes('_')) { 
                     isItalic = !isItalic;
-                    word = word.replace(/_(\S.*?)_/g, '$1'); // Remove underline markers
+                    word = word.replace(/_/g, ''); 
                 }
 
-                // Define a fonte para a palavra atual
                 let fontStyle = 'normal';
                 if (isBold && isItalic) fontStyle = 'bolditalic';
                 else if (isBold) fontStyle = 'bold';
@@ -854,16 +850,19 @@
             if (line) {
                 doc.text(line, x, currentY, { align: 'justify' });
             }
-            return currentY + lineHeight; // Return next Y position
+            return currentY + lineHeight; 
         }
 
-        window.generateGlobalEntryPDF = async function() { // Exposto globalmente para o onclick
+        window.generateGlobalEntryPDF = async function() {
             console.log("Iniciando geração do PDF...");
             const submitButton = document.getElementById('submitButton');
             submitButton.disabled = true;
             submitButton.textContent = 'Enviando...';
 
+            // Acesse jsPDF diretamente de window.jspdf
+            const jsPDF = window.jspdf.jsPDF; 
             const doc = new jsPDF();
+
             let y = 20;
             const margin = 20;
             const lineHeight = 7;
@@ -1150,18 +1149,18 @@
 
                 console.log("PDF gerado como blob...");
                 const pdfBlob = doc.output('blob');
-                const solicitanteNomeParaArquivo = form.fullName.value ? form.fullName.value.replace(/\s+/g, '_').substring(0, 50) : 'Global_Entry_Solicitante'; // Limita nome para evitar problemas de caminho
+                const solicitanteNomeParaArquivo = form.fullName.value ? form.fullName.value.replace(/\s+/g, '_').substring(0, 50) : 'Global_Entry_Solicitante'; 
                 const pdfFileName = `GlobalEntry_${solicitanteNomeParaArquivo}_${new Date().getTime()}.pdf`;
 
-                // **PASSO ADICIONADO: DOWNLOAD DO PDF PARA O CLIENTE**
+                // PASSO ADICIONADO: DOWNLOAD DO PDF PARA O CLIENTE
                 doc.save(pdfFileName); 
                 console.log('PDF baixado automaticamente para o cliente.');
 
                 // Firebase Storage upload
                 console.log(`Iniciando upload para Firebase Storage: global_entry_forms/${pdfFileName}`);
-                const storageRef = ref(storage, `global_entry_forms/${pdfFileName}`);
-                await uploadBytes(storageRef, pdfBlob);
-                const downloadURL = await getDownloadURL(storageRef);
+                const storageRef = firebase.storage().ref(`global_entry_forms/${pdfFileName}`); // Use firebase.storage().ref
+                await storageRef.put(pdfBlob); // Use put() method
+                const downloadURL = await storageRef.getDownloadURL(); // Use getDownloadURL()
 
                 console.log('PDF uploaded successfully. Download URL:', downloadURL);
 
