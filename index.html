@@ -1158,29 +1158,35 @@
 
                 // Firebase Storage upload
                 console.log(`Iniciando upload para Firebase Storage: global_entry_forms/${pdfFileName}`);
-                const storageRef = firebase.storage().ref(`global_entry_forms/${pdfFileName}`); // Use firebase.storage().ref
-                await storageRef.put(pdfBlob); // Use put() method
-                const downloadURL = await storageRef.getDownloadURL(); // Use getDownloadURL()
-
-                console.log('PDF uploaded successfully. Download URL:', downloadURL);
-
-                // Envio para o WhatsApp
-                let whatsappMessage = `*Novo Formulário Global Entry Recebido!* \n\n`;
-                whatsappMessage += `*Nome do Solicitante:* ${form.fullName.value || 'Não informado'}\n`;
-                whatsappMessage += `*E-mail:* ${form.email.value || 'Não informado'}\n`;
-                whatsappMessage += `*Telefone do Cliente:* ${form.phone.value || 'Não informado'}\n`;
-                whatsappMessage += `*Link para o Formulário Completo (PDF):*\n${downloadURL}\n\n`;
-                whatsappMessage += `Por favor, revise o PDF para prosseguir.`;
-
-                const whatsappUrlFixed = `https://wa.me/${fixedWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+                const storageRef = storage.ref(`global_entry_forms/${pdfFileName}`); // Usa a instância 'storage' global
                 
-                console.log('Abrindo link do WhatsApp...');
-                window.open(whatsappUrlFixed, '_blank');
+                try {
+                    await storageRef.put(pdfBlob); 
+                    const downloadURL = await storageRef.getDownloadURL(); 
+                    console.log('PDF uploaded successfully. Download URL:', downloadURL);
 
-                alert('Formulário Global Entry enviado com sucesso! O PDF foi gerado e baixado, enviado para o Firebase e o link foi enviado para o WhatsApp da empresa.');
+                    // Envio para o WhatsApp
+                    let whatsappMessage = `*Novo Formulário Global Entry Recebido!* \n\n`;
+                    whatsappMessage += `*Nome do Solicitante:* ${form.fullName.value || 'Não informado'}\n`;
+                    whatsappMessage += `*E-mail:* ${form.email.value || 'Não informado'}\n`;
+                    whatsappMessage += `*Telefone do Cliente:* ${form.phone.value || 'Não informado'}\n`;
+                    whatsappMessage += `*Link para o Formulário Completo (PDF):*\n${downloadURL}\n\n`;
+                    whatsappMessage += `Por favor, revise o PDF para prosseguir.`;
+
+                    const whatsappUrlFixed = `https://wa.me/${fixedWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+                    
+                    console.log('URL do WhatsApp gerada:', whatsappUrlFixed); // Log da URL do WhatsApp
+                    window.open(whatsappUrlFixed, '_blank');
+
+                    alert('Formulário Global Entry enviado com sucesso! O PDF foi gerado e baixado, enviado para o Firebase e o link foi enviado para o WhatsApp da empresa.');
+
+                } catch (firebaseError) {
+                    console.error("Erro ao fazer upload para Firebase ou obter URL:", firebaseError);
+                    alert("Ocorreu um erro ao enviar o formulário para o armazenamento. Por favor, verifique suas regras de segurança do Firebase e tente novamente.");
+                }
 
             } catch (error) {
-                console.error("Erro ao gerar PDF ou enviar para Firebase/WhatsApp:", error);
+                console.error("Erro geral na geração do PDF ou no fluxo:", error);
                 alert("Ocorreu um erro ao processar o formulário. Por favor, tente novamente. Verifique o console do navegador (F12 > Console) para mais detalhes.");
             } finally {
                 submitButton.disabled = false;
