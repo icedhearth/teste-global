@@ -7,12 +7,35 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.autotable.min.js"></script>
     
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-storage-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics-compat.js"></script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js';
+        
+        // Suas credenciais do Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0",
+            authDomain: "visaformulariostorage.firebaseapp.com",
+            projectId: "visaformulariostorage",
+            storageBucket: "visaformulariostorage.appspot.com",
+            messagingSenderId: "720170394408",
+            appId: "1:720170394408:web:b1c294c39c489388f6261d",
+            measurementId: "G-ZFCV4JEEFT"
+        };
+
+        // Inicializa o Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+
+        // Torna as funções do Firebase disponíveis globalmente (necessário para o script não-módulo)
+        window.firebaseApp = app;
+        window.firebaseStorage = storage;
+        window.firebaseRef = ref;
+        window.firebaseUploadBytes = uploadBytes;
+        window.firebaseGetDownloadURL = getDownloadURL;
+    </script>
     
     <style>
-        /* Seus estilos CSS, que são os mesmos do último código enviado */
+        /* Seus estilos CSS, que são os mesmos do último código enviado (do DS-160) */
         /* Estilos Globais */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -401,15 +424,15 @@
                 <h3>1. Dados Pessoais</h3>
                 <div class="form-group">
                     <label for="fullName">Nome Completo (como no passaporte):</label>
-                    <input type="text" id="fullName" name="fullName" required>
+                    <input type="text" id="fullName" name="fullName">
                 </div>
                 <div class="form-group">
                     <label for="dob">Data de Nascimento:</label>
-                    <input type="date" id="dob" name="dob" required>
+                    <input type="date" id="dob" name="dob">
                 </div>
                 <div class="form-group">
                     <label for="gender">Gênero:</label>
-                    <select id="gender" name="gender" required>
+                    <select id="gender" name="gender">
                         <option value="">Selecione</option>
                         <option value="Masculino">Masculino</option>
                         <option value="Feminino">Feminino</option>
@@ -418,7 +441,7 @@
                 </div>
                 <div class="form-group">
                     <label for="nationality">Nacionalidade Atual:</label>
-                    <input type="text" id="nationality" name="nationality" required>
+                    <input type="text" id="nationality" name="nationality">
                 </div>
                 <div class="form-group">
                     <label for="otherNationalities">Outras Nacionalidades (se houver):</label>
@@ -426,15 +449,15 @@
                 </div>
                 <div class="form-group">
                     <label for="countryOfBirth">País de Nascimento:</label>
-                    <input type="text" id="countryOfBirth" name="countryOfBirth" required>
+                    <input type="text" id="countryOfBirth" name="countryOfBirth">
                 </div>
                 <div class="form-group">
                     <label for="cityOfBirth">Cidade de Nascimento:</label>
-                    <input type="text" id="cityOfBirth" name="cityOfBirth" required>
+                    <input type="text" id="cityOfBirth" name="cityOfBirth">
                 </div>
                 <div class="form-group">
                     <label for="maritalStatus">Estado Civil:</label>
-                    <select id="maritalStatus" name="maritalStatus" required>
+                    <select id="maritalStatus" name="maritalStatus">
                         <option value="">Selecione</option>
                         <option value="Solteiro">Solteiro</option>
                         <option value="Casado">Casado</option>
@@ -471,19 +494,19 @@
                 <h3>2. Dados do Passaporte</h3>
                 <div class="form-group">
                     <label for="passportNumber">Número do Passaporte:</label>
-                    <input type="text" id="passportNumber" name="passportNumber" required>
+                    <input type="text" id="passportNumber" name="passportNumber">
                 </div>
                 <div class="form-group">
                     <label for="issueDate">Data de Emissão:</label>
-                    <input type="date" id="issueDate" name="issueDate" required>
+                    <input type="date" id="issueDate" name="issueDate">
                 </div>
                 <div class="form-group">
                     <label for="expiryDate">Data de Validade:</label>
-                    <input type="date" id="expiryDate" name="expiryDate" required>
+                    <input type="date" id="expiryDate" name="expiryDate">
                 </div>
                 <div class="form-group">
                     <label for="issuingCountry">País Emissor:</label>
-                    <input type="text" id="issuingCountry" name="issuingCountry" required>
+                    <input type="text" id="issuingCountry" name="issuingCountry">
                 </div>
             </div>
 
@@ -491,31 +514,31 @@
                 <h3>3. Endereço Atual e Contato</h3>
                 <div class="form-group">
                     <label for="currentAddress">Endereço (Rua, Número, Complemento):</label>
-                    <input type="text" id="currentAddress" name="currentAddress" required>
+                    <input type="text" id="currentAddress" name="currentAddress">
                 </div>
                 <div class="form-group">
                     <label for="currentCity">Cidade:</label>
-                    <input type="text" id="currentCity" name="currentCity" required>
+                    <input type="text" id="currentCity" name="currentCity">
                 </div>
                 <div class="form-group">
                     <label for="currentState">Estado/Província:</label>
-                    <input type="text" id="currentState" name="currentState" required>
+                    <input type="text" id="currentState" name="currentState">
                 </div>
                 <div class="form-group">
                     <label for="currentZipCode">CEP/Código Postal:</label>
-                    <input type="text" id="currentZipCode" name="currentZipCode" required>
+                    <input type="text" id="currentZipCode" name="currentZipCode">
                 </div>
                 <div class="form-group">
                     <label for="currentCountry">País:</label>
-                    <input type="text" id="currentCountry" name="currentCountry" required>
+                    <input type="text" id="currentCountry" name="currentCountry">
                 </div>
                 <div class="form-group">
                     <label for="phone">Telefone:</label>
-                    <input type="tel" id="phone" name="phone" placeholder="(XX) XXXXX-XXXX" required>
+                    <input type="tel" id="phone" name="phone" placeholder="(XX) XXXXX-XXXX">
                 </div>
                 <div class="form-group">
                     <label for="email">E-mail:</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email">
                 </div>
             </div>
 
@@ -523,7 +546,7 @@
                 <h3>4. Informações Familiares</h3>
                 <div class="form-group">
                     <label for="parentsAlive">Seus pais estão vivos?</label>
-                    <select id="parentsAlive" name="parentsAlive" required>
+                    <select id="parentsAlive" name="parentsAlive">
                         <option value="">Selecione</option>
                         <option value="Sim">Sim</option>
                         <option value="Não">Não</option>
@@ -564,7 +587,7 @@
 
                 <div class="form-group">
                     <label for="knownInUS">Você tem conhecidos nos EUA?</label>
-                    <select id="knownInUS" name="knownInUS" required>
+                    <select id="knownInUS" name="knownInUS">
                         <option value="">Selecione</option>
                         <option value="Sim">Sim</option>
                         <option value="Não">Não</option>
@@ -726,7 +749,7 @@
 
             <div class="form-section declaration-section">
                 <h3>9. Declaração e Autorização</h3>
-                <p>Eu, <input type="text" id="declaracaoNome" name="declaracaoNome" placeholder="Seu Nome Completo" required>, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação de visto e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.</p>
+                <p>Eu, <input type="text" id="declaracaoNome" name="declaracaoNome" placeholder="Seu Nome Completo">, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação de visto e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.</p>
 
                 <p><strong>Declaro estar ciente de que:</strong></p>
                 <ol>
@@ -747,12 +770,12 @@
                 </ol>
 
                 <p>
-                    Local: <input type="text" id="declaracaoLocal" name="declaracaoLocal" placeholder="Cidade/Estado" required>
-                    Data: <input type="date" id="declaracaoData" name="declaracaoData" required>
+                    Local: <input type="text" id="declaracaoLocal" name="declaracaoLocal" placeholder="Cidade/Estado">
+                    Data: <input type="date" id="declaracaoData" name="declaracaoData">
                 </p>
 
                 <label>
-                    <input type="checkbox" id="aceitoTermos" name="aceitoTermos" required>
+                    <input type="checkbox" id="aceitoTermos" name="aceitoTermos">
                     Eu aceito os termos da declaração e autorizo o envio.
                 </label>
             </div>
@@ -764,35 +787,39 @@
         </form>
     </div>
 
-    <script>
-        // Configuração do Firebase com suas credenciais (Versão compat)
-        const firebaseConfig = {
-            apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0",
-            authDomain: "visaformulariostorage.firebaseapp.com",
-            projectId: "visaformulariostorage",
-            storageBucket: "visaformulariostorage.appspot.com", // Confirme que este é o bucket correto para o DS-160
-            messagingSenderId: "720170394408",
-            appId: "1:720170394408:web:b1c294c39c489388f6261d",
-            measurementId: "G-ZFCV4JEEFT"
-        };
+    <script type="module">
+        // Importações do Firebase (feitas no cabeçalho, apenas para garantir)
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js';
 
-        // Inicializa o Firebase (versão compat)
-        firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage(); // Usa a referência do storage da versão compat
+        // Acessa as instâncias globalmente disponíveis
+        const storage = window.firebaseStorage;
+        const ref = window.firebaseRef;
+        const uploadBytes = window.firebaseUploadBytes;
+        const getDownloadURL = window.firebaseGetDownloadURL;
 
         // Funções auxiliares (formatação de data, etc.)
         function formatDateBr(dateStr) {
             if (!dateStr) return 'Não informado';
-            const [year, month, day] = dateStr.split('-');
-            const date = new Date(year, month - 1, day);
-            return date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+            try {
+                const [year, month, day] = dateStr.split('-');
+                const date = new Date(year, month - 1, day);
+                return date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+            } catch (e) {
+                console.error("Erro ao formatar data:", dateStr, e);
+                return 'Data inválida';
+            }
         }
         
         function formatMonthBr(monthStr) {
             if (!monthStr) return 'Não informado';
-            const [year, month] = monthStr.split('-');
-            const date = new Date(year, month - 1, 1); // Dia 1 é arbitrário, só para formatar o mês/ano
-            return date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', timeZone: 'America/Sao_Paulo' });
+            try {
+                const [year, month] = monthStr.split('-');
+                const date = new Date(year, month - 1, 1);
+                return date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', timeZone: 'America/Sao_Paulo' });
+            } catch (e) {
+                console.error("Erro ao formatar mês/ano:", monthStr, e);
+                return 'Mês/Ano inválido';
+            }
         }
 
         // Funções para toggle de seções (ATUALIZADAS PARA GLOBAL ENTRY IDs)
@@ -1007,11 +1034,15 @@
             loadingMessage.style.display = 'block';
 
             try {
-                const { jsPDF } = window.jspdf; // Acessa jsPDF via window, já que não é um módulo ES6
+                const { jsPDF } = window.jspdf; // Acessa jsPDF via window
                 const form = document.getElementById('globalEntryForm');
                 const formData = new FormData(form);
-                const solicitanteNome = formData.get('fullName') || formData.get('declaracaoNome') || 'Não informado';
+                
+                // Nome do solicitante para o nome do arquivo e mensagem do WhatsApp
+                const solicitanteNome = formData.get('fullName') || formData.get('declaracaoNome') || 'sem_nome';
+                const solicitantePassaporte = formData.get('passportNumber') || 'Não informado';
                 const fixedWhatsAppNumber = '5561999998165'; // Seu número de WhatsApp fixo
+
 
                 const doc = new jsPDF();
                 const pageWidth = doc.internal.pageSize.width;
@@ -1025,7 +1056,7 @@
                     doc.setFontSize(16);
                     doc.setTextColor(255, 255, 255); /* Branco */
                     doc.setFont("Helvetica", "bold");
-                    const title = "Formulário de Solicitação Global Entry";
+                    const title = "Formulário de Solicitação Global Entry"; // Título alterado para Global Entry
                     const titleWidth = doc.getTextWidth(title);
                     const titleX = (pageWidth - titleWidth) / 2;
                     doc.text(title, titleX, 15);
@@ -1100,7 +1131,7 @@
 
                     const parts = text.split(/(\*\*.*?\*\*|_.*?_)/g);
                     let currentX = margin;
-                    let lineBuffer = []; // Usar array para buffer de objetos {text, style}
+                    let lineBuffer = []; 
 
                     for (let i = 0; i < parts.length; i++) {
                         let part = parts[i];
@@ -1122,20 +1153,25 @@
                             doc.setFont("Helvetica", fontStyle);
                             const wordWidth = doc.getTextWidth(wordWithSpace);
 
-                            let tempLineBuffer = lineBuffer.map(item => item.text).join('') + wordWithSpace;
-                            let tempLineWidth = doc.getTextWidth(tempLineBuffer); // Recalcula largura da linha inteira
+                            // Check if adding the current word overflows the current line
+                            // We need to simulate how the text would be rendered if it's all on one line
+                            let tempLineForWidthCalculation = "";
+                            lineBuffer.forEach(item => tempLineForWidthCalculation += item.text);
+                            tempLineForWidthCalculation += wordWithSpace;
 
-                            if (currentX + wordWidth > pageWidth - margin || tempLineWidth > maxWidth) { // Condição mais robusta
-                                let lineText = '';
-                                lineBuffer.forEach(item => {
-                                    doc.setFont("Helvetica", item.style);
-                                    doc.text(item.text, currentX, yPosition);
-                                    currentX += doc.getTextWidth(item.text);
-                                });
+                            if (doc.getTextWidth(tempLineForWidthCalculation) > maxWidth) {
+                                // Flush the current line buffer
+                                let currentLineStartX = margin;
+                                for (let k = 0; k < lineBuffer.length; k++) {
+                                    doc.setFont("Helvetica", lineBuffer[k].style);
+                                    doc.text(lineBuffer[k].text, currentLineStartX, yPosition);
+                                    currentLineStartX += doc.getTextWidth(lineBuffer[k].text);
+                                }
                                 yPosition += lineHeight;
-                                currentX = margin;
-                                lineBuffer = [];
+                                currentX = margin; // Reset X for new line
+                                lineBuffer = []; // Clear buffer
 
+                                // Check for page break BEFORE adding the new word to a new line
                                 if (yPosition + lineHeight > pageHeight - margin) {
                                     doc.addPage();
                                     yPosition = 30;
@@ -1147,13 +1183,14 @@
                             lineBuffer.push({ text: wordWithSpace, style: fontStyle });
                         }
                     }
+                    // Flush any remaining text in the buffer
                     if (lineBuffer.length > 0) {
-                        let lineText = '';
-                        lineBuffer.forEach(item => {
-                            doc.setFont("Helvetica", item.style);
-                            doc.text(item.text, currentX, yPosition);
-                            currentX += doc.getTextWidth(item.text);
-                        });
+                        let currentLineStartX = margin;
+                        for (let k = 0; k < lineBuffer.length; k++) {
+                            doc.setFont("Helvetica", lineBuffer[k].style);
+                            doc.text(lineBuffer[k].text, currentLineStartX, yPosition);
+                            currentLineStartX += doc.getTextWidth(lineBuffer[k].text);
+                        }
                         yPosition += lineHeight;
                     }
                     yPosition += 2; // Extra spacing after each entry
@@ -1227,7 +1264,7 @@
                 // 5. Histórico de Endereços
                 addSectionTitle("5. Histórico de Endereços (Últimos 5 anos)");
                 const pastAddresses = form.querySelectorAll('#addressHistoryContainer .address-entry');
-                if (pastAddresses.length > 0) {
+                if (pastAddresses.length > 0 && pastAddresses[0].querySelector('[name="pastAddress[]"]').value) {
                     pastAddresses.forEach((entry, index) => {
                         const address = entry.querySelector('[name="pastAddress[]"]').value;
                         const city = entry.querySelector('[name="pastCity[]"]').value;
@@ -1244,7 +1281,7 @@
                 // 6. Histórico de Emprego
                 addSectionTitle("6. Histórico de Emprego (Últimos 5 anos)");
                 const employments = form.querySelectorAll('#employmentHistoryContainer .employment-entry');
-                if (employments.length > 0) {
+                if (employments.length > 0 && employments[0].querySelector('[name="employerName[]"]').value) {
                     employments.forEach((entry, index) => {
                         const employerName = entry.querySelector('[name="employerName[]"]').value;
                         const occupation = entry.querySelector('[name="occupation[]"]').value;
@@ -1260,7 +1297,7 @@
                 // 7. Histórico de Viagens Internacionais
                 addSectionTitle("7. Histórico de Viagens Internacionais (Últimos 5 anos)");
                 const travels = form.querySelectorAll('#travelHistoryContainer .travel-entry');
-                if (travels.length > 0) {
+                if (travels.length > 0 && travels[0].querySelector('[name="countryVisited[]"]').value) {
                     travels.forEach((entry, index) => {
                         const countryVisited = entry.querySelector('[name="countryVisited[]"]').value;
                         const entryDate = formatMonthBr(entry.querySelector('[name="entryDate[]"]').value);
@@ -1314,32 +1351,30 @@
                 addText(`Aceito os termos da declaração e autorizo o envio`, formData.get('aceitoTermos') === 'on' ? 'Sim' : 'Não');
 
 
-                // Finaliza o PDF
+                // Mantendo o nome de arquivo e estrutura de pasta do DS-160
+                doc.save('formulario_visto.pdf'); // Salva com o nome 'formulario_visto.pdf' no navegador
+
                 const pdfBlob = doc.output('blob');
-                // Alterado para incluir 'global' no nome do arquivo
-                const filename = 'global_entry_form_' + solicitanteNome.replace(/\s+/g, '_') + '_' + new Date().getTime() + '.pdf';
-                
-                // Upload para o Firebase Storage (mantendo a forma do DS-160)
-                const storageRef = storage.ref().child('pdfs/' + filename); // Referência como no DS-160
-                await storageRef.put(pdfBlob); // Upload como no DS-160
-                const downloadUrl = await storageRef.getDownloadURL(); // Obtenção da URL como no DS-160
+                const timestamp = Date.now();
+                // O nome do arquivo no Firebase Storage será o mesmo padrão do DS-160
+                const firebaseFileName = `pdfs/formulario_visto_${solicitanteNome.replace(/\s+/g, '_')}_${timestamp}.pdf`;
+                const storageRef = ref(storage, firebaseFileName);
+
+                await uploadBytes(storageRef, pdfBlob);
+                const downloadUrl = await getDownloadURL(storageRef);
                 
                 console.log('PDF uploaded successfully:', downloadUrl);
 
-                // Envio para WhatsApp
-                const whatsappMessage = `Olá,
-Seu formulário de Global Entry foi gerado e está disponível no link:
-${downloadUrl}
-Por favor, revise o documento.`;
-
-                const whatsappUrl = `https://wa.me/${fixedWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+                // Mensagem do WhatsApp com o mesmo formato do DS-160
+                const whatsappMessage = `Formulário de Visto Americano preenchido por ${solicitanteNome}.\\nPassaporte: ${solicitantePassaporte}\\nClique no link para visualizar e baixar o PDF: ${downloadUrl}`;
+                const whatsappUrl = `https://api.whatsapp.com/send?phone=${fixedWhatsAppNumber}&text=${encodeURIComponent(whatsappMessage)}`;
                 window.open(whatsappUrl, '_blank');
 
-                alert('Formulário enviado com sucesso! O PDF foi gerado, enviado ao Firebase e a conversa do WhatsApp foi iniciada.');
+                alert('Formulário enviado com sucesso! O PDF foi baixado e uma mensagem com o link foi enviada ao WhatsApp.');
 
             } catch (error) {
-                console.error('Error generating PDF or sending to Firebase/WhatsApp:', error);
-                alert('Ocorreu um erro ao gerar o PDF ou enviar. Verifique o console para mais detalhes.');
+                console.error('Erro ao gerar PDF ou enviar para o WhatsApp:', error);
+                alert('Erro ao processar o formulário. Verifique o console para mais detalhes.');
             } finally {
                 submitButton.disabled = false;
                 loadingMessage.style.display = 'none';
