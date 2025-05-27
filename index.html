@@ -7,10 +7,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.autotable.min.js"></script>
     
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-storage-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics-compat.js"></script>
-    
     <style>
         /* Estilos Globais */
         body {
@@ -762,5 +758,592 @@
             <button type="submit" id="submitButton">Gerar PDF e Enviar</button>
         </form>
     </div>
+
+    <script type="module">
+        // Importa as funções necessárias do Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
+        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
+        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js";
+
+        // Configuração do Firebase com suas credenciais
+        const firebaseConfig = {
+            apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0",
+            authDomain: "visaformulariostorage.firebaseapp.com",
+            projectId: "visaformulariostorage",
+            storageBucket: "visaformulariostorage.appspot.com", // CORRIGIDO: Use o bucket real
+            messagingSenderId: "720170394408",
+            appId: "1:720170394408:web:b1c294c39c489388f6261d",
+            measurementId: "G-ZFCV4JEEFT"
+        };
+
+        // Inicializa o Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
+        const analytics = getAnalytics(app);
+
+        // Funções auxiliares (formatação de data, etc.)
+        function formatDateBr(dateStr) {
+            if (!dateStr) return 'Não informado';
+            const [year, month, day] = dateStr.split('-');
+            const date = new Date(year, month - 1, day);
+            return date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
+        }
+        
+        function formatMonthBr(monthStr) {
+            if (!monthStr) return 'Não informado';
+            const [year, month] = monthStr.split('-');
+            const date = new Date(year, month - 1, 1); // Dia 1 é arbitrário, só para formatar o mês/ano
+            return date.toLocaleDateString('pt-BR', { year: 'numeric', month: '2-digit', timeZone: 'America/Sao_Paulo' });
+        }
+
+        // Funções para toggle de seções (ATUALIZADAS PARA GLOBAL ENTRY IDs)
+        function toggleSpouseInfo() {
+            const maritalStatus = document.getElementById('maritalStatus');
+            const spouseInfo = document.getElementById('spouseInfo');
+            const spouseDeathInfo = document.getElementById('spouseDeathInfo');
+
+            if (['Casado', 'Divorciado', 'Viúvo', 'União Estável'].includes(maritalStatus.value)) {
+                spouseInfo.classList.remove('hidden-section');
+                if (maritalStatus.value === 'Viúvo') {
+                    spouseDeathInfo.classList.remove('hidden-section');
+                } else {
+                    spouseDeathInfo.classList.add('hidden-section');
+                    spouseDeathInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
+                }
+            } else {
+                spouseInfo.classList.add('hidden-section');
+                spouseDeathInfo.classList.add('hidden-section');
+                spouseInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
+                spouseDeathInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
+            }
+        }
+
+        function toggleParentsInfo() {
+            const parentsAlive = document.getElementById('parentsAlive');
+            const parentsInfo = document.getElementById('parentsInfo');
+            
+            if (parentsAlive.value === 'Sim') {
+                parentsInfo.classList.remove('hidden-section');
+                toggleParentsInUSInfo();
+            } else {
+                parentsInfo.classList.add('hidden-section');
+                parentsInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
+                document.getElementById('parentsInUSDetails').classList.add('hidden-section');
+                document.getElementById('parentsInUSDetails').querySelectorAll('input, textarea, select').forEach(input => input.value = '');
+            }
+        }
+
+        function toggleParentsInUSInfo() {
+            const parentsInUS = document.getElementById('parentsInUS');
+            const parentsInUSDetails = document.getElementById('parentsInUSDetails');
+            if (parentsInUS.value === 'Sim') {
+                parentsInUSDetails.classList.remove('hidden-section');
+            } else {
+                parentsInUSDetails.classList.add('hidden-section');
+                parentsInUSDetails.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
+            }
+        }
+
+        function toggleKnownInUSInfo() {
+            const knownInUS = document.getElementById('knownInUS');
+            const knownInUSInfo = document.getElementById('knownInUSInfo');
+            if (knownInUS.value === 'Sim') {
+                knownInUSInfo.classList.remove('hidden-section');
+            } else {
+                knownInUSInfo.classList.add('hidden-section');
+                knownInUSInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
+            }
+        }
+
+        function toggleEligibilityDetails(event) {
+            const targetId = event.target.id;
+            let detailsDivId;
+
+            if (targetId.includes('crime')) {
+                detailsDivId = 'crimeDetails';
+            } else if (targetId.includes('violation')) {
+                detailsDivId = 'violationDetails';
+            } else if (targetId.includes('investigation')) {
+                detailsDivId = 'investigationDetails';
+            } else if (targetId.includes('falseInfo')) {
+                detailsDivId = 'falseInfoDetails';
+            }
+
+            const detailsDiv = document.getElementById(detailsDivId);
+            if (event.target.value === 'Sim') {
+                detailsDiv.classList.remove('hidden-section');
+            } else {
+                detailsDiv.classList.add('hidden-section');
+                detailsDiv.querySelectorAll('textarea').forEach(input => input.value = '');
+            }
+        }
+
+        // Funções para adicionar campos dinâmicos (Endereço, Emprego, Viagem)
+        function addAddressEntry() {
+            const container = document.getElementById('addressHistoryContainer');
+            const newEntry = document.createElement('div');
+            newEntry.classList.add('address-entry');
+            newEntry.innerHTML = `
+                <hr style="margin: 20px 0;">
+                <div class="form-group">
+                    <label>Endereço:</label>
+                    <input type="text" name="pastAddress[]" placeholder="Rua, Número, Complemento">
+                </div>
+                <div class="form-group">
+                    <label>Cidade:</label>
+                    <input type="text" name="pastCity[]">
+                </div>
+                <div class="form-group">
+                    <label>Estado/Província:</label>
+                    <input type="text" name="pastState[]">
+                </div>
+                <div class="form-group">
+                    <label>País:</label>
+                    <input type="text" name="pastCountry[]">
+                </div>
+                <div class="form-group">
+                    <label>De (MM/AAAA):</label>
+                    <input type="month" name="pastAddressFrom[]">
+                </div>
+                <div class="form-group">
+                    <label>Até (MM/AAAA):</label>
+                    <input type="month" name="pastAddressTo[]">
+                </div>
+                <button type="button" onclick="this.parentNode.remove()" style="background-color: #dc3545; margin-top: 5px;">Remover Endereço</button>
+            `;
+            container.appendChild(newEntry);
+        }
+
+        function addEmploymentEntry() {
+            const container = document.getElementById('employmentHistoryContainer');
+            const newEntry = document.createElement('div');
+            newEntry.classList.add('employment-entry');
+            newEntry.innerHTML = `
+                <hr style="margin: 20px 0;">
+                <div class="form-group">
+                    <label>Empregador:</label>
+                    <input type="text" name="employerName[]">
+                </div>
+                <div class="form-group">
+                    <label>Cargo:</label>
+                    <input type="text" name="occupation[]">
+                </div>
+                <div class="form-group">
+                    <label>Endereço do Empregador:</label>
+                    <input type="text" name="employerAddress[]" placeholder="Rua, Número, Cidade, País">
+                </div>
+                <div class="form-group">
+                    <label>De (MM/AAAA):</label>
+                    <input type="month" name="employmentFrom[]">
+                </div>
+                <div class="form-group">
+                    <label>Até (MM/AAAA):</label>
+                    <input type="month" name="employmentTo[]">
+                </div>
+                <button type="button" onclick="this.parentNode.remove()" style="background-color: #dc3545; margin-top: 5px;">Remover Emprego</button>
+            `;
+            container.appendChild(newEntry);
+        }
+
+        function addTravelEntry() {
+            const container = document.getElementById('travelHistoryContainer');
+            const newEntry = document.createElement('div');
+            newEntry.classList.add('travel-entry');
+            newEntry.innerHTML = `
+                <hr style="margin: 20px 0;">
+                <div class="form-group">
+                    <label>País Visitado:</label>
+                    <input type="text" name="countryVisited[]">
+                </div>
+                <div class="form-group">
+                    <label>Data de Entrada (MM/AAAA):</label>
+                    <input type="month" name="entryDate[]">
+                </div>
+                <div class="form-group">
+                    <label>Data de Saída (MM/AAAA):</label>
+                    <input type="month" name="exitDate[]">
+                </div>
+                <div class="form-group">
+                    <label>Propósito da Viagem:</label>
+                    <textarea name="travelPurpose[]" rows="2"></textarea>
+                </div>
+                <button type="button" onclick="this.parentNode.remove()" style="background-color: #dc3545; margin-top: 5px;">Remover Viagem</button>
+            `;
+            container.appendChild(newEntry);
+        }
+
+
+        // Adicionando event listeners para as toggles e o submit
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('maritalStatus').addEventListener('change', toggleSpouseInfo);
+            document.getElementById('parentsAlive').addEventListener('change', toggleParentsInfo);
+            document.getElementById('parentsInUS').addEventListener('change', toggleParentsInUSInfo);
+            document.getElementById('knownInUS').addEventListener('change', toggleKnownInUSInfo);
+
+            document.getElementById('crimeYes').addEventListener('change', toggleEligibilityDetails);
+            document.getElementById('crimeNo').addEventListener('change', toggleEligibilityDetails);
+            document.getElementById('violationYes').addEventListener('change', toggleEligibilityDetails);
+            document.getElementById('violationNo').addEventListener('change', toggleEligibilityDetails);
+            document.getElementById('investigationYes').addEventListener('change', toggleEligibilityDetails);
+            document.getElementById('investigationNo').addEventListener('change', toggleEligibilityDetails);
+            document.getElementById('falseInfoYes').addEventListener('change', toggleEligibilityDetails);
+            document.getElementById('falseInfoNo').addEventListener('change', toggleEligibilityDetails);
+
+            const form = document.getElementById('globalEntryForm');
+            form.addEventListener('submit', generatePDF);
+
+            // Chamadas iniciais para definir o estado correto no carregamento da página
+            toggleSpouseInfo();
+            toggleParentsInfo();
+            toggleKnownInUSInfo();
+            // As de elegibilidade serão controladas pelo estado 'checked' inicial no HTML ('Não' por padrão)
+        });
+
+        // Função para gerar o PDF e enviar
+        async function generatePDF(event) {
+            event.preventDefault(); // Previne o envio padrão do formulário e o reset da página
+            const submitButton = document.getElementById('submitButton');
+            const loadingMessage = document.getElementById('loadingMessage');
+            submitButton.disabled = true;
+            loadingMessage.style.display = 'block';
+
+            try {
+                const { jsPDF } = window.jspdf;
+                const form = document.getElementById('globalEntryForm');
+                const formData = new FormData(form);
+                const solicitanteNome = formData.get('fullName') || formData.get('declaracaoNome') || 'Não informado';
+                const fixedWhatsAppNumber = '5561999998165'; // Seu número de WhatsApp fixo
+
+                const doc = new jsPDF();
+                const pageWidth = doc.internal.pageSize.width;
+                const pageHeight = doc.internal.pageSize.height;
+                const margin = 10;
+                let yPosition = 30;
+
+                function drawHeader() {
+                    doc.setFillColor(0, 48, 135); /* Azul Marinho */
+                    doc.rect(0, 0, pageWidth, 25, 'F');
+                    doc.setFontSize(16);
+                    doc.setTextColor(255, 255, 255); /* Branco */
+                    doc.setFont("Helvetica", "bold");
+                    const title = "Formulário de Solicitação Global Entry";
+                    const titleWidth = doc.getTextWidth(title);
+                    const titleX = (pageWidth - titleWidth) / 2;
+                    doc.text(title, titleX, 15);
+                    doc.setFontSize(14);
+                    const starSpacing = 8;
+                    for (let i = 0; i < 3; i++) {
+                        doc.text("*", titleX - (i + 1) * starSpacing - 5, 15);
+                        doc.text("*", titleX + titleWidth + (i + 1) * starSpacing + 5, 15);
+                    }
+                }
+
+                function drawPageBorder() {
+                    doc.setDrawColor(0, 48, 135); /* Azul Marinho */
+                    doc.setLineWidth(0.5);
+                    doc.rect(margin / 2, margin / 2, pageWidth - margin, pageHeight - margin);
+                }
+
+                function addSectionTitle(title) {
+                    if (yPosition + 15 > pageHeight - margin) {
+                        doc.addPage();
+                        yPosition = 30;
+                        drawHeader();
+                        drawPageBorder();
+                    }
+                    doc.setFillColor(200, 16, 46); /* Vermelho */
+                    doc.rect(margin, yPosition - 5, pageWidth - 2 * margin, 10, 'F');
+                    doc.setFontSize(12);
+                    doc.setTextColor(255, 255, 255); /* Branco */
+                    doc.setFont("Helvetica", "bold");
+                    doc.text(title, margin + 5, yPosition + 2);
+                    yPosition += 15;
+                }
+
+                function addText(label, value, isBoldLabel = false, isBoldValue = false) {
+                    const maxWidth = pageWidth - 2 * margin;
+                    const lineHeight = 7;
+                    
+                    doc.setFont("Helvetica", isBoldLabel ? "bold" : "normal");
+                    doc.setTextColor(0, 0, 0); // Black
+                    doc.setFontSize(10);
+                    
+                    const labelText = label + (label ? ": " : "");
+                    const labelWidth = doc.getTextWidth(labelText);
+
+                    let currentText = labelText;
+
+                    doc.setFont("Helvetica", isBoldValue ? "bold" : "normal");
+                    const valueText = value || 'Não informado';
+                    currentText += valueText;
+
+                    const lines = doc.splitTextToSize(currentText, maxWidth);
+
+                    for (let i = 0; i < lines.length; i++) {
+                        if (yPosition + lineHeight > pageHeight - margin) {
+                            doc.addPage();
+                            yPosition = 30;
+                            drawHeader();
+                            drawPageBorder();
+                        }
+                        doc.text(lines[i], margin, yPosition);
+                        yPosition += lineHeight;
+                    }
+                    yPosition += 2; // Extra spacing after each entry
+                }
+
+                function addJustifiedText(text) {
+                    const maxWidth = pageWidth - 2 * margin;
+                    const lineHeight = 7;
+                    doc.setFont("Helvetica", "normal");
+                    doc.setTextColor(0, 0, 0);
+                    doc.setFontSize(10);
+
+                    const parts = text.split(/(\*\*.*?\*\*|_.*?_)/g);
+                    let currentX = margin;
+                    let lineBuffer = []; // Usar array para buffer de objetos {text, style}
+
+                    for (let i = 0; i < parts.length; i++) {
+                        let part = parts[i];
+                        let fontStyle = "normal";
+
+                        if (part.startsWith('**') && part.endsWith('**')) {
+                            fontStyle = "bold";
+                            part = part.substring(2, part.length - 2);
+                        } else if (part.startsWith('_') && part.endsWith('_')) {
+                            fontStyle = "italic";
+                            part = part.substring(1, part.length - 1);
+                        }
+                        
+                        const words = part.trim().split(/\s+/);
+                        for (let j = 0; j < words.length; j++) {
+                            const word = words[j];
+                            const wordWithSpace = word + (j < words.length - 1 ? ' ' : '');
+
+                            doc.setFont("Helvetica", fontStyle);
+                            const wordWidth = doc.getTextWidth(wordWithSpace);
+
+                            let tempLineBuffer = lineBuffer.map(item => item.text).join('') + wordWithSpace;
+                            let tempLineWidth = doc.getTextWidth(tempLineBuffer); // Recalcula largura da linha inteira
+
+                            if (currentX + wordWidth > pageWidth - margin || tempLineWidth > maxWidth) { // Condição mais robusta
+                                let lineText = '';
+                                lineBuffer.forEach(item => {
+                                    doc.setFont("Helvetica", item.style);
+                                    doc.text(item.text, currentX, yPosition);
+                                    currentX += doc.getTextWidth(item.text);
+                                });
+                                yPosition += lineHeight;
+                                currentX = margin;
+                                lineBuffer = [];
+
+                                if (yPosition + lineHeight > pageHeight - margin) {
+                                    doc.addPage();
+                                    yPosition = 30;
+                                    drawHeader();
+                                    drawPageBorder();
+                                    currentX = margin;
+                                }
+                            }
+                            lineBuffer.push({ text: wordWithSpace, style: fontStyle });
+                        }
+                    }
+                    if (lineBuffer.length > 0) {
+                        let lineText = '';
+                        lineBuffer.forEach(item => {
+                            doc.setFont("Helvetica", item.style);
+                            doc.text(item.text, currentX, yPosition);
+                            currentX += doc.getTextWidth(item.text);
+                        });
+                        yPosition += lineHeight;
+                    }
+                    yPosition += 2; // Extra spacing after each entry
+                }
+
+
+                drawHeader();
+                drawPageBorder();
+
+                // 1. Dados Pessoais
+                addSectionTitle("1. Dados Pessoais");
+                addText(`Nome Completo`, formData.get('fullName'));
+                addText(`Data de Nascimento`, formatDateBr(formData.get('dob')));
+                addText(`Gênero`, formData.get('gender'));
+                addText(`Nacionalidade Atual`, formData.get('nationality'));
+                addText(`Outras Nacionalidades`, formData.get('otherNationalities'));
+                addText(`País de Nascimento`, formData.get('countryOfBirth'));
+                addText(`Cidade de Nascimento`, formData.get('cityOfBirth'));
+                addText(`Estado Civil`, formData.get('maritalStatus'));
+
+                const maritalStatus = formData.get('maritalStatus');
+                if (['Casado', 'Divorciado', 'Viúvo', 'União Estável'].includes(maritalStatus)) {
+                    addSectionTitle("Dados do Cônjuge");
+                    addText(`Nome Completo do Cônjuge`, formData.get('spouseFullName'));
+                    addText(`Data de Nascimento do Cônjuge`, formatDateBr(formData.get('spouseDob')));
+                    addText(`País de Nascimento do Cônjuge`, formData.get('spouseCountryOfBirth'));
+                    if (maritalStatus === 'Viúvo') {
+                        addText(`Data de Falecimento do Cônjuge`, formatDateBr(formData.get('spouseDod')));
+                    }
+                }
+
+                // 2. Dados do Passaporte
+                addSectionTitle("2. Dados do Passaporte");
+                addText(`Número do Passaporte`, formData.get('passportNumber'));
+                addText(`Data de Emissão`, formatDateBr(formData.get('issueDate')));
+                addText(`Data de Validade`, formatDateBr(formData.get('expiryDate')));
+                addText(`País Emissor`, formData.get('issuingCountry'));
+
+                // 3. Endereço Atual e Contato
+                addSectionTitle("3. Endereço Atual e Contato");
+                addText(`Endereço`, formData.get('currentAddress'));
+                addText(`Cidade`, formData.get('currentCity'));
+                addText(`Estado/Província`, formData.get('currentState'));
+                addText(`CEP/Código Postal`, formData.get('currentZipCode'));
+                addText(`País`, formData.get('currentCountry'));
+                addText(`Telefone`, formData.get('phone'));
+                addText(`E-mail`, formData.get('email'));
+
+                // 4. Informações Familiares
+                addSectionTitle("4. Informações Familiares");
+                addText(`Seus pais estão vivos?`, formData.get('parentsAlive'));
+                if (formData.get('parentsAlive') === 'Sim') {
+                    addText(`Nome Completo do Pai`, formData.get('fatherFullName'));
+                    addText(`Data de Nascimento do Pai`, formatDateBr(formData.get('fatherDob')));
+                    addText(`Nome Completo da Mãe`, formData.get('motherFullName'));
+                    addText(`Data de Nascimento da Mãe`, formatDateBr(formData.get('motherDob')));
+                    addText(`Seus pais estão nos EUA?`, formData.get('parentsInUS'));
+                    if (formData.get('parentsInUS') === 'Sim') {
+                        addText(`Explicação sobre pais nos EUA`, formData.get('parentsInUSExplanation'));
+                    }
+                }
+                addText(`Você tem conhecidos nos EUA?`, formData.get('knownInUS'));
+                if (formData.get('knownInUS') === 'Sim') {
+                    addSectionTitle("Dados do Conhecido nos EUA");
+                    addText(`Nome Completo do Conhecido`, formData.get('knownName'));
+                    addText(`Telefone do Conhecido`, formData.get('knownPhone'));
+                    addText(`E-mail do Conhecido`, formData.get('knownEmail'));
+                    addText(`Vínculo com o Solicitante`, formData.get('knownRelationship'));
+                }
+
+                // 5. Histórico de Endereços
+                addSectionTitle("5. Histórico de Endereços (Últimos 5 anos)");
+                const pastAddresses = form.querySelectorAll('#addressHistoryContainer .address-entry');
+                if (pastAddresses.length > 0) {
+                    pastAddresses.forEach((entry, index) => {
+                        const address = entry.querySelector('[name="pastAddress[]"]').value;
+                        const city = entry.querySelector('[name="pastCity[]"]').value;
+                        const state = entry.querySelector('[name="pastState[]"]').value;
+                        const country = entry.querySelector('[name="pastCountry[]"]').value;
+                        const from = formatMonthBr(entry.querySelector('[name="pastAddressFrom[]"]').value);
+                        const to = formatMonthBr(entry.querySelector('[name="pastAddressTo[]"]').value);
+                        addText(`Endereço ${index + 1}`, `${address}, ${city}, ${state}, ${country}. De: ${from} Até: ${to}`);
+                    });
+                } else {
+                    addText('', 'Nenhum endereço adicional informado.');
+                }
+
+                // 6. Histórico de Emprego
+                addSectionTitle("6. Histórico de Emprego (Últimos 5 anos)");
+                const employments = form.querySelectorAll('#employmentHistoryContainer .employment-entry');
+                if (employments.length > 0) {
+                    employments.forEach((entry, index) => {
+                        const employerName = entry.querySelector('[name="employerName[]"]').value;
+                        const occupation = entry.querySelector('[name="occupation[]"]').value;
+                        const employerAddress = entry.querySelector('[name="employerAddress[]"]').value;
+                        const from = formatMonthBr(entry.querySelector('[name="employmentFrom[]"]').value);
+                        const to = formatMonthBr(entry.querySelector('[name="employmentTo[]"]').value);
+                        addText(`Emprego ${index + 1}`, `Empregador: ${employerName}, Cargo: ${occupation}, Endereço: ${employerAddress}. De: ${from} Até: ${to}`);
+                    });
+                } else {
+                    addText('', 'Nenhum histórico de emprego informado.');
+                }
+                
+                // 7. Histórico de Viagens Internacionais
+                addSectionTitle("7. Histórico de Viagens Internacionais (Últimos 5 anos)");
+                const travels = form.querySelectorAll('#travelHistoryContainer .travel-entry');
+                if (travels.length > 0) {
+                    travels.forEach((entry, index) => {
+                        const countryVisited = entry.querySelector('[name="countryVisited[]"]').value;
+                        const entryDate = formatMonthBr(entry.querySelector('[name="entryDate[]"]').value);
+                        const exitDate = formatMonthBr(entry.querySelector('[name="exitDate[]"]').value);
+                        const travelPurpose = entry.querySelector('[name="travelPurpose[]"]').value;
+                        addText(`Viagem ${index + 1}`, `País: ${countryVisited}, Entrada: ${entryDate}, Saída: ${exitDate}, Propósito: ${travelPurpose}`);
+                    });
+                } else {
+                    addText('', 'Nenhum histórico de viagem internacional informado.');
+                }
+
+                // 8. Perguntas de Elegibilidade e Histórico
+                addSectionTitle("8. Perguntas de Elegibilidade e Histórico");
+                addText(`a. Condenado por crime/acusação pendente/mandados:`, formData.get('criminalRecord'));
+                if (formData.get('criminalRecord') === 'Sim') {
+                    addText(`Explicação`, formData.get('crimeExplanation'));
+                }
+                addText(`b. Violação de regulamentos/leis (alfandegárias, imigração, agrícolas):`, formData.get('violationRecord'));
+                if (formData.get('violationRecord') === 'Sim') {
+                    addText(`Explicação`, formData.get('violationExplanation'));
+                }
+                addText(`c. Objeto de investigação em andamento:`, formData.get('investigationStatus'));
+                if (formData.get('investigationStatus') === 'Sim') {
+                    addText(`Explicação`, formData.get('investigationExplanation'));
+                }
+                addText(`d. Forneceu informações falsas/incompletas (formulário/processo imigração):`, formData.get('falseInformation'));
+                if (formData.get('falseInformation') === 'Sim') {
+                    addText(`Explicação`, formData.get('falseInfoExplanation'));
+                }
+
+                // 9. Declaração e Autorização
+                addSectionTitle("9. Declaração e Autorização");
+                addJustifiedText(`Eu, **${formData.get('declaracaoNome') || 'Não informado'}**, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação de visto e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.`);
+                yPosition += 5;
+                addJustifiedText(`**Declaro estar ciente de que:**`);
+                addJustifiedText(`1. Qualquer declaração falsa, incompleta ou enganosa poderá resultar na recusa permanente do visto ou na negativa de admissão nos Estados Unidos, conforme disposto na legislação aplicável.`);
+                addJustifiedText(`2. Todas as informações prestadas nesta solicitação constituem declarações juramentadas, realizadas sob pena de perjúrio, nos termos do disposto no _28 U.S.C. § 1746_.`);
+                addJustifiedText(`3. Informações adicionais poderão ser requisitadas pelas autoridades competentes após a análise desta solicitação, sendo minha responsabilidade fornecê-las tempestivamente.`);
+                addJustifiedText(`4. As informações contidas nesta solicitação poderão ser compartilhadas com outras agências governamentais dos Estados Unidos, que possuem autoridade para utilizá-las para fins de aplicação da lei ou para propósitos imigratórios, conforme permitido pela legislação vigente.`);
+                addJustifiedText(`5. A fotografia fornecida com esta solicitação poderá ser utilizada pelas autoridades americanas para fins de verificação de identidade, empregabilidade ou outros objetivos legais previstos na legislação dos Estados Unidos.`);
+                yPosition += 5;
+                addJustifiedText(`**Declaro ainda:**`);
+                addJustifiedText(`6. Que sou exclusivamente responsável pela autenticidade e exatidão dos documentos apresentados e das informações prestadas nesta solicitação.`);
+                addJustifiedText(`7. Que tenho pleno conhecimento de que a concessão ou negativa do visto é prerrogativa exclusiva da Autoridade Consular Americana, não cabendo a terceiros qualquer ingerência sobre tal decisão.`);
+                addJustifiedText(`8. Que estou ciente de que, em processos de renovação de visto, entrevistas presenciais poderão ser exigidas a critério exclusivo da Autoridade Consular Americana.`);
+                addJustifiedText(`9. Que reconheço que o serviço contratado constitui assessoria relacionada ao processo de preenchimento de documentação, agendamento de biometria e entrevista, não abrangendo serviços de entrega ou retirada de documentos no Centro de Atendimento ao Solicitante de Visto (CASV), sendo necessária a contratação de um agente colaborador, caso eu deseje tais serviços adicionais.`);
+                addJustifiedText(`10. Que a aposição de minha assinatura eletrônica neste documento possui validade jurídica, conforme a legislação aplicável, e representa meu reconhecimento expresso dos serviços contratados.`);
+                yPosition += 5;
+                addText(`Local`, formData.get('declaracaoLocal'));
+                addText(`Data`, formatDateBr(formData.get('declaracaoData')));
+                addText(`Aceito os termos da declaração e autorizo o envio`, formData.get('aceitoTermos') === 'on' ? 'Sim' : 'Não');
+
+
+                // Finaliza o PDF
+                const pdfBlob = doc.output('blob');
+                const filename = 'global_entry_form_' + solicitanteNome.replace(/\s+/g, '_') + '_' + new Date().getTime() + '.pdf';
+                
+                // Upload para o Firebase Storage
+                const storageRef = ref(storage, 'pdfs/' + filename);
+                await uploadBytes(storageRef, pdfBlob);
+                const downloadUrl = await getDownloadURL(storageRef);
+                console.log('PDF uploaded successfully:', downloadUrl);
+
+                // Envio para WhatsApp
+                const whatsappMessage = `Olá,
+Seu formulário de Global Entry foi gerado e está disponível no link:
+${downloadUrl}
+Por favor, revise o documento.`;
+
+                const whatsappUrl = `https://wa.me/${fixedWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
+                window.open(whatsappUrl, '_blank');
+
+                alert('Formulário enviado com sucesso! O PDF foi gerado, enviado ao Firebase e a conversa do WhatsApp foi iniciada.');
+
+            } catch (error) {
+                console.error('Error generating PDF or sending to Firebase/WhatsApp:', error);
+                alert('Ocorreu um erro ao gerar o PDF ou enviar. Verifique o console para mais detalhes.');
+            } finally {
+                submitButton.disabled = false;
+                loadingMessage.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>
