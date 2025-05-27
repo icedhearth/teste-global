@@ -7,7 +7,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.autotable.min.js"></script>
     
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-analytics-compat.js"></script>
+    
     <style>
+        /* Seus estilos CSS, que são os mesmos do último código enviado */
         /* Estilos Globais */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -759,27 +764,21 @@
         </form>
     </div>
 
-    <script type="module">
-        // Importa as funções necessárias do Firebase SDK
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-app.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-storage.js";
-        import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.5.0/firebase-analytics.js";
-
-        // Configuração do Firebase com suas credenciais
+    <script>
+        // Configuração do Firebase com suas credenciais (Versão compat)
         const firebaseConfig = {
             apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0",
             authDomain: "visaformulariostorage.firebaseapp.com",
             projectId: "visaformulariostorage",
-            storageBucket: "visaformulariostorage.appspot.com", // CORRIGIDO: Use o bucket real
+            storageBucket: "visaformulariostorage.appspot.com", // Confirme que este é o bucket correto para o DS-160
             messagingSenderId: "720170394408",
             appId: "1:720170394408:web:b1c294c39c489388f6261d",
             measurementId: "G-ZFCV4JEEFT"
         };
 
-        // Inicializa o Firebase
-        const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
-        const analytics = getAnalytics(app);
+        // Inicializa o Firebase (versão compat)
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage(); // Usa a referência do storage da versão compat
 
         // Funções auxiliares (formatação de data, etc.)
         function formatDateBr(dateStr) {
@@ -1008,7 +1007,7 @@
             loadingMessage.style.display = 'block';
 
             try {
-                const { jsPDF } = window.jspdf;
+                const { jsPDF } = window.jspdf; // Acessa jsPDF via window, já que não é um módulo ES6
                 const form = document.getElementById('globalEntryForm');
                 const formData = new FormData(form);
                 const solicitanteNome = formData.get('fullName') || formData.get('declaracaoNome') || 'Não informado';
@@ -1317,12 +1316,14 @@
 
                 // Finaliza o PDF
                 const pdfBlob = doc.output('blob');
+                // Alterado para incluir 'global' no nome do arquivo
                 const filename = 'global_entry_form_' + solicitanteNome.replace(/\s+/g, '_') + '_' + new Date().getTime() + '.pdf';
                 
-                // Upload para o Firebase Storage
-                const storageRef = ref(storage, 'pdfs/' + filename);
-                await uploadBytes(storageRef, pdfBlob);
-                const downloadUrl = await getDownloadURL(storageRef);
+                // Upload para o Firebase Storage (mantendo a forma do DS-160)
+                const storageRef = storage.ref().child('pdfs/' + filename); // Referência como no DS-160
+                await storageRef.put(pdfBlob); // Upload como no DS-160
+                const downloadUrl = await storageRef.getDownloadURL(); // Obtenção da URL como no DS-160
+                
                 console.log('PDF uploaded successfully:', downloadUrl);
 
                 // Envio para WhatsApp
