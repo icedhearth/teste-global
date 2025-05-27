@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulário de Inscrição Global Entry</title>
+    <title>Formulário DS-160 (com Perguntas Global Entry)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.16/jspdf.autotable.min.js"></script>
     
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js';
-        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js';
-        
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-storage-compat.js"></script>
+    
+    <script>
         // Suas credenciais do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0",
@@ -23,19 +23,12 @@
         };
 
         // Inicializa o Firebase
-        const app = initializeApp(firebaseConfig);
-        const storage = getStorage(app);
-
-        // Torna as funções do Firebase disponíveis globalmente (necessário para o script não-módulo)
-        window.firebaseApp = app;
-        window.firebaseStorage = storage;
-        window.firebaseRef = ref;
-        window.firebaseUploadBytes = uploadBytes;
-        window.firebaseGetDownloadURL = getDownloadURL;
+        firebase.initializeApp(firebaseConfig);
+        const storage = firebase.storage();
     </script>
     
     <style>
-        /* Seus estilos CSS, que são os mesmos do último código enviado (do DS-160) */
+        /* Seus estilos CSS, os mesmos do último código enviado (do DS-160 funcional) */
         /* Estilos Globais */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -416,10 +409,10 @@
 </head>
 <body>
     <div class="container">
-        <h1>Formulário de Inscrição Global Entry</h1>
-        <p style="text-align: center;">Preencha o formulário com seus dados para a aplicação do Global Entry.</p>
+        <h1>Formulário DS-160 <br><small style="font-size: 0.6em; color: #666;">(com Perguntas Adicionais para Global Entry)</small></h1>
+        <p style="text-align: center;">Preencha o formulário com seus dados. Os campos adicionais são para a aplicação do Global Entry.</p>
 
-        <form id="globalEntryForm">
+        <form id="ds160Form">
             <div class="form-section">
                 <h3>1. Dados Pessoais</h3>
                 <div class="form-group">
@@ -705,44 +698,46 @@
             </div>
 
             <div class="form-section">
-                <h3>8. Perguntas de Elegibilidade e Histórico</h3>
+                <h3>8. Perguntas Adicionais Global Entry</h3>
+                <p>Estas perguntas são específicas para a aplicação do Global Entry e serão adicionadas ao seu formulário.</p>
+
                 <div class="form-group radio-group">
                     <label>a. Você já foi condenado(a) por qualquer crime (incluindo DUI/DWI), tem alguma acusação criminal pendente, ou possui mandados de prisão em aberto em qualquer país?</label>
-                    <input type="radio" id="crimeYes" name="criminalRecord" value="Sim"> <label for="crimeYes">Sim</label>
-                    <input type="radio" id="crimeNo" name="criminalRecord" value="Não" checked> <label for="crimeNo">Não</label>
-                    <div class="form-group" id="crimeDetails" style="display: none; margin-top: 10px;">
-                        <label for="crimeExplanation">Explique:</label>
-                        <textarea id="crimeExplanation" name="crimeExplanation" rows="3"></textarea>
+                    <input type="radio" id="geCrimeYes" name="geCriminalRecord" value="Sim"> <label for="geCrimeYes">Sim</label>
+                    <input type="radio" id="geCrimeNo" name="geCriminalRecord" value="Não" checked> <label for="geCrimeNo">Não</label>
+                    <div class="form-group" id="geCrimeDetails" style="display: none; margin-top: 10px;">
+                        <label for="geCrimeExplanation">Explique:</label>
+                        <textarea id="geCrimeExplanation" name="geCrimeExplanation" rows="3"></textarea>
                     </div>
                 </div>
 
                 <div class="form-group radio-group">
                     <label>b. Você já foi considerado(a) culpado(a) de violação de quaisquer regulamentos ou leis alfandegárias, de imigração ou agrícolas em qualquer país?</label>
-                    <input type="radio" id="violationYes" name="violationRecord" value="Sim"> <label for="violationYes">Sim</label>
-                    <input type="radio" id="violationNo" name="violationRecord" value="Não" checked> <label for="violationNo">Não</label>
-                    <div class="form-group" id="violationDetails" style="display: none; margin-top: 10px;">
-                        <label for="violationExplanation">Explique:</label>
-                        <textarea id="violationExplanation" name="violationExplanation" rows="3"></textarea>
+                    <input type="radio" id="geViolationYes" name="geViolationRecord" value="Sim"> <label for="geViolationYes">Sim</label>
+                    <input type="radio" id="geViolationNo" name="geViolationRecord" value="Não" checked> <label for="geViolationNo">Não</label>
+                    <div class="form-group" id="geViolationDetails" style="display: none; margin-top: 10px;">
+                        <label for="geViolationExplanation">Explique:</label>
+                        <textarea id="geViolationExplanation" name="geViolationExplanation" rows="3"></textarea>
                     </div>
                 </div>
 
                 <div class="form-group radio-group">
                     <label>c. Você é objeto de uma investigação em andamento por qualquer agência federal, estadual ou local de aplicação da lei?</label>
-                    <input type="radio" id="investigationYes" name="investigationStatus" value="Sim"> <label for="investigationYes">Sim</label>
-                    <input type="radio" id="investigationNo" name="investigationStatus" value="Não" checked> <label for="investigationNo">Não</label>
-                    <div class="form-group" id="investigationDetails" style="display: none; margin-top: 10px;">
-                        <label for="investigationExplanation">Explique:</label>
-                        <textarea id="investigationExplanation" name="investigationExplanation" rows="3"></textarea>
+                    <input type="radio" id="geInvestigationYes" name="geInvestigationStatus" value="Sim"> <label for="geInvestigationYes">Sim</label>
+                    <input type="radio" id="geInvestigationNo" name="geInvestigationStatus" value="Não" checked> <label for="geInvestigationNo">Não</label>
+                    <div class="form-group" id="geInvestigationDetails" style="display: none; margin-top: 10px;">
+                        <label for="geInvestigationExplanation">Explique:</label>
+                        <textarea id="geInvestigationExplanation" name="geInvestigationExplanation" rows="3"></textarea>
                     </div>
                 </div>
 
                 <div class="form-group radio-group">
                     <label>d. Você já forneceu informações falsas ou incompletas em qualquer formulário de inscrição ou processo de imigração para os Estados Unidos ou qualquer outro país?</label>
-                    <input type="radio" id="falseInfoYes" name="falseInformation" value="Sim"> <label for="falseInfoYes">Sim</label>
-                    <input type="radio" id="falseInfoNo" name="falseInformation" value="Não" checked> <label for="falseInfoNo">Não</label>
-                    <div class="form-group" id="falseInfoDetails" style="display: none; margin-top: 10px;">
-                        <label for="falseInfoExplanation">Explique:</label>
-                        <textarea id="falseInfoExplanation" name="falseInfoExplanation" rows="3"></textarea>
+                    <input type="radio" id="geFalseInfoYes" name="geFalseInformation" value="Sim"> <label for="geFalseInfoYes">Sim</label>
+                    <input type="radio" id="geFalseInfoNo" name="geFalseInformation" value="Não" checked> <label for="geFalseInfoNo">Não</label>
+                    <div class="form-group" id="geFalseInfoDetails" style="display: none; margin-top: 10px;">
+                        <label for="geFalseInfoExplanation">Explique:</label>
+                        <textarea id="geFalseInfoExplanation" name="geFalseInfoExplanation" rows="3"></textarea>
                     </div>
                 </div>
             </div>
@@ -787,16 +782,7 @@
         </form>
     </div>
 
-    <script type="module">
-        // Importações do Firebase (feitas no cabeçalho, apenas para garantir)
-        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js';
-
-        // Acessa as instâncias globalmente disponíveis
-        const storage = window.firebaseStorage;
-        const ref = window.firebaseRef;
-        const uploadBytes = window.firebaseUploadBytes;
-        const getDownloadURL = window.firebaseGetDownloadURL;
-
+    <script>
         // Funções auxiliares (formatação de data, etc.)
         function formatDateBr(dateStr) {
             if (!dateStr) return 'Não informado';
@@ -822,7 +808,7 @@
             }
         }
 
-        // Funções para toggle de seções (ATUALIZADAS PARA GLOBAL ENTRY IDs)
+        // Funções para toggle de seções (ID's do DS-160 mantidos)
         function toggleSpouseInfo() {
             const maritalStatus = document.getElementById('maritalStatus');
             const spouseInfo = document.getElementById('spouseInfo');
@@ -834,11 +820,13 @@
                     spouseDeathInfo.classList.remove('hidden-section');
                 } else {
                     spouseDeathInfo.classList.add('hidden-section');
+                    // Limpar campos quando a seção é ocultada
                     spouseDeathInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
                 }
             } else {
                 spouseInfo.classList.add('hidden-section');
                 spouseDeathInfo.classList.add('hidden-section');
+                // Limpar campos quando a seção é ocultada
                 spouseInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
                 spouseDeathInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
             }
@@ -850,7 +838,7 @@
             
             if (parentsAlive.value === 'Sim') {
                 parentsInfo.classList.remove('hidden-section');
-                toggleParentsInUSInfo();
+                toggleParentsInUSInfo(); // Chamar para atualizar o estado da subseção
             } else {
                 parentsInfo.classList.add('hidden-section');
                 parentsInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
@@ -881,18 +869,19 @@
             }
         }
 
-        function toggleEligibilityDetails(event) {
+        // Nova função para as perguntas do Global Entry (usando os novos IDs)
+        function toggleGEEligibilityDetails(event) {
             const targetId = event.target.id;
             let detailsDivId;
 
-            if (targetId.includes('crime')) {
-                detailsDivId = 'crimeDetails';
-            } else if (targetId.includes('violation')) {
-                detailsDivId = 'violationDetails';
-            } else if (targetId.includes('investigation')) {
-                detailsDivId = 'investigationDetails';
-            } else if (targetId.includes('falseInfo')) {
-                detailsDivId = 'falseInfoDetails';
+            if (targetId.includes('geCrime')) {
+                detailsDivId = 'geCrimeDetails';
+            } else if (targetId.includes('geViolation')) {
+                detailsDivId = 'geViolationDetails';
+            } else if (targetId.includes('geInvestigation')) {
+                detailsDivId = 'geInvestigationDetails';
+            } else if (targetId.includes('geFalseInfo')) {
+                detailsDivId = 'geFalseInfoDetails';
             }
 
             const detailsDiv = document.getElementById(detailsDivId);
@@ -900,11 +889,11 @@
                 detailsDiv.classList.remove('hidden-section');
             } else {
                 detailsDiv.classList.add('hidden-section');
-                detailsDiv.querySelectorAll('textarea').forEach(input => input.value = '');
+                detailsDiv.querySelectorAll('textarea').forEach(input => input.value = ''); // Limpa o textarea ao esconder
             }
         }
 
-        // Funções para adicionar campos dinâmicos (Endereço, Emprego, Viagem)
+        // Funções para adicionar campos dinâmicos (Endereço, Emprego, Viagem) - MANTIDOS
         function addAddressEntry() {
             const container = document.getElementById('addressHistoryContainer');
             const newEntry = document.createElement('div');
@@ -1006,23 +995,24 @@
             document.getElementById('parentsInUS').addEventListener('change', toggleParentsInUSInfo);
             document.getElementById('knownInUS').addEventListener('change', toggleKnownInUSInfo);
 
-            document.getElementById('crimeYes').addEventListener('change', toggleEligibilityDetails);
-            document.getElementById('crimeNo').addEventListener('change', toggleEligibilityDetails);
-            document.getElementById('violationYes').addEventListener('change', toggleEligibilityDetails);
-            document.getElementById('violationNo').addEventListener('change', toggleEligibilityDetails);
-            document.getElementById('investigationYes').addEventListener('change', toggleEligibilityDetails);
-            document.getElementById('investigationNo').addEventListener('change', toggleEligibilityDetails);
-            document.getElementById('falseInfoYes').addEventListener('change', toggleEligibilityDetails);
-            document.getElementById('falseInfoNo').addEventListener('change', toggleEligibilityDetails);
+            // Adicionar listeners para as novas perguntas do Global Entry
+            document.getElementById('geCrimeYes').addEventListener('change', toggleGEEligibilityDetails);
+            document.getElementById('geCrimeNo').addEventListener('change', toggleGEEligibilityDetails);
+            document.getElementById('geViolationYes').addEventListener('change', toggleGEEligibilityDetails);
+            document.getElementById('geViolationNo').addEventListener('change', toggleGEEligibilityDetails);
+            document.getElementById('geInvestigationYes').addEventListener('change', toggleGEEligibilityDetails);
+            document.getElementById('geInvestigationNo').addEventListener('change', toggleGEEligibilityDetails);
+            document.getElementById('geFalseInfoYes').addEventListener('change', toggleGEEligibilityDetails);
+            document.getElementById('geFalseInfoNo').addEventListener('change', toggleGEEligibilityDetails);
 
-            const form = document.getElementById('globalEntryForm');
+            const form = document.getElementById('ds160Form');
             form.addEventListener('submit', generatePDF);
 
             // Chamadas iniciais para definir o estado correto no carregamento da página
             toggleSpouseInfo();
             toggleParentsInfo();
             toggleKnownInUSInfo();
-            // As de elegibilidade serão controladas pelo estado 'checked' inicial no HTML ('Não' por padrão)
+            // As de elegibilidade do GE serão controladas pelo estado 'checked' inicial no HTML ('Não' por padrão)
         });
 
         // Função para gerar o PDF e enviar
@@ -1035,10 +1025,10 @@
 
             try {
                 const { jsPDF } = window.jspdf; // Acessa jsPDF via window
-                const form = document.getElementById('globalEntryForm');
+                const form = document.getElementById('ds160Form');
                 const formData = new FormData(form);
                 
-                // Nome do solicitante para o nome do arquivo e mensagem do WhatsApp
+                // Nome do solicitante para o nome do arquivo e mensagem do WhatsApp (Mantido como DS-160)
                 const solicitanteNome = formData.get('fullName') || formData.get('declaracaoNome') || 'sem_nome';
                 const solicitantePassaporte = formData.get('passportNumber') || 'Não informado';
                 const fixedWhatsAppNumber = '5561999998165'; // Seu número de WhatsApp fixo
@@ -1056,7 +1046,7 @@
                     doc.setFontSize(16);
                     doc.setTextColor(255, 255, 255); /* Branco */
                     doc.setFont("Helvetica", "bold");
-                    const title = "Formulário de Solicitação Global Entry"; // Título alterado para Global Entry
+                    const title = "Formulário DS-160"; // Título DS-160 mantido
                     const titleWidth = doc.getTextWidth(title);
                     const titleX = (pageWidth - titleWidth) / 2;
                     doc.text(title, titleX, 15);
@@ -1200,7 +1190,7 @@
                 drawHeader();
                 drawPageBorder();
 
-                // 1. Dados Pessoais
+                // 1. Dados Pessoais (DS-160)
                 addSectionTitle("1. Dados Pessoais");
                 addText(`Nome Completo`, formData.get('fullName'));
                 addText(`Data de Nascimento`, formatDateBr(formData.get('dob')));
@@ -1222,14 +1212,14 @@
                     }
                 }
 
-                // 2. Dados do Passaporte
+                // 2. Dados do Passaporte (DS-160)
                 addSectionTitle("2. Dados do Passaporte");
                 addText(`Número do Passaporte`, formData.get('passportNumber'));
                 addText(`Data de Emissão`, formatDateBr(formData.get('issueDate')));
                 addText(`Data de Validade`, formatDateBr(formData.get('expiryDate')));
                 addText(`País Emissor`, formData.get('issuingCountry'));
 
-                // 3. Endereço Atual e Contato
+                // 3. Endereço Atual e Contato (DS-160)
                 addSectionTitle("3. Endereço Atual e Contato");
                 addText(`Endereço`, formData.get('currentAddress'));
                 addText(`Cidade`, formData.get('currentCity'));
@@ -1239,7 +1229,7 @@
                 addText(`Telefone`, formData.get('phone'));
                 addText(`E-mail`, formData.get('email'));
 
-                // 4. Informações Familiares
+                // 4. Informações Familiares (DS-160)
                 addSectionTitle("4. Informações Familiares");
                 addText(`Seus pais estão vivos?`, formData.get('parentsAlive'));
                 if (formData.get('parentsAlive') === 'Sim') {
@@ -1261,7 +1251,7 @@
                     addText(`Vínculo com o Solicitante`, formData.get('knownRelationship'));
                 }
 
-                // 5. Histórico de Endereços
+                // 5. Histórico de Endereços (DS-160)
                 addSectionTitle("5. Histórico de Endereços (Últimos 5 anos)");
                 const pastAddresses = form.querySelectorAll('#addressHistoryContainer .address-entry');
                 if (pastAddresses.length > 0 && pastAddresses[0].querySelector('[name="pastAddress[]"]').value) {
@@ -1278,7 +1268,7 @@
                     addText('', 'Nenhum endereço adicional informado.');
                 }
 
-                // 6. Histórico de Emprego
+                // 6. Histórico de Emprego (DS-160)
                 addSectionTitle("6. Histórico de Emprego (Últimos 5 anos)");
                 const employments = form.querySelectorAll('#employmentHistoryContainer .employment-entry');
                 if (employments.length > 0 && employments[0].querySelector('[name="employerName[]"]').value) {
@@ -1294,7 +1284,7 @@
                     addText('', 'Nenhum histórico de emprego informado.');
                 }
                 
-                // 7. Histórico de Viagens Internacionais
+                // 7. Histórico de Viagens Internacionais (DS-160)
                 addSectionTitle("7. Histórico de Viagens Internacionais (Últimos 5 anos)");
                 const travels = form.querySelectorAll('#travelHistoryContainer .travel-entry');
                 if (travels.length > 0 && travels[0].querySelector('[name="countryVisited[]"]').value) {
@@ -1309,26 +1299,26 @@
                     addText('', 'Nenhum histórico de viagem internacional informado.');
                 }
 
-                // 8. Perguntas de Elegibilidade e Histórico
-                addSectionTitle("8. Perguntas de Elegibilidade e Histórico");
-                addText(`a. Condenado por crime/acusação pendente/mandados:`, formData.get('criminalRecord'));
-                if (formData.get('criminalRecord') === 'Sim') {
-                    addText(`Explicação`, formData.get('crimeExplanation'));
+                // 8. Perguntas Adicionais Global Entry (NOVAS SEÇÕES)
+                addSectionTitle("8. Perguntas Adicionais Global Entry");
+                addText(`a. Condenado por crime/acusação pendente/mandados:`, formData.get('geCriminalRecord'));
+                if (formData.get('geCriminalRecord') === 'Sim') {
+                    addText(`Explicação`, formData.get('geCrimeExplanation'));
                 }
-                addText(`b. Violação de regulamentos/leis (alfandegárias, imigração, agrícolas):`, formData.get('violationRecord'));
-                if (formData.get('violationRecord') === 'Sim') {
-                    addText(`Explicação`, formData.get('violationExplanation'));
+                addText(`b. Violação de regulamentos/leis (alfandegárias, imigração, agrícolas):`, formData.get('geViolationRecord'));
+                if (formData.get('geViolationRecord') === 'Sim') {
+                    addText(`Explicação`, formData.get('geViolationExplanation'));
                 }
-                addText(`c. Objeto de investigação em andamento:`, formData.get('investigationStatus'));
-                if (formData.get('investigationStatus') === 'Sim') {
-                    addText(`Explicação`, formData.get('investigationExplanation'));
+                addText(`c. Objeto de investigação em andamento:`, formData.get('geInvestigationStatus'));
+                if (formData.get('geInvestigationStatus') === 'Sim') {
+                    addText(`Explicação`, formData.get('geInvestigationExplanation'));
                 }
-                addText(`d. Forneceu informações falsas/incompletas (formulário/processo imigração):`, formData.get('falseInformation'));
-                if (formData.get('falseInformation') === 'Sim') {
-                    addText(`Explicação`, formData.get('falseInfoExplanation'));
+                addText(`d. Forneceu informações falsas/incompletas (formulário/processo imigração):`, formData.get('geFalseInformation'));
+                if (formData.get('geFalseInformation') === 'Sim') {
+                    addText(`Explicação`, formData.get('geFalseInfoExplanation'));
                 }
 
-                // 9. Declaração e Autorização
+                // 9. Declaração (DS-160)
                 addSectionTitle("9. Declaração e Autorização");
                 addJustifiedText(`Eu, **${formData.get('declaracaoNome') || 'Não informado'}**, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação de visto e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.`);
                 yPosition += 5;
@@ -1351,21 +1341,21 @@
                 addText(`Aceito os termos da declaração e autorizo o envio`, formData.get('aceitoTermos') === 'on' ? 'Sim' : 'Não');
 
 
-                // Mantendo o nome de arquivo e estrutura de pasta do DS-160
+                // Mantendo o nome de arquivo e estrutura de pasta do DS-160 (SAÍDA IGUAL)
                 doc.save('formulario_visto.pdf'); // Salva com o nome 'formulario_visto.pdf' no navegador
 
                 const pdfBlob = doc.output('blob');
                 const timestamp = Date.now();
                 // O nome do arquivo no Firebase Storage será o mesmo padrão do DS-160
                 const firebaseFileName = `pdfs/formulario_visto_${solicitanteNome.replace(/\s+/g, '_')}_${timestamp}.pdf`;
-                const storageRef = ref(storage, firebaseFileName);
+                const storageRef = storage.ref().child(firebaseFileName); // Usando a sintaxe v9 compatível
 
-                await uploadBytes(storageRef, pdfBlob);
-                const downloadUrl = await getDownloadURL(storageRef);
+                await storageRef.put(pdfBlob);
+                const downloadUrl = await storageRef.getDownloadURL();
                 
                 console.log('PDF uploaded successfully:', downloadUrl);
 
-                // Mensagem do WhatsApp com o mesmo formato do DS-160
+                // Mensagem do WhatsApp com o mesmo formato do DS-160 (SAÍDA IGUAL)
                 const whatsappMessage = `Formulário de Visto Americano preenchido por ${solicitanteNome}.\\nPassaporte: ${solicitantePassaporte}\\nClique no link para visualizar e baixar o PDF: ${downloadUrl}`;
                 const whatsappUrl = `https://api.whatsapp.com/send?phone=${fixedWhatsAppNumber}&text=${encodeURIComponent(whatsappMessage)}`;
                 window.open(whatsappUrl, '_blank');
