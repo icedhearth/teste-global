@@ -310,7 +310,7 @@
         .declaration-section input[type="text"][name="declaracaoLocal"],
         .declaration-section input[type="date"][name="declaracaoData"] {
             width: 100%; /* Ocupa a largura total para melhor preenchimento */
-            display: block; /* Cada um em sua própria linha */
+            display: block; /* Cada one em sua própria linha */
             margin-left: 0;
             margin-top: 5px; /* Espaçamento entre eles */
             margin-bottom: 10px;
@@ -397,15 +397,15 @@
                 <h3>1. Dados Pessoais</h3>
                 <div class="form-group">
                     <label for="fullName">Nome Completo (como no passaporte):</label>
-                    <input type="text" id="fullName" name="fullName">
+                    <input type="text" id="fullName" name="fullName" required>
                 </div>
                 <div class="form-group">
                     <label for="dob">Data de Nascimento:</label>
-                    <input type="date" id="dob" name="dob">
+                    <input type="date" id="dob" name="dob" required>
                 </div>
                 <div class="form-group">
                     <label for="gender">Gênero:</label>
-                    <select id="gender" name="gender">
+                    <select id="gender" name="gender" required>
                         <option value="">Selecione</option>
                         <option value="Masculino">Masculino</option>
                         <option value="Feminino">Feminino</option>
@@ -414,7 +414,7 @@
                 </div>
                 <div class="form-group">
                     <label for="nationality">Nacionalidade Atual:</label>
-                    <input type="text" id="nationality" name="nationality">
+                    <input type="text" id="nationality" name="nationality" required>
                 </div>
                 <div class="form-group">
                     <label for="otherNationalities">Outras Nacionalidades (se houver):</label>
@@ -422,15 +422,15 @@
                 </div>
                 <div class="form-group">
                     <label for="countryOfBirth">País de Nascimento:</label>
-                    <input type="text" id="countryOfBirth" name="countryOfBirth">
+                    <input type="text" id="countryOfBirth" name="countryOfBirth" required>
                 </div>
                 <div class="form-group">
                     <label for="cityOfBirth">Cidade de Nascimento:</label>
-                    <input type="text" id="cityOfBirth" name="cityOfBirth">
+                    <input type="text" id="cityOfBirth" name="cityOfBirth" required>
                 </div>
                 <div class="form-group">
                     <label for="maritalStatus">Estado Civil:</label>
-                    <select id="maritalStatus" name="maritalStatus">
+                    <select id="maritalStatus" name="maritalStatus" required>
                         <option value="">Selecione</option>
                         <option value="Solteiro">Solteiro</option>
                         <option value="Casado">Casado</option>
@@ -467,19 +467,19 @@
                 <h3>2. Dados do Passaporte</h3>
                 <div class="form-group">
                     <label for="passportNumber">Número do Passaporte:</label>
-                    <input type="text" id="passportNumber" name="passportNumber">
+                    <input type="text" id="passportNumber" name="passportNumber" required>
                 </div>
                 <div class="form-group">
                     <label for="issueDate">Data de Emissão:</label>
-                    <input type="date" id="issueDate" name="issueDate">
+                    <input type="date" id="issueDate" name="issueDate" required>
                 </div>
                 <div class="form-group">
                     <label for="expiryDate">Data de Validade:</label>
-                    <input type="date" id="expiryDate" name="expiryDate">
+                    <input type="date" id="expiryDate" name="expiryDate" required>
                 </div>
                 <div class="form-group">
                     <label for="issuingCountry">País Emissor:</label>
-                    <input type="text" id="issuingCountry" name="issuingCountry">
+                    <input type="text" id="issuingCountry" name="issuingCountry" required>
                 </div>
             </div>
 
@@ -487,31 +487,31 @@
                 <h3>3. Endereço Atual e Contato</h3>
                 <div class="form-group">
                     <label for="currentAddress">Endereço (Rua, Número, Complemento):</label>
-                    <input type="text" id="currentAddress" name="currentAddress">
+                    <input type="text" id="currentAddress" name="currentAddress" required>
                 </div>
                 <div class="form-group">
                     <label for="currentCity">Cidade:</label>
-                    <input type="text" id="currentCity" name="currentCity">
+                    <input type="text" id="currentCity" name="currentCity" required>
                 </div>
                 <div class="form-group">
                     <label for="currentState">Estado/Província:</label>
-                    <input type="text" id="currentState" name="currentState">
+                    <input type="text" id="currentState" name="currentState" required>
                 </div>
                 <div class="form-group">
                     <label for="currentZipCode">CEP/Código Postal:</label>
-                    <input type="text" id="currentZipCode" name="currentZipCode">
+                    <input type="text" id="currentZipCode" name="currentZipCode" required>
                 </div>
                 <div class="form-group">
                     <label for="currentCountry">País:</label>
-                    <input type="text" id="currentCountry" name="currentCountry">
+                    <input type="text" id="currentCountry" name="currentCountry" required>
                 </div>
                 <div class="form-group">
                     <label for="phone">Telefone:</label>
-                    <input type="tel" id="phone" name="phone" placeholder="(XX) XXXXX-XXXX">
+                    <input type="tel" id="phone" name="phone" placeholder="(XX) XXXXX-XXXX" required>
                 </div>
                 <div class="form-group">
                     <label for="email">E-mail:</label>
-                    <input type="email" id="email" name="email">
+                    <input type="email" id="email" name="email" required>
                 </div>
             </div>
 
@@ -519,7 +519,7 @@
                 <h3>4. Informações Familiares</h3>
                 <div class="form-group">
                     <label for="parentsAlive">Seus pais estão vivos?</label>
-                    <select id="parentsAlive" name="parentsAlive">
+                    <select id="parentsAlive" name="parentsAlive" required>
                         <option value="">Selecione</option>
                         <option value="Sim">Sim</option>
                         <option value="Não">Não</option>
@@ -560,7 +560,7 @@
 
                 <div class="form-group">
                     <label for="knownInUS">Você tem conhecidos nos EUA?</label>
-                    <select id="knownInUS" name="knownInUS">
+                    <select id="knownInUS" name="knownInUS" required>
                         <option value="">Selecione</option>
                         <option value="Sim">Sim</option>
                         <option value="Não">Não</option>
@@ -722,7 +722,7 @@
 
             <div class="form-section declaration-section">
                 <h3>9. Declaração e Autorização</h3>
-                <p>Eu, <input type="text" id="declaracaoNome" name="declaracaoNome" placeholder="Seu Nome Completo">, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação de visto e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.</p>
+                <p>Eu, <input type="text" id="declaracaoNome" name="declaracaoNome" placeholder="Seu Nome Completo" required>, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação de visto e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.</p>
 
                 <p><strong>Declaro estar ciente de que:</strong></p>
                 <ol>
@@ -742,77 +742,54 @@
                     <li>Que a aposição de minha assinatura eletrônica neste documento possui validade jurídica, conforme a legislação aplicável, e representa meu reconhecimento expresso dos serviços contratados.</li>
                 </ol>
 
-                <p><strong>Autorização:</strong></p>
-                <p>Declaro, por fim, ter revisado e conferido todos os dados por mim apresentados, autorizando expressamente a empresa **Objetivo Turismo Ltda.**, contratada diretamente por mim ou por intermédio de minha agência, a proceder com o envio eletrônico do Formulário DS-160 ao Consulado Americano, bem como a realizar o pagamento das taxas e o agendamento necessários à tramitação do meu pedido de visto.</p>
+                <p>
+                    Local: <input type="text" id="declaracaoLocal" name="declaracaoLocal" placeholder="Cidade/Estado" required>
+                    Data: <input type="date" id="declaracaoData" name="declaracaoData" required>
+                </p>
 
-                <div class="form-group">
-                    <label for="declaracaoLocal">Local:</label>
-                    <input type="text" id="declaracaoLocal" name="declaracaoLocal">
-                </div>
-                <div class="form-group">
-                    <label for="declaracaoData">Data:</label>
-                    <input type="date" id="declaracaoData" name="declaracaoData">
-                </div>
-                <div class="form-group checkbox-group">
-                    <input type="checkbox" id="aceiteDeclaracao" name="aceiteDeclaracao">
-                    <label for="aceiteDeclaracao">Concordo com os termos desta declaração</label>
-                </div>
+                <label>
+                    <input type="checkbox" id="aceitoTermos" name="aceitoTermos" required>
+                    Eu aceito os termos da declaração e autorizo o envio.
+                </label>
             </div>
 
-            <div class="button-group">
-                <button type="button" id="submitButton" onclick="generateGlobalEntryPDF()">Enviar</button>
+            <div id="loadingMessage" style="display:none; text-align:center; margin-top:20px; color:#0056b3;">
+                Processando... Por favor, aguarde.
             </div>
+            <button type="submit" id="submitButton">Gerar PDF e Enviar</button>
         </form>
     </div>
 
-    <script>
-        // Configuração do Firebase com suas credenciais
+    <script type="module">
+        // Importa as funções necessárias do Firebase SDK v9+
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js';
+        import { getStorage, ref, uploadBytes, getDownloadURL } from 'https://www.gstatic.com/firebasejs/10.0.0/firebase-storage.js';
+
+        // Configuração do Firebase com suas credenciais - ATUALIZADO AQUI!
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY", // Sua API Key real
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID",
-            measurementId: "YOUR_MEASUREMENT_ID"
+            apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0",
+            authDomain: "visaformulariostorage.firebaseapp.com",
+            projectId: "visaformulariostorage",
+            storageBucket: "visaformulariostorage.appspot.com", // <--- CORREÇÃO APLICADA AQUI!
+            messagingSenderId: "720170394408",
+            appId: "1:720170394408:web:b1c294c39c489388f6261d",
+            measurementId: "G-ZFCV4JEEFT"
         };
-        // Use as suas credenciais reais aqui:
-        // Exemplo:
-        // const firebaseConfig = {
-        //     apiKey: "AIzaSyAkBV0rHEghBOHl2mDOs6rMDHkUgYMxFr0",
-        //     authDomain: "visaformulariostorage.firebaseapp.com",
-        //     projectId: "visaformulariostorage",
-        //     storageBucket: "visaformulariostorage.appspot.com",
-        //     messagingSenderId: "SEU_MESSAGING_SENDER_ID",
-        //     appId: "SEU_APP_ID",
-        //     measurementId: "SEU_MEASUREMENT_ID"
-        // };
 
-        // Inicializa o Firebase (acessando a instância global de 'firebase')
-        const app = firebase.initializeApp(firebaseConfig);
-        const storage = firebase.storage(app); // Firebase v8 compat SDK
+        // Inicializa o Firebase
+        const app = initializeApp(firebaseConfig);
+        const storage = getStorage(app);
 
-        // --- Funções Auxiliares ---
-        function formatDateBr(dateStr) {
-            if (!dateStr) return 'Não informado';
-            try {
-                const [year, month, day] = dateStr.split('-');
-                const date = new Date(year, month - 1, day);
-                if (isNaN(date.getTime())) {
-                    return 'Data inválida';
-                }
-                return date.toLocaleDateString('pt-BR', { timeZone: 'America/Sao_Paulo' });
-            } catch (e) {
-                return 'Erro ao formatar data';
-            }
-        }
+        // Número de telefone do WhatsApp para onde o PDF será enviado
+        const fixedWhatsAppNumber = "5561999998165"; // Exemplo: +55 (DDD) NÚMERO
 
-        // Função para adicionar campos de histórico de endereço
-        window.addAddressEntry = function() {
+        // Função para adicionar campos de endereço
+        function addAddressEntry() {
             const container = document.getElementById('addressHistoryContainer');
             const newEntry = document.createElement('div');
             newEntry.classList.add('address-entry');
             newEntry.innerHTML = `
+                <hr>
                 <div class="form-group">
                     <label>Endereço:</label>
                     <input type="text" name="pastAddress[]" placeholder="Rua, Número, Complemento">
@@ -837,18 +814,19 @@
                     <label>Até (MM/AAAA):</label>
                     <input type="month" name="pastAddressTo[]">
                 </div>
-                <button type="button" onclick="this.parentNode.remove()" style="background-color: #dc3545; margin-top: 5px;">Remover</button>
-                <hr style="margin: 15px 0;">
+                <button type="button" onclick="this.parentElement.remove()" style="background-color: #dc3545;">Remover Endereço</button>
             `;
             container.appendChild(newEntry);
         }
+        window.addAddressEntry = addAddressEntry; // Torna a função acessível globalmente
 
-        // Função para adicionar campos de histórico de emprego
-        window.addEmploymentEntry = function() {
+        // Função para adicionar campos de emprego
+        function addEmploymentEntry() {
             const container = document.getElementById('employmentHistoryContainer');
             const newEntry = document.createElement('div');
             newEntry.classList.add('employment-entry');
             newEntry.innerHTML = `
+                <hr>
                 <div class="form-group">
                     <label>Empregador:</label>
                     <input type="text" name="employerName[]">
@@ -869,18 +847,19 @@
                     <label>Até (MM/AAAA):</label>
                     <input type="month" name="employmentTo[]">
                 </div>
-                <button type="button" onclick="this.parentNode.remove()" style="background-color: #dc3545; margin-top: 5px;">Remover</button>
-                <hr style="margin: 15px 0;">
+                <button type="button" onclick="this.parentElement.remove()" style="background-color: #dc3545;">Remover Emprego</button>
             `;
             container.appendChild(newEntry);
         }
+        window.addEmploymentEntry = addEmploymentEntry; // Torna a função acessível globalmente
 
-        // Função para adicionar campos de histórico de viagens
-        window.addTravelEntry = function() {
+        // Função para adicionar campos de viagem
+        function addTravelEntry() {
             const container = document.getElementById('travelHistoryContainer');
             const newEntry = document.createElement('div');
             newEntry.classList.add('travel-entry');
             newEntry.innerHTML = `
+                <hr>
                 <div class="form-group">
                     <label>País Visitado:</label>
                     <input type="text" name="countryVisited[]">
@@ -897,483 +876,482 @@
                     <label>Propósito da Viagem:</label>
                     <textarea name="travelPurpose[]" rows="2"></textarea>
                 </div>
-                <button type="button" onclick="this.parentNode.remove()" style="background-color: #dc3545; margin-top: 5px;">Remover</button>
-                <hr style="margin: 15px 0;">
+                <button type="button" onclick="this.parentElement.remove()" style="background-color: #dc3545;">Remover Viagem</button>
             `;
             container.appendChild(newEntry);
         }
+        window.addTravelEntry = addTravelEntry; // Torna a função acessível globalmente
 
-        // Funções de toggle para campos condicionais
-        function toggleSpouseInfo() {
-            const maritalStatus = document.getElementById('maritalStatus');
-            const spouseInfo = document.getElementById('spouseInfo');
-            const spouseDeathInfo = document.getElementById('spouseDeathInfo');
-
-            if (['Casado', 'Divorciado', 'Viúvo', 'União Estável'].includes(maritalStatus.value)) {
-                spouseInfo.classList.remove('hidden-section');
-                if (maritalStatus.value === 'Viúvo') {
-                    spouseDeathInfo.classList.remove('hidden-section');
-                } else {
-                    spouseDeathInfo.classList.add('hidden-section');
-                    spouseDeathInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
-                }
-            } else {
-                spouseInfo.classList.add('hidden-section');
-                spouseInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
-                spouseDeathInfo.classList.add('hidden-section');
-                spouseDeathInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
-            }
-        }
-
-        function toggleParentsInfo() {
-            const parentsAlive = document.getElementById('parentsAlive');
-            const parentsInfo = document.getElementById('parentsInfo');
-            if (parentsAlive.value === 'Sim') {
-                parentsInfo.classList.remove('hidden-section');
-                toggleParentsInUSDetails(); // Reavalia a sub-seção
-            } else {
-                parentsInfo.classList.add('hidden-section');
-                parentsInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
-                document.getElementById('parentsInUSDetails').classList.add('hidden-section');
-                document.getElementById('parentsInUSDetails').querySelectorAll('input, textarea, select').forEach(input => input.value = '');
-            }
-        }
-
-        function toggleParentsInUSDetails() {
-            const parentsInUS = document.getElementById('parentsInUS');
-            const parentsInUSDetails = document.getElementById('parentsInUSDetails');
-            if (parentsInUS.value === 'Sim') {
-                parentsInUSDetails.classList.remove('hidden-section');
-            } else {
-                parentsInUSDetails.classList.add('hidden-section');
-                parentsInUSDetails.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
-            }
-        }
-
-        function toggleKnownInUSInfo() {
-            const knownInUS = document.getElementById('knownInUS');
-            const knownInUSInfo = document.getElementById('knownInUSInfo');
-            if (knownInUS.value === 'Sim') {
-                knownInUSInfo.classList.remove('hidden-section');
-            } else {
-                knownInUSInfo.classList.add('hidden-section');
-                knownInUSInfo.querySelectorAll('input, textarea, select').forEach(input => input.value = '');
-            }
-        }
-
-        // Lógica para mostrar/esconder campos de explicação para as perguntas de elegibilidade
         document.addEventListener('DOMContentLoaded', () => {
-            document.getElementById('maritalStatus').addEventListener('change', toggleSpouseInfo);
-            document.getElementById('parentsAlive').addEventListener('change', toggleParentsInfo);
-            document.getElementById('parentsInUS').addEventListener('change', toggleParentsInUSDetails);
-            document.getElementById('knownInUS').addEventListener('change', toggleKnownInUSInfo);
+            const form = document.getElementById('globalEntryForm');
+            const submitButton = document.getElementById('submitButton');
+            const loadingMessage = document.getElementById('loadingMessage');
 
+            // Lógica para mostrar/ocultar campos condicionais
+            const maritalStatusSelect = document.getElementById('maritalStatus');
+            const spouseInfoDiv = document.getElementById('spouseInfo');
+            const spouseDeathInfoDiv = document.getElementById('spouseDeathInfo');
+
+            maritalStatusSelect.addEventListener('change', () => {
+                const status = maritalStatusSelect.value;
+                if (status === 'Casado' || status === 'Divorciado' || status === 'Viúvo' || status === 'União Estável') {
+                    spouseInfoDiv.classList.remove('hidden-section');
+                } else {
+                    spouseInfoDiv.classList.add('hidden-section');
+                    // Limpar campos do cônjuge se a seção for ocultada
+                    spouseInfoDiv.querySelectorAll('input, select, textarea').forEach(input => {
+                        input.value = '';
+                    });
+                }
+
+                if (status === 'Viúvo') {
+                    spouseDeathInfoDiv.classList.remove('hidden-section');
+                } else {
+                    spouseDeathInfoDiv.classList.add('hidden-section');
+                    document.getElementById('spouseDod').value = '';
+                }
+            });
+
+            const parentsAliveSelect = document.getElementById('parentsAlive');
+            const parentsInfoDiv = document.getElementById('parentsInfo');
+            const parentsInUSSelect = document.getElementById('parentsInUS');
+            const parentsInUSDetailsDiv = document.getElementById('parentsInUSDetails');
+
+            parentsAliveSelect.addEventListener('change', () => {
+                if (parentsAliveSelect.value === 'Sim') {
+                    parentsInfoDiv.classList.remove('hidden-section');
+                } else {
+                    parentsInfoDiv.classList.add('hidden-section');
+                    parentsInfoDiv.querySelectorAll('input, select, textarea').forEach(input => input.value = '');
+                    parentsInUSDetailsDiv.classList.add('hidden-section'); // Oculta também os detalhes dos pais nos EUA
+                    document.getElementById('parentsInUS').value = '';
+                }
+            });
+
+            parentsInUSSelect.addEventListener('change', () => {
+                if (parentsInUSSelect.value === 'Sim') {
+                    parentsInUSDetailsDiv.classList.remove('hidden-section');
+                } else {
+                    parentsInUSDetailsDiv.classList.add('hidden-section');
+                    document.getElementById('parentsInUSExplanation').value = '';
+                }
+            });
+
+            const knownInUSSelect = document.getElementById('knownInUS');
+            const knownInUSInfoDiv = document.getElementById('knownInUSInfo');
+
+            knownInUSSelect.addEventListener('change', () => {
+                if (knownInUSSelect.value === 'Sim') {
+                    knownInUSInfoDiv.classList.remove('hidden-section');
+                } else {
+                    knownInUSInfoDiv.classList.add('hidden-section');
+                    knownInUSInfoDiv.querySelectorAll('input, select, textarea').forEach(input => input.value = '');
+                }
+            });
+            
+            // Lógica para perguntas de elegibilidade
             document.querySelectorAll('input[name="criminalRecord"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    document.getElementById('crimeDetails').style.display = event.target.value === 'Sim' ? 'block' : 'none';
+                radio.addEventListener('change', () => {
+                    document.getElementById('crimeDetails').style.display = document.getElementById('crimeYes').checked ? 'block' : 'none';
+                    if (!document.getElementById('crimeYes').checked) {
+                        document.getElementById('crimeExplanation').value = '';
+                    }
                 });
             });
             document.querySelectorAll('input[name="violationRecord"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    document.getElementById('violationDetails').style.display = event.target.value === 'Sim' ? 'block' : 'none';
+                radio.addEventListener('change', () => {
+                    document.getElementById('violationDetails').style.display = document.getElementById('violationYes').checked ? 'block' : 'none';
+                    if (!document.getElementById('violationYes').checked) {
+                        document.getElementById('violationExplanation').value = '';
+                    }
                 });
             });
             document.querySelectorAll('input[name="investigationStatus"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    document.getElementById('investigationDetails').style.display = event.target.value === 'Sim' ? 'block' : 'none';
+                radio.addEventListener('change', () => {
+                    document.getElementById('investigationDetails').style.display = document.getElementById('investigationYes').checked ? 'block' : 'none';
+                    if (!document.getElementById('investigationYes').checked) {
+                        document.getElementById('investigationExplanation').value = '';
+                    }
                 });
             });
             document.querySelectorAll('input[name="falseInformation"]').forEach(radio => {
-                radio.addEventListener('change', (event) => {
-                    document.getElementById('falseInfoDetails').style.display = event.target.value === 'Sim' ? 'block' : 'none';
+                radio.addEventListener('change', () => {
+                    document.getElementById('falseInfoDetails').style.display = document.getElementById('falseInfoYes').checked ? 'block' : 'none';
+                    if (!document.getElementById('falseInfoYes').checked) {
+                        document.getElementById('falseInfoExplanation').value = '';
+                    }
                 });
             });
 
-            // Chamadas iniciais para definir o estado correto no carregamento da página
-            toggleSpouseInfo();
-            toggleParentsInfo();
-            toggleParentsInUSDetails();
-            toggleKnownInUSInfo();
-
-            // Inicializar estado dos campos de elegibilidade
-            document.getElementById('crimeNo').checked = true; // Define 'Não' como padrão
-            document.getElementById('violationNo').checked = true;
-            document.getElementById('investigationNo').checked = true;
-            document.getElementById('falseInfoNo').checked = true;
-
-            document.getElementById('crimeDetails').style.display = 'none';
-            document.getElementById('violationDetails').style.display = 'none';
-            document.getElementById('investigationDetails').style.display = 'none';
-            document.getElementById('falseInfoDetails').style.display = 'none';
-        });
-
-        // Função para adicionar texto justificado com formatação (para o PDF)
-        function addJustifiedText(doc, text, x, y, maxWidth, lineHeight) {
-            const words = text.split(' ');
-            let line = '';
-            let currentY = y;
-            
-            let isBold = false;
-            let isItalic = false;
-
-            // Reset font style to normal at the beginning of each justified text block
-            doc.setFont(doc.getFont().fontName, 'normal');
-
-            for (let i = 0; i < words.length; i++) {
-                let word = words[i];
-                let originalWord = word; 
-
-                // Check for bold and italic markers
-                if (originalWord.includes('**')) {
-                    isBold = !isBold;
-                    word = word.replace(/\*\*/g, '');
-                }
-                if (originalWord.includes('_')) { 
-                    isItalic = !isItalic;
-                    word = word.replace(/_|-/g, ''); // Adicionado - para lidar com o underscore do 28 U.S.C.
-                }
-
-                let fontStyle = 'normal';
-                if (isBold && isItalic) fontStyle = 'bolditalic';
-                else if (isBold) fontStyle = 'bold';
-                else if (isItalic) fontStyle = 'italic';
-                
-                doc.setFont(doc.getFont().fontName, fontStyle);
-                
-                const testLine = line + (line ? ' ' : '') + word;
-                const testWidth = doc.getTextWidth(testLine);
-
-                if (testWidth > maxWidth && i > 0) {
-                    doc.text(line, x, currentY, { align: 'justify' });
-                    currentY += lineHeight;
-                    line = word;
-                } else {
-                    line = testLine;
+            // Função para formatar as datas no PDF
+            function formatarData(dataISO) {
+                if (!dataISO) return 'Não informado';
+                try {
+                    const [ano, mes, dia] = dataISO.split('-');
+                    return `${dia}/${mes}/${ano}`;
+                } catch (e) {
+                    return dataISO; // Retorna como está se não conseguir formatar
                 }
             }
-            if (line) {
-                doc.text(line, x, currentY, { align: 'justify' });
+
+            // Função para formatar meses no PDF
+            function formatarMesAno(mesAnoISO) {
+                if (!mesAnoISO) return 'Não informado';
+                try {
+                    const [ano, mes] = mesAnoISO.split('-');
+                    return `${mes}/${ano}`;
+                } catch (e) {
+                    return mesAnoISO; // Retorna como está se não conseguir formatar
+                }
             }
-            return currentY + lineHeight; 
-        }
 
-        window.generateGlobalEntryPDF = async function() {
-            console.log("Iniciando geração do PDF...");
-            const submitButton = document.getElementById('submitButton');
-            submitButton.disabled = true;
-            submitButton.textContent = 'Enviando...';
+            form.addEventListener('submit', async (event) => {
+                event.preventDefault();
+                submitButton.disabled = true;
+                loadingMessage.style.display = 'block';
 
-            const jsPDF = window.jspdf.jsPDF; 
-            const doc = new jsPDF();
+                try {
+                    const formData = new FormData(form);
+                    const solicitanteNome = formData.get('fullName').toUpperCase().replace(/\s+/g, '_') || 'GlobalEntry_Sem_Nome';
 
-            let y = 20;
-            const margin = 20;
-            const lineHeight = 7;
-            const form = document.getElementById('globalEntryForm');
-            const fixedWhatsAppNumber = '556199998165'; // Seu número de WhatsApp fixo
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF();
 
-            try {
-                doc.setFontSize(18);
-                doc.setTextColor(40, 40, 40);
-                doc.text("Formulário de Inscrição Global Entry", doc.internal.pageSize.width / 2, y, { align: "center" });
-                y += 15;
+                    let y = 10;
+                    doc.setFontSize(18);
+                    doc.text("Formulário de Inscrição Global Entry", 105, y, { align: 'center' });
+                    y += 10;
+                    doc.setFontSize(10);
+                    doc.text(`Preenchido por: ${formData.get('fullName') || 'Não Informado'}`, 105, y, { align: 'center' });
+                    y += 20;
 
-                doc.setFontSize(12);
-                doc.setTextColor(0, 0, 0);
+                    // Função auxiliar para adicionar texto com quebra de linha
+                    const addSection = (title, data) => {
+                        doc.setFontSize(14);
+                        doc.setTextColor(0, 0, 139); // Azul marinho
+                        doc.text(title, 10, y);
+                        y += 7;
+                        doc.setDrawColor(0, 123, 255); // Azul para a linha
+                        doc.setLineWidth(0.5);
+                        doc.line(10, y, 200, y); // Linha abaixo do título
+                        y += 10;
+                        doc.setFontSize(10);
+                        doc.setTextColor(0, 0, 0); // Preto para o texto
 
-                // 1. Dados Pessoais
-                doc.setFontSize(14);
-                doc.text("1. Dados Pessoais", margin, y);
-                y += 10;
-                doc.setFontSize(11);
-                doc.text(`Nome Completo: ${form.fullName.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Data de Nascimento: ${formatDateBr(form.dob.value) || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Gênero: ${form.gender.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Nacionalidade Atual: ${form.nationality.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Outras Nacionalidades: ${form.otherNationalities.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`País de Nascimento: ${form.countryOfBirth.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Cidade de Nascimento: ${form.cityOfBirth.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Estado Civil: ${form.maritalStatus.value || 'Não informado'}`, margin, y); y += lineHeight;
+                        for (const key in data) {
+                            if (data[key]) { // Apenas adiciona se o valor não for vazio
+                                let displayValue = data[key];
+                                if (key.toLowerCase().includes('data') && data[key].includes('-')) {
+                                    displayValue = formatarData(data[key]);
+                                } else if (key.toLowerCase().includes('mes') || key.toLowerCase().includes('ano')) { // Para campos de mês/ano
+                                    displayValue = formatarMesAno(data[key]);
+                                }
+                                doc.text(`${key}: ${displayValue}`, 10, y);
+                                y += 7;
+                                if (y > 280) { // Se passar da página, adiciona nova página
+                                    doc.addPage();
+                                    y = 10;
+                                    doc.setFontSize(10);
+                                }
+                            }
+                        }
+                        y += 10; // Espaço após a seção
+                    };
 
-                if (['Casado', 'Divorciado', 'Viúvo', 'União Estável'].includes(form.maritalStatus.value)) {
-                    y += 5;
-                    doc.setFontSize(12);
-                    doc.text("Dados do Cônjuge:", margin + 5, y);
-                    y += lineHeight;
-                    doc.setFontSize(11);
-                    doc.text(`Nome Completo do Cônjuge: ${form.spouseFullName.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    doc.text(`Data de Nascimento do Cônjuge: ${formatDateBr(form.spouseDob.value) || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    doc.text(`País de Nascimento do Cônjuge: ${form.spouseCountryOfBirth.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    if (form.maritalStatus.value === 'Viúvo') {
-                        doc.text(`Data de Falecimento do Cônjuge: ${formatDateBr(form.spouseDod.value) || 'Não informado'}`, margin + 10, y); y += lineHeight;
+                    // Dados Pessoais
+                    const personalData = {
+                        'Nome Completo': formData.get('fullName'),
+                        'Data de Nascimento': formData.get('dob'),
+                        'Gênero': formData.get('gender'),
+                        'Nacionalidade Atual': formData.get('nationality'),
+                        'Outras Nacionalidades': formData.get('otherNationalities'),
+                        'País de Nascimento': formData.get('countryOfBirth'),
+                        'Cidade de Nascimento': formData.get('cityOfBirth'),
+                        'Estado Civil': formData.get('maritalStatus')
+                    };
+                    addSection('1. Dados Pessoais', personalData);
+
+                    // Dados do Cônjuge (se aplicável)
+                    if (formData.get('maritalStatus') === 'Casado' || formData.get('maritalStatus') === 'Divorciado' || formData.get('maritalStatus') === 'Viúvo' || formData.get('maritalStatus') === 'União Estável') {
+                        const spouseData = {
+                            'Nome Completo do Cônjuge': formData.get('spouseFullName'),
+                            'Data de Nascimento do Cônjuge': formData.get('spouseDob'),
+                            'País de Nascimento do Cônjuge': formData.get('spouseCountryOfBirth')
+                        };
+                        if (formData.get('maritalStatus') === 'Viúvo') {
+                            spouseData['Data de Falecimento do Cônjuge'] = formData.get('spouseDod');
+                        }
+                        addSection('Dados do Cônjuge', spouseData);
                     }
-                }
-                y += 5;
 
-                // 2. Dados do Passaporte
-                doc.setFontSize(14);
-                doc.text("2. Dados do Passaporte", margin, y);
-                y += 10;
-                doc.setFontSize(11);
-                doc.text(`Número do Passaporte: ${form.passportNumber.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Data de Emissão: ${formatDateBr(form.issueDate.value) || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Data de Validade: ${formatDateBr(form.expiryDate.value) || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`País Emissor: ${form.issuingCountry.value || 'Não informado'}`, margin, y); y += lineHeight;
-                y += 5;
+                    // Dados do Passaporte
+                    const passportData = {
+                        'Número do Passaporte': formData.get('passportNumber'),
+                        'Data de Emissão': formData.get('issueDate'),
+                        'Data de Validade': formData.get('expiryDate'),
+                        'País Emissor': formData.get('issuingCountry')
+                    };
+                    addSection('2. Dados do Passaporte', passportData);
 
-                // 3. Endereço Atual e Contato
-                doc.setFontSize(14);
-                doc.text("3. Endereço Atual e Contato", margin, y);
-                y += 10;
-                doc.setFontSize(11);
-                doc.text(`Endereço: ${form.currentAddress.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Cidade: ${form.currentCity.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Estado/Província: ${form.currentState.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`CEP/Código Postal: ${form.currentZipCode.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`País: ${form.currentCountry.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Telefone: ${form.phone.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`E-mail: ${form.email.value || 'Não informado'}`, margin, y); y += 5;
+                    // Endereço Atual e Contato
+                    const contactData = {
+                        'Endereço Atual': formData.get('currentAddress'),
+                        'Cidade': formData.get('currentCity'),
+                        'Estado/Província': formData.get('currentState'),
+                        'CEP/Código Postal': formData.get('currentZipCode'),
+                        'País': formData.get('currentCountry'),
+                        'Telefone': formData.get('phone'),
+                        'E-mail': formData.get('email')
+                    };
+                    addSection('3. Endereço Atual e Contato', contactData);
 
-                // 4. Informações Familiares
-                doc.setFontSize(14);
-                doc.text("4. Informações Familiares", margin, y);
-                y += 10;
-                doc.setFontSize(11);
-                doc.text(`Seus pais estão vivos?: ${form.parentsAlive.value || 'Não informado'}`, margin, y); y += lineHeight;
-                if (form.parentsAlive.value === 'Sim') {
-                    doc.text(`Nome Completo do Pai: ${form.fatherFullName.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    doc.text(`Data de Nascimento do Pai: ${formatDateBr(form.fatherDob.value) || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    doc.text(`Nome Completo da Mãe: ${form.motherFullName.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    doc.text(`Data de Nascimento da Mãe: ${formatDateBr(form.motherDob.value) || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    doc.text(`Seus pais estão nos EUA?: ${form.parentsInUS.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    if (form.parentsInUS.value === 'Sim') {
-                        doc.text(`Explicação sobre pais nos EUA: ${form.parentsInUSExplanation.value || 'Não informado'}`, margin + 15, y); y += lineHeight;
+                    // Informações Familiares
+                    const familyData = {
+                        'Pais Estão Vivos?': formData.get('parentsAlive')
+                    };
+                    if (formData.get('parentsAlive') === 'Sim') {
+                        familyData['Nome Completo do Pai'] = formData.get('fatherFullName');
+                        familyData['Data de Nascimento do Pai'] = formData.get('fatherDob');
+                        familyData['Nome Completo da Mãe'] = formData.get('motherFullName');
+                        familyData['Data de Nascimento da Mãe'] = formData.get('motherDob');
+                        familyData['Pais nos EUA?'] = formData.get('parentsInUS');
+                        if (formData.get('parentsInUS') === 'Sim') {
+                            familyData['Explicação Pais nos EUA'] = formData.get('parentsInUSExplanation');
+                        }
                     }
-                }
-                
-                doc.text(`Você tem conhecidos nos EUA?: ${form.knownInUS.value || 'Não informado'}`, margin, y); y += lineHeight;
-                if (form.knownInUS.value === 'Sim') {
-                    doc.setFontSize(12);
-                    doc.text("Dados do Conhecido nos EUA:", margin + 5, y);
-                    y += lineHeight;
-                    doc.setFontSize(11);
-                    doc.text(`Nome Completo do Conhecido: ${form.knownName.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    doc.text(`Telefone do Conhecido: ${form.knownPhone.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    doc.text(`E-mail do Conhecido: ${form.knownEmail.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                    doc.text(`Vínculo com o Solicitante: ${form.knownRelationship.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                }
-                y += 5;
+                    familyData['Tem Conhecidos nos EUA?'] = formData.get('knownInUS');
+                    if (formData.get('knownInUS') === 'Sim') {
+                        familyData['Nome do Conhecido'] = formData.get('knownName');
+                        familyData['Telefone do Conhecido'] = formData.get('knownPhone');
+                        familyData['E-mail do Conhecido'] = formData.get('knownEmail');
+                        familyData['Vínculo com o Solicitante'] = formData.get('knownRelationship');
+                    }
+                    addSection('4. Informações Familiares', familyData);
 
-                // Histórico de Endereços
-                doc.setFontSize(14);
-                doc.text("5. Histórico de Endereços (Últimos 5 anos)", margin, y);
-                y += 10;
-                doc.setFontSize(11);
-                const pastAddresses = document.querySelectorAll('#addressHistoryContainer .address-entry');
-                if (pastAddresses.length === 0) {
-                    doc.text('Nenhum endereço informado.', margin, y); y += lineHeight;
-                } else {
-                    pastAddresses.forEach((entry, index) => {
+                    // Histórico de Endereços
+                    const pastAddresses = [];
+                    document.querySelectorAll('#addressHistoryContainer .address-entry').forEach(entry => {
                         const address = entry.querySelector('[name="pastAddress[]"]').value;
                         const city = entry.querySelector('[name="pastCity[]"]').value;
                         const state = entry.querySelector('[name="pastState[]"]').value;
                         const country = entry.querySelector('[name="pastCountry[]"]').value;
-                        const fromMonth = entry.querySelector('[name="pastAddressFrom[]"]').value;
-                        const toMonth = entry.querySelector('[name="pastAddressTo[]"]').value;
-                        
-                        doc.text(`Endereço ${index + 1}: ${address}, ${city}, ${state}, ${country}`, margin, y); y += lineHeight;
-                        doc.text(`Período: ${fromMonth || 'Não informado'} a ${toMonth || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                        y += 3; // Pequeno espaço entre entradas
-                        if (y > doc.internal.pageSize.height - margin) { // Nova página se necessário
-                            doc.addPage();
-                            y = margin;
+                        const from = entry.querySelector('[name="pastAddressFrom[]"]').value;
+                        const to = entry.querySelector('[name="pastAddressTo[]"]').value;
+                        if (address || city || state || country || from || to) {
+                             pastAddresses.push([
+                                address || 'N/I',
+                                city || 'N/I',
+                                state || 'N/I',
+                                country || 'N/I',
+                                formatarMesAno(from),
+                                formatarMesAno(to)
+                            ]);
                         }
                     });
-                }
-                y += 5;
+                    if (pastAddresses.length > 0) {
+                        doc.addPage();
+                        y = 10;
+                        doc.setFontSize(14);
+                        doc.setTextColor(0, 0, 139);
+                        doc.text('5. Histórico de Endereços (Últimos 5 anos)', 10, y);
+                        y += 7;
+                        doc.setDrawColor(0, 123, 255);
+                        doc.setLineWidth(0.5);
+                        doc.line(10, y, 200, y);
+                        y += 10;
+                        doc.autoTable({
+                            startY: y,
+                            head: [['Endereço', 'Cidade', 'Estado', 'País', 'De (MM/AAAA)', 'Até (MM/AAAA)']],
+                            body: pastAddresses,
+                            theme: 'grid',
+                            styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                            headStyles: { fillColor: [0, 123, 255], textColor: [255, 255, 255] },
+                            columnStyles: { 0: { cellWidth: 40 }, 1: { cellWidth: 30 }, 2: { cellWidth: 30 }, 3: { cellWidth: 30 }, 4: { cellWidth: 30 }, 5: { cellWidth: 30 } },
+                            didDrawPage: (data) => {
+                                y = data.cursor.y + 10;
+                            }
+                        });
+                        y = doc.autoTable.previous.finalY + 10;
+                    }
 
-                // Histórico de Emprego
-                doc.setFontSize(14);
-                doc.text("6. Histórico de Emprego (Últimos 5 anos)", margin, y);
-                y += 10;
-                doc.setFontSize(11);
-                const employmentEntries = document.querySelectorAll('#employmentHistoryContainer .employment-entry');
-                if (employmentEntries.length === 0) {
-                    doc.text('Nenhum emprego informado.', margin, y); y += lineHeight;
-                } else {
-                    employmentEntries.forEach((entry, index) => {
+                    // Histórico de Emprego
+                    const employmentHistory = [];
+                    document.querySelectorAll('#employmentHistoryContainer .employment-entry').forEach(entry => {
                         const employerName = entry.querySelector('[name="employerName[]"]').value;
                         const occupation = entry.querySelector('[name="occupation[]"]').value;
                         const employerAddress = entry.querySelector('[name="employerAddress[]"]').value;
-                        const employmentFrom = entry.querySelector('[name="employmentFrom[]"]').value;
-                        const employmentTo = entry.querySelector('[name="employmentTo[]"]').value;
-
-                        doc.text(`Emprego ${index + 1}: ${employerName} (${occupation})`, margin, y); y += lineHeight;
-                        doc.text(`Endereço: ${employerAddress}`, margin + 10, y); y += lineHeight;
-                        doc.text(`Período: ${employmentFrom || 'Não informado'} a ${employmentTo || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                        y += 3; // Pequeno espaço entre entradas
-                        if (y > doc.internal.pageSize.height - margin) {
-                            doc.addPage();
-                            y = margin;
+                        const from = entry.querySelector('[name="employmentFrom[]"]').value;
+                        const to = entry.querySelector('[name="employmentTo[]"]').value;
+                        if (employerName || occupation || employerAddress || from || to) {
+                            employmentHistory.push([
+                                employerName || 'N/I',
+                                occupation || 'N/I',
+                                employerAddress || 'N/I',
+                                formatarMesAno(from),
+                                formatarMesAno(to)
+                            ]);
                         }
                     });
-                }
-                y += 5;
+                    if (employmentHistory.length > 0) {
+                        doc.addPage();
+                        y = 10;
+                        doc.setFontSize(14);
+                        doc.setTextColor(0, 0, 139);
+                        doc.text('6. Histórico de Emprego (Últimos 5 anos)', 10, y);
+                        y += 7;
+                        doc.setDrawColor(0, 123, 255);
+                        doc.setLineWidth(0.5);
+                        doc.line(10, y, 200, y);
+                        y += 10;
+                        doc.autoTable({
+                            startY: y,
+                            head: [['Empregador', 'Cargo', 'Endereço', 'De (MM/AAAA)', 'Até (MM/AAAA)']],
+                            body: employmentHistory,
+                            theme: 'grid',
+                            styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                            headStyles: { fillColor: [0, 123, 255], textColor: [255, 255, 255] },
+                            columnStyles: { 0: { cellWidth: 40 }, 1: { cellWidth: 30 }, 2: { cellWidth: 50 }, 3: { cellWidth: 30 }, 4: { cellWidth: 30 } },
+                            didDrawPage: (data) => {
+                                y = data.cursor.y + 10;
+                            }
+                        });
+                        y = doc.autoTable.previous.finalY + 10;
+                    }
 
-                // Histórico de Viagens Internacionais
-                doc.setFontSize(14);
-                doc.text("7. Histórico de Viagens Internacionais (Últimos 5 anos)", margin, y);
-                y += 10;
-                doc.setFontSize(11);
-                const travelEntries = document.querySelectorAll('#travelHistoryContainer .travel-entry');
-                if (travelEntries.length === 0) {
-                    doc.text('Nenhuma viagem internacional informada.', margin, y); y += lineHeight;
-                } else {
-                    travelEntries.forEach((entry, index) => {
-                        const countryVisited = entry.querySelector('[name="countryVisited[]"]').value;
+                    // Histórico de Viagens Internacionais
+                    const travelHistory = [];
+                    document.querySelectorAll('#travelHistoryContainer .travel-entry').forEach(entry => {
+                        const country = entry.querySelector('[name="countryVisited[]"]').value;
                         const entryDate = entry.querySelector('[name="entryDate[]"]').value;
                         const exitDate = entry.querySelector('[name="exitDate[]"]').value;
-                        const travelPurpose = entry.querySelector('[name="travelPurpose[]"]').value;
-
-                        doc.text(`Viagem ${index + 1}: País - ${countryVisited}`, margin, y); y += lineHeight;
-                        doc.text(`Datas: ${entryDate || 'Não informado'} a ${exitDate || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                        doc.text(`Propósito: ${travelPurpose || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                        y += 3; // Pequeno espaço entre entradas
-                        if (y > doc.internal.pageSize.height - margin) {
-                            doc.addPage();
-                            y = margin;
+                        const purpose = entry.querySelector('[name="travelPurpose[]"]').value;
+                        if (country || entryDate || exitDate || purpose) {
+                            travelHistory.push([
+                                country || 'N/I',
+                                formatarMesAno(entryDate),
+                                formatarMesAno(exitDate),
+                                purpose || 'N/I'
+                            ]);
                         }
                     });
+                    if (travelHistory.length > 0) {
+                        doc.addPage();
+                        y = 10;
+                        doc.setFontSize(14);
+                        doc.setTextColor(0, 0, 139);
+                        doc.text('7. Histórico de Viagens Internacionais (Últimos 5 anos)', 10, y);
+                        y += 7;
+                        doc.setDrawColor(0, 123, 255);
+                        doc.setLineWidth(0.5);
+                        doc.line(10, y, 200, y);
+                        y += 10;
+                        doc.autoTable({
+                            startY: y,
+                            head: [['País Visitado', 'Entrada (MM/AAAA)', 'Saída (MM/AAAA)', 'Propósito']],
+                            body: travelHistory,
+                            theme: 'grid',
+                            styles: { fontSize: 8, cellPadding: 2, overflow: 'linebreak' },
+                            headStyles: { fillColor: [0, 123, 255], textColor: [255, 255, 255] },
+                            columnStyles: { 0: { cellWidth: 40 }, 1: { cellWidth: 35 }, 2: { cellWidth: 35 }, 3: { cellWidth: 'auto' } },
+                            didDrawPage: (data) => {
+                                y = data.cursor.y + 10;
+                            }
+                        });
+                        y = doc.autoTable.previous.finalY + 10;
+                    }
+
+                    // Perguntas de Elegibilidade e Histórico
+                    if (y > 260) { doc.addPage(); y = 10; } // Nova página se necessário
+                    addSection('8. Perguntas de Elegibilidade e Histórico', {
+                        'Condenado por Crime?': formData.get('criminalRecord') + (formData.get('criminalRecord') === 'Sim' ? ' - ' + formData.get('crimeExplanation') : ''),
+                        'Violação de Leis?': formData.get('violationRecord') + (formData.get('violationRecord') === 'Sim' ? ' - ' + formData.get('violationExplanation') : ''),
+                        'Investigação em Andamento?': formData.get('investigationStatus') + (formData.get('investigationStatus') === 'Sim' ? ' - ' + formData.get('investigationExplanation') : ''),
+                        'Forneceu Informação Falsa?': formData.get('falseInformation') + (formData.get('falseInformation') === 'Sim' ? ' - ' + formData.get('falseInfoExplanation') : '')
+                    });
+
+                    // Declaração (Adicionar a declaração no final do PDF)
+                    if (y > 200) { doc.addPage(); y = 10; } // Nova página se necessário
+                    doc.setFontSize(14);
+                    doc.setTextColor(0, 0, 139);
+                    doc.text('9. Declaração e Autorização', 10, y);
+                    y += 7;
+                    doc.setDrawColor(0, 123, 255);
+                    doc.setLineWidth(0.5);
+                    doc.line(10, y, 200, y);
+                    y += 10;
+
+                    doc.setFontSize(10);
+                    doc.setTextColor(0, 0, 0);
+
+                    const declaracaoNome = formData.get('declaracaoNome') || '_________________________';
+                    const declaracaoLocal = formData.get('declaracaoLocal') || '_________________________';
+                    const declaracaoData = formData.get('declaracaoData') ? formatarData(formData.get('declaracaoData')) : '____________';
+
+                    const declarationText = `Eu, ${declaracaoNome}, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação de visto e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.
+
+Declaro estar ciente de que:
+1. Qualquer declaração falsa, incompleta ou enganosa poderá resultar na recusa permanente do visto ou na negativa de admissão nos Estados Unidos, conforme disposto na legislação aplicável.
+2. Todas as informações prestadas nesta solicitação constituem declarações juramentadas, realizadas sob pena de perjúrio, nos termos do disposto no 28 U.S.C. § 1746.
+3. Informações adicionais poderão ser requisitadas pelas autoridades competentes após a análise desta solicitação, sendo minha responsabilidade fornecê-las tempestivamente.
+4. As informações contidas nesta solicitação poderão ser compartilhadas com outras agências governamentais dos Estados Unidos, que possuem autoridade para utilizá-las para fins de aplicação da lei ou para propósitos imigratórios, conforme permitido pela legislação vigente.
+5. A fotografia fornecida com esta solicitação poderá ser utilizada pelas autoridades americanas para fins de verificação de identidade, empregabilidade ou outros objetivos legais previstos na legislação dos Estados Unidos.
+
+Declaro ainda:
+6. Que sou exclusivamente responsável pela autenticidade e exatidão dos documentos apresentados e das informações prestadas nesta solicitação.
+7. Que tenho pleno conhecimento de que a concessão ou negativa do visto é prerrogativa exclusiva da Autoridade Consular Americana, não cabendo a terceiros qualquer ingerência sobre tal decisão.
+8. Que estou ciente de que, em processos de renovação de visto, entrevistas presenciais poderão ser exigidas a critério exclusivo da Autoridade Consular Americana.
+9. Que reconheço que o serviço contratado constitui assessoria relacionada ao processo de preenchimento de documentação, agendamento de biometria e entrevista, não abrangendo serviços de entrega ou retirada de documentos no Centro de Atendimento ao Solicitante de Visto (CASV), sendo necessária a contratação de um agente colaborador, caso eu deseje tais serviços adicionais.
+10. Que a aposição de minha assinatura eletrônica neste documento possui validade jurídica, conforme a legislação aplicável, e representa meu reconhecimento expresso dos serviços contratados.
+
+Local: ${declaracaoLocal} Data: ${declaracaoData}
+Aceito os termos da declaração e autorizo o envio: ${formData.get('aceitoTermos') ? 'Sim' : 'Não'}
+`;
+                    const splitText = doc.splitTextToSize(declarationText, 190);
+                    doc.text(splitText, 10, y);
+                    y += (splitText.length * 7) + 10; // Ajusta 'y' após a declaração
+
+
+                    // Salva o PDF no navegador (opcional, mas bom para o usuário)
+                    doc.save(`GlobalEntry_${solicitanteNome}.pdf`);
+
+                    // Prepara para upload no Firebase Storage
+                    const pdfBlob = doc.output('blob');
+                    const timestamp = Date.now();
+                    
+                    // Nome do arquivo no Firebase Storage: pdfs/GlobalEntry_NOME_COMPLETO_TIMESTAMP.pdf
+                    // OBS: o nome do arquivo foi ajustado para usar a mesma pasta 'pdfs/'
+                    // e adicionar 'GlobalEntry_' para identificação
+                    const firebaseFileName = `pdfs/GlobalEntry_${solicitanteNome}_${timestamp}.pdf`;
+                    const storageRef = ref(storage, firebaseFileName);
+
+                    // Upload do PDF
+                    await uploadBytes(storageRef, pdfBlob);
+                    const downloadUrl = await getDownloadURL(storageRef);
+
+                    console.log('PDF uploaded successfully:', downloadUrl);
+
+                    // Envio para o WhatsApp
+                    let whatsappMessage = `*Novo Formulário Global Entry Recebido!* \n\n`;
+                    whatsappMessage += `*Nome do Solicitante:* ${formData.get('fullName') || 'Não Informado'}\n`;
+                    whatsappMessage += `*E-mail:* ${formData.get('email') || 'Não Informado'}\n`;
+                    whatsappMessage += `*Telefone do Cliente:* ${formData.get('phone') || 'Não Informado'}\n`;
+                    whatsappMessage += `*Link para o Formulário Completo (PDF):*\n${downloadUrl}\n\n`;
+                    whatsappMessage += `Por favor, revise o PDF para prosseguir.`;
+
+                    const whatsappUrl = `https://api.whatsapp.com/send?phone=${fixedWhatsAppNumber}&text=${encodeURIComponent(whatsappMessage)}`;
+                    window.open(whatsappUrl, '_blank');
+
+                    alert('Formulário Global Entry enviado com sucesso! O PDF foi gerado e o link enviado para o WhatsApp da empresa.');
+
+                } catch (error) {
+                    console.error("Erro ao gerar PDF ou enviar para Firebase/WhatsApp:", error);
+                    alert("Ocorreu um erro ao processar o formulário. Por favor, tente novamente. Verifique o console para mais detalhes.");
+                } finally {
+                    submitButton.disabled = false;
+                    loadingMessage.style.display = 'none';
                 }
-                y += 5;
-
-                // Perguntas de Elegibilidade e Histórico
-                doc.setFontSize(14);
-                doc.text("8. Perguntas de Elegibilidade e Histórico", margin, y);
-                y += 10;
-                doc.setFontSize(11);
-                
-                doc.text(`a. Condenado(a) por crime/mandados?: ${form.criminalRecord.value || 'Não informado'}`, margin, y); y += lineHeight;
-                if (form.criminalRecord.value === 'Sim') {
-                    doc.text(`   Explicação: ${form.crimeExplanation.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                }
-                doc.text(`b. Violação de regulamentos alfandegários/imigração/agrícolas?: ${form.violationRecord.value || 'Não informado'}`, margin, y); y += lineHeight;
-                if (form.violationRecord.value === 'Sim') {
-                    doc.text(`   Explicação: ${form.violationExplanation.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                }
-                doc.text(`c. Objeto de investigação em andamento?: ${form.investigationStatus.value || 'Não informado'}`, margin, y); y += lineHeight;
-                if (form.investigationStatus.value === 'Sim') {
-                    doc.text(`   Explicação: ${form.investigationExplanation.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                }
-                doc.text(`d. Forneceu informações falsas/incompletas antes?: ${form.falseInformation.value || 'Não informado'}`, margin, y); y += lineHeight;
-                if (form.falseInformation.value === 'Sim') {
-                    doc.text(`   Explicação: ${form.falseInfoExplanation.value || 'Não informado'}`, margin + 10, y); y += lineHeight;
-                }
-                y += 5;
-
-                // Declaração e Autorização
-                if (y > doc.internal.pageSize.height - margin - 150) { // Nova página se pouco espaço
-                    doc.addPage();
-                    y = margin;
-                }
-                doc.setFontSize(14);
-                doc.text("9. Declaração e Autorização", margin, y);
-                y += 10;
-                doc.setFontSize(11);
-
-                doc.setFont(doc.getFont().fontName, 'normal'); // Reset font style
-                const declaracaoText = `Eu, ${form.declaracaoNome.value || 'Não informado'}, declaro, sob as penas da lei, que li e compreendi integralmente todas as questões contidas nesta solicitação de visto e afirmo que as respostas por mim fornecidas são verdadeiras, completas e corretas, conforme o meu melhor conhecimento e convicção.`;
-                y = addJustifiedText(doc, declaracaoText, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
-                y += lineHeight;
-
-                doc.setFontSize(12);
-                doc.text("Declaro estar ciente de que:", margin, y);
-                y += 5;
-                doc.setFontSize(11);
-
-                doc.setFont(doc.getFont().fontName, 'normal');
-                const listItems1 = [
-                    `1. Qualquer declaração falsa, incompleta ou enganosa poderá resultar na recusa permanente do visto ou na negativa de admissão nos Estados Unidos, conforme disposto na legislação aplicável.`,
-                    `2. Todas as informações prestadas nesta solicitação constituem declarações juramentadas, realizadas sob pena de perjúrio, nos termos do disposto no _28 U.S.C. § 1746_.`,
-                    `3. Informações adicionais poderão ser requisitadas pelas autoridades competentes após a análise desta solicitação, sendo minha responsabilidade fornecê-las tempestivamente.`,
-                    `4. As informações contidas nesta solicitação poderão ser compartilhadas com outras agências governamentais dos Estados Unidos, que possuem autoridade para utilizá-las para fins de aplicação da lei ou para propósitos imigratórios, conforme permitido pela legislação vigente.`,
-                    `5. A fotografia fornecida com esta solicitação poderá ser utilizada pelas autoridades americanas para fins de verificação de identidade, empregabilidade ou outros objetivos legais previstos na legislação dos Estados Unidos.`
-                ];
-                listItems1.forEach(item => {
-                    y = addJustifiedText(doc, item, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
-                    y += 2; // Pequeno espaço entre os itens da lista
-                });
-                y += 5;
-
-                doc.setFontSize(12);
-                doc.text("Declaro ainda:", margin, y);
-                y += 5;
-                doc.setFontSize(11);
-
-                const listItems2 = [
-                    `6. Que sou exclusivamente responsável pela autenticidade e exatidão dos documentos apresentados e das informações prestadas nesta solicitação.`,
-                    `7. Que tenho pleno conhecimento de que a concessão ou negativa do visto é prerrogativa exclusiva da Autoridade Consular Americana, não cabendo a terceiros qualquer ingerência sobre tal decisão.`,
-                    `8. Que estou ciente de que, em processos de renovação de visto, entrevistas presenciais poderão ser exigidas a critério exclusivo da Autoridade Consular Americana.`,
-                    `9. Que reconheço que o serviço contratado constitui assessoria relacionada ao processo de preenchimento de documentação, agendamento de biometria e entrevista, não abrangendo serviços de entrega ou retirada de documentos no Centro de Atendimento ao Solicitante de Visto (CASV), sendo necessária a contratação de um agente colaborador, caso eu deseje tais serviços adicionais.`,
-                    `10. Que a aposição de minha assinatura eletrônica neste documento possui validade jurídica, conforme a legislação aplicável, e representa meu reconhecimento expresso dos serviços contratados.`
-                ];
-                listItems2.forEach(item => {
-                    y = addJustifiedText(doc, item, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
-                    y += 2; // Pequeno espaço entre os itens da lista
-                });
-                y += 5;
-
-                doc.setFontSize(12);
-                doc.text("Autorização:", margin, y);
-                y += 5;
-                doc.setFontSize(11);
-                const authorizationText = `Declaro, por fim, ter revisado e conferido todos os dados por mim apresentados, autorizando expressamente a empresa **Objetivo Turismo Ltda.**, contratada diretamente por mim ou por intermédio de minha agência, a proceder com o envio eletrônico do Formulário DS-160 ao Consulado Americano, bem como a realizar o pagamento das taxas e o agendamento necessários à tramitação do meu pedido de visto.`;
-                y = addJustifiedText(doc, authorizationText, margin, y, doc.internal.pageSize.width - 2 * margin, lineHeight);
-                y += lineHeight;
-
-                doc.text(`Local: ${form.declaracaoLocal.value || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Data: ${formatDateBr(form.declaracaoData.value) || 'Não informado'}`, margin, y); y += lineHeight;
-                doc.text(`Aceite da Declaração: ${form.aceiteDeclaracao.checked ? 'Sim' : 'Não'}`, margin, y); y += lineHeight;
-                y += 15;
-
-                // --- Geração e Upload do PDF ---
-                const pdfBlob = doc.output('blob');
-                const timestamp = Date.now();
-                const fullNameCleaned = (form.fullName.value || 'sem_nome').replace(/[^a-zA-Z0-9_]/g, '_'); // Limpa o nome para o arquivo
-
-                // ALTERAÇÃO CRUCIAL AQUI: Salva na pasta 'pdfs/' com o prefixo 'GlobalEntry'
-                const fileName = `pdfs/GlobalEntry_${fullNameCleaned}_${timestamp}.pdf`;
-                
-                console.log(`Tentando fazer upload do arquivo: ${fileName}`);
-
-                // Firebase Storage (usando sintaxe v8 compat)
-                const storageRef = storage.ref().child(fileName);
-                const snapshot = await storageRef.put(pdfBlob);
-                const downloadURL = await snapshot.ref.getDownloadURL();
-
-                console.log('PDF uploaded successfully:', downloadURL);
-
-                // --- Envio para o WhatsApp ---
-                let whatsappMessage = `*Novo Formulário Global Entry Recebido!* \n\n`;
-                whatsappMessage += `*Nome do Solicitante:* ${form.fullName.value || 'Não informado'}\n`;
-                whatsappMessage += `*E-mail:* ${form.email.value || 'Não informado'}\n`;
-                whatsappMessage += `*Telefone do Cliente:* ${form.phone.value || 'Não informado'}\n`;
-                whatsappMessage += `*Link para o Formulário Completo (PDF):*\n${downloadURL}\n\n`;
-                whatsappMessage += `Por favor, revise o PDF para prosseguir.`;
-
-                const whatsappUrlFixed = `https://wa.me/${fixedWhatsAppNumber}?text=${encodeURIComponent(whatsappMessage)}`;
-                window.open(whatsappUrlFixed, '_blank');
-
-                alert('Formulário Global Entry enviado com sucesso! O PDF foi gerado e o link enviado para o WhatsApp da empresa.');
-
-            } catch (error) {
-                console.error("Erro ao gerar PDF ou enviar para Firebase/WhatsApp:", error);
-                alert("Ocorreu um erro ao processar o formulário. Por favor, tente novamente. Verifique o console para mais detalhes.");
-            } finally {
-                submitButton.disabled = false;
-                submitButton.textContent = 'Enviar';
-            }
-        }
+            });
+        });
     </script>
 </body>
 </html>
